@@ -70,7 +70,7 @@ ConfigurationOfMooseOnWeb >> baseline01: spec [
 				package: 'MooseOnWeb-REST-Api-Tests' with: [ spec requires: #('MooseOnWeb-REST-Api') ];
 				package: 'MooseOnWeb-REST-Api' with: [ spec requires: #('ZincHTTPComponents') ].
 
-			spec group: 'default' with: #('MooseOnWeb-JsonMagritteExample' 'Fame-Json-ImportExport' 'MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api').
+			spec group: 'default' with: #("'MooseOnWeb-JsonMagritteExample'" 'Fame-Json-ImportExport' 'MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api').
 
 			]
 ]
