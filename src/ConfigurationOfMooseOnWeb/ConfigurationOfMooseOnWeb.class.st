@@ -49,7 +49,6 @@ ConfigurationOfMooseOnWeb >> baseline01: spec [
 			spec blessing: #baseline.
 			spec description: 'First shoot for MooseOnWeb !'.
 			spec repository: 'http://www.smalltalkhub.com/mc/VincentBlondeau/MooseOnWeb/main'.	
-
 			spec
 				project: 'ZincHTTPComponents'
 				with: [ 
@@ -58,9 +57,16 @@ ConfigurationOfMooseOnWeb >> baseline01: spec [
 						versionString: #stable;
 						loads: #('REST');
 						repository: 'http://www.squeaksource.com/ZincHTTPComponents' ].
+	      	spec
+				project: 'SeasideRest'
+				with: [ 
+					spec
+						className: 'ConfigurationOfSeasideRest';
+						versionString: #stable;
+						repository: 'http://www.squeaksource.com/Seaside30Addons/' ].
 			spec
 				package: 'Fame-Json-ImportExport';
-				package: 'MooseOnWeb-JsonMagritteExample';
+				"package: 'MooseOnWeb-JsonMagritteExample';"
 				package: 'MooseOnWeb-REST-Api-Tests' with: [ spec requires: #('MooseOnWeb-REST-Api') ];
 				package: 'MooseOnWeb-REST-Api' with: [ spec requires: #('ZincHTTPComponents') ].
 
