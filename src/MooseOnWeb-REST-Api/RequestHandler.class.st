@@ -1,25 +1,34 @@
 Class {
 	#name : #RequestHandler,
 	#superclass : #WARestfulHandler,
-	#category : #'MooseOnWeb-REST-Api-SeasideOnly'
+	#category : #'MooseOnWeb-REST-Api'
 }
 
 { #category : #'as yet unclassified' }
 RequestHandler class >> initialize [ 
-	"WAAdmin register: self at: 'modelRoot'"
+	WAAdmin register: self at: 'modelRoot'
 ]
 
 { #category : #'as yet unclassified' }
 RequestHandler >> listMooseModel [
-   <get>
 	"renvoie un fichier brut nomé todo-api."
-	|i|
-	i:=1.
-	 self requestContext respond: [ :response |
-       MooseModel root do: [ :each | 
-         response contentType: 'text/plain'.
-         response
-            nextPutAll: i asString, ' : ', each name, String crlf. i := i+1 ] ]
+
+	<get>
+	self requestContext
+		respond: [ :response | 
+			response contentType: 'application/json'.
+			response
+				nextPutAll:
+					(String
+						streamContents: [ :stream | 
+							(NeoJSONWriter on: stream)
+								nextPut:
+									(MooseModel root
+										collect: [ :each | 
+											Dictionary new
+												at: #mooseID put: each mooseID;
+												at: #name put: each name;
+												yourself ])	"replaceAll: Character cr with: Character" ]) ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -28,7 +37,18 @@ RequestHandler >> mooseModelAt: aNum [
 	self requestContext
 		respond: [ :response | 
 			response contentType: 'text/json'.
-			(MooseModel root at: aNum asInteger) entities do: [ :each | response nextPutAll: each mooseID asString, String crlf ] ]
+			response
+				nextPutAll:
+					(String
+						streamContents: [ :stream | 
+							(NeoJSONWriter on: stream)
+								nextPut:
+									((MooseModel root at: aNum asInteger) entities
+										collect: [ :each | 
+											Dictionary new
+												at: #mooseID put: each mooseID;
+												at: #name put: each name;
+												yourself ])	"replaceAll: Character cr with: Character" ]) ]
 ]
 
 { #category : #'as yet unclassified' }

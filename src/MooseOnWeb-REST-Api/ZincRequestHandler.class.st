@@ -1,6 +1,6 @@
 Class {
 	#name : #ZincRequestHandler,
-	#superclass : #ZnAutoMatchedRestCall,
+	#superclass : #ZnJSONRestCall,
 	#category : #'MooseOnWeb-REST-Api'
 }
 
@@ -11,13 +11,14 @@ ZincRequestHandler class >> match: request [
 		ifFalse: [ nil ]    
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 ZincRequestHandler >> get [
 
-	variables size == 0 ifTrue: [ self listMooseModels ] ifFalse: [  ].
+	self flag: 'si la requete contient seulement / ca compte comme un caractere.... et size vaut 1...'.
+	variables size == 0 ifTrue: [ self listMooseModels ] ifFalse: [ self listEntities ].
 	
 	"
-	objectUri := '/modelRootZinc/{1}' format: { variables first }.
+	objectUri := '/modelRootZinc/{1}' format: { }.
 	
 	data := self delegate storage at: objectUri ifAbsent: [ ^ self notFound ].
 	
@@ -25,7 +26,8 @@ ZincRequestHandler >> get [
 	self jsonResponse: data."
 	
 
-"	i:=1.
+"	
+	i:=1.
 	 self requestContext respond: [ :response |
        MooseModel root do: [ :each | 
          response contentType: 'text/plain'.
@@ -35,17 +37,28 @@ ZincRequestHandler >> get [
 	self response: (ZnResponse ok: (ZnEntity with: 1 asString))"
 ]
 
-{ #category : #'as yet unclassified' }
-ZincRequestHandler >> listMooseModels [
-	self
-		response:
-			(ZnResponse
-				ok:
-					(ZnEntity
-						with: self mooseModelsAsCollection asString))
+{ #category : #encapsulation }
+ZincRequestHandler >> listEntities [
+	self jsonResponse:  (self mooseEntitiesFromRootNumber: variables first asInteger)
+
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #encapsulation }
+ZincRequestHandler >> listMooseModels [
+	self jsonResponse: self mooseModelsAsCollection 
+]
+
+{ #category : #collectionsCreators }
+ZincRequestHandler >> mooseEntitiesFromRootNumber: aNum [
+	^(MooseModel root at: aNum) collect: [ :each | Dictionary new at:#mooseID put: each mooseID ; at:#name put: each name;yourself ] 
+]
+
+{ #category : #collectionsCreators }
 ZincRequestHandler >> mooseModelsAsCollection [
-	^MooseModel root collect: [ :each | each mooseID asString , ' : ' , each name , String crlf ] 
+	^ (MooseModel root
+		collect: [ :each | 
+			Dictionary new
+				at: #mooseID put: each mooseID;
+				at: #name put: each name;
+				yourself ])" copyWith: (MooseModel superclass methodDict keys )".
 ]
