@@ -29,7 +29,6 @@ FMJsonPrinter >> beginAttribute: name [
 
 { #category : #parsing }
 FMJsonPrinter >> beginDocument [
-	stream nextPut: Character  lf.
 	stream nextPut: $[.
 ]
 
