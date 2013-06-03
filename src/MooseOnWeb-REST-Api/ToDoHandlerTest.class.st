@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'server'
 	],
-	#category : #'MooseOnWeb-REST-Api-Tests'
+	#category : #'MooseOnWeb-REST-Api-SeasideOnly'
 }
 
 { #category : #'as yet unclassified' }

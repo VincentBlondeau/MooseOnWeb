@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'data'
 	],
-	#category : #'MooseOnWeb-REST-Api'
+	#category : #'MooseOnWeb-REST-Api-SeasideOnly'
 }
 
 { #category : #'class initialization' }
 ToDoHandler class >> initialize [ 
-	WAAdmin register: self at: 'todo-api'
+"	WAAdmin register: self at: 'todo-api'"
 ]
 
 { #category : #'as yet unclassified' }
