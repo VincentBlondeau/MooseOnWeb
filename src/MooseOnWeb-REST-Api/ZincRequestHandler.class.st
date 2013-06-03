@@ -6,27 +6,23 @@ Class {
 
 { #category : #accessing }
 ZincRequestHandler class >> match: request [
-	^ request uri firstPathSegment = 'modelRootZinc'
+	^ request uri firstPathSegment = 'modelRoot'
 		ifTrue: [ request uri pathSegments allButFirst ]
 		ifFalse: [ nil ]    
 ]
 
 { #category : #public }
 ZincRequestHandler >> get [
-
-	self flag: 'si la requete contient seulement / ca compte comme un caractere.... et size vaut 1...'.
-	variables size == 0 ifTrue: [ self listMooseModels ] ifFalse: [ self listEntities ].
-	
+	variables size == 0
+		ifTrue: [ self listMooseModels ]
+		ifFalse: [ [self listEntities] on: Error do: [self badRequest: 'Cannot access !'] ] .
 	"
 	objectUri := '/modelRootZinc/{1}' format: { }.
 	
 	data := self delegate storage at: objectUri ifAbsent: [ ^ self notFound ].
 	
 	
-	self jsonResponse: data."
-	
-
-"	
+	self jsonResponse: data."	"	
 	i:=1.
 	 self requestContext respond: [ :response |
        MooseModel root do: [ :each | 
@@ -39,26 +35,11 @@ ZincRequestHandler >> get [
 
 { #category : #encapsulation }
 ZincRequestHandler >> listEntities [
-	self jsonResponse:  (self mooseEntitiesFromRootNumber: variables first asInteger)
+	self jsonResponseFromJson:  (MooseModel root at: variables first asInteger) asJson
 
 ]
 
 { #category : #encapsulation }
 ZincRequestHandler >> listMooseModels [
-	self jsonResponse: self mooseModelsAsCollection 
-]
-
-{ #category : #collectionsCreators }
-ZincRequestHandler >> mooseEntitiesFromRootNumber: aNum [
-	^(MooseModel root at: aNum) collect: [ :each | Dictionary new at:#mooseID put: each mooseID ; at:#name put: each name;yourself ] 
-]
-
-{ #category : #collectionsCreators }
-ZincRequestHandler >> mooseModelsAsCollection [
-	^ (MooseModel root
-		collect: [ :each | 
-			Dictionary new
-				at: #mooseID put: each mooseID;
-				at: #name put: each name;
-				yourself ])" copyWith: (MooseModel superclass methodDict keys )".
+	self jsonResponseFromJson: MooseModel root asJson
 ]
