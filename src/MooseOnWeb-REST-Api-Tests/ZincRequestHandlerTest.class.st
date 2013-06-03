@@ -9,6 +9,28 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ZincRequestHandlerTest >> mooseEntitiesFromRootNumber: aNum [
+	self flag:	'TO BE DELETED'.
+	^ (MooseModel root at: aNum)
+		collect: [ :each | 
+			Dictionary new
+				at: #mooseID put: each mooseID;
+				at: #name put: each name;
+				yourself ]
+]
+
+{ #category : #'as yet unclassified' }
+ZincRequestHandlerTest >> mooseModelsAsCollection [
+self flag: 'TO BE DELETED'.
+	^ (MooseModel root
+		collect: [ :each | 
+			Dictionary new
+				at: #mooseID put: each mooseID;
+				at: #name put: each name;
+				yourself ])" copyWith: (MooseModel superclass methodDict keys )".
+]
+
+{ #category : #'as yet unclassified' }
 ZincRequestHandlerTest >> setUp [
 	server := ZnServer startOn: 1710 + 10 atRandom.
 	server delegate: 
@@ -17,6 +39,7 @@ ZincRequestHandlerTest >> setUp [
 							rootClass: ZincRequestHandler ;
 							yourself); 
 			yourself).
+	MooseModel root size = 0 ifTrue: [ MooseModel new ].
 	client := ZnClient new
 		url: server localUrl;
 		addPathSegment: #modelRootZinc;
@@ -30,13 +53,33 @@ ZincRequestHandlerTest >> tearDown [
 ]
 
 { #category : #'as yet unclassified' }
-ZincRequestHandlerTest >> testUriSum [
-	"Here we test doing a GET /sum/1/2/3"
-	
-	| input output |
-	input := #(1 2 3).
-	input do: [ :each | client addPathSegment: each asString ].
+ZincRequestHandlerTest >> testUriModelOne [
+	"Here we test doing a GET /modelRootZinc/1"
+	|  output number |
+	number :=1.
+	client addPathSegment: number asString.
 	output := client get.
 	self assert: client isSuccess.
-	self assert: output equals: input sum asString
+	self assert: output equals:  (String
+		streamContents: [ :stream | 
+			(NeoJSONWriter on: stream)
+				prettyPrint: true;
+				newLine: String crlf;
+				nextPut: (self mooseEntitiesFromRootNumber: number).
+			stream crlf ] ).
+]
+
+{ #category : #'as yet unclassified' }
+ZincRequestHandlerTest >> testUriRoot [
+	"Here we test doing a GET /modelRootZinc/1"
+	|  output |
+	output := client get.
+	self assert: client isSuccess.
+	self assert: output equals:  (String
+		streamContents: [ :stream | 
+			(NeoJSONWriter on: stream)
+				prettyPrint: true;
+				newLine: String crlf;
+				nextPut: (self mooseModelsAsCollection ).
+			stream crlf ] ).
 ]
