@@ -62,8 +62,8 @@ ConfigurationOfMooseOnWeb >> baseline01: spec [
 				with: [ 
 					spec
 						className: 'ConfigurationOfSeasideRest';
-						versionString: #stable;
-						repository: 'http://www.squeaksource.com/Seaside30Addons/' ].
+						versionString: #bleedingEdge;
+						repository: 'http://www.squeaksource.com/Seaside30Addons' ].
 			spec
 				package: 'Fame-Json-ImportExport';
 				"package: 'MooseOnWeb-JsonMagritteExample';"
