@@ -96,7 +96,7 @@ ConfigurationOfMooseOnWeb >> baseline02: spec [
 			spec
 				package: 'Fame-Json-ImportExport';
 				package: 'MooseOnWeb-REST-Api-Tests' with: [ spec requires: #('MooseOnWeb-REST-Api') ];
-				package: 'MooseOnWeb-REST-Api' with: [ spec requires: #('ZincHTTPComponents' 'SeasideRest') ].
+				package: 'MooseOnWeb-REST-Api' with: [ spec requires: #('ZincHTTPComponents') ].
 
 			spec group: 'default' with: #('Fame-Json-ImportExport' 'MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api').
 
