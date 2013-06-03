@@ -42,7 +42,7 @@ ZincRequestHandlerTest >> setUp [
 	MooseModel root size = 0 ifTrue: [ MooseModel new ].
 	client := ZnClient new
 		url: server localUrl;
-		addPathSegment: #modelRootZinc;
+		addPathSegment: #modelRoot;
 		yourself
 ]
 
@@ -55,31 +55,19 @@ ZincRequestHandlerTest >> tearDown [
 { #category : #'as yet unclassified' }
 ZincRequestHandlerTest >> testUriModelOne [
 	"Here we test doing a GET /modelRootZinc/1"
-	|  output number |
+	| output number |
 	number :=1.
 	client addPathSegment: number asString.
 	output := client get.
 	self assert: client isSuccess.
-	self assert: output equals:  (String
-		streamContents: [ :stream | 
-			(NeoJSONWriter on: stream)
-				prettyPrint: true;
-				newLine: String crlf;
-				nextPut: (self mooseEntitiesFromRootNumber: number).
-			stream crlf ] ).
+	self assert: output equals: (MooseModel root  at: number) asJson  .
 ]
 
 { #category : #'as yet unclassified' }
 ZincRequestHandlerTest >> testUriRoot [
-	"Here we test doing a GET /modelRootZinc/1"
-	|  output |
+	"Here we test doing a GET /modelRootZinc"
+	| output |
 	output := client get.
 	self assert: client isSuccess.
-	self assert: output equals:  (String
-		streamContents: [ :stream | 
-			(NeoJSONWriter on: stream)
-				prettyPrint: true;
-				newLine: String crlf;
-				nextPut: (self mooseModelsAsCollection ).
-			stream crlf ] ).
+	self assert: output equals: MooseModel root asJson.
 ]
