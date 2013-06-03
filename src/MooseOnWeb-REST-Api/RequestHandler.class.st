@@ -1,7 +1,7 @@
 Class {
 	#name : #RequestHandler,
 	#superclass : #WARestfulHandler,
-	#category : #'MooseOnWeb-REST-Api'
+	#category : #'MooseOnWeb-REST-Api-SeasideOnly'
 }
 
 { #category : #'as yet unclassified' }

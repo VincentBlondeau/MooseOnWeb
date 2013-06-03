@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'data'
 	],
-	#category : #'MooseOnWeb-REST-Api'
+	#category : #'MooseOnWeb-REST-Api-SeasideOnly'
 }
 
 { #category : #'class initialization' }
