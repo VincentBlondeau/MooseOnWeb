@@ -36,7 +36,7 @@ ZincRequestHandlerTest >> setUp [
 	server delegate: 
 		(ZnRestServerDelegate new 
 			uriSpace: (ZnCallHierarchyRestUriSpace new 
-							rootClass: ZincRequestHandler ;
+							rootClass: ModelRootHandler ;
 							yourself); 
 			yourself).
 	MooseModel root size = 0 ifTrue: [ MooseModel new ].
