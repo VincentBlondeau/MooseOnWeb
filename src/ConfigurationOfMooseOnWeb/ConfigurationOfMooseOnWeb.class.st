@@ -104,6 +104,39 @@ ConfigurationOfMooseOnWeb >> baseline02: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfMooseOnWeb >> baseline03: spec [
+	<version: '0.3-baseline'>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec description: 'MooseOnWeb on the Zinc REST API !'.
+			spec repository: 'http://www.smalltalkhub.com/mc/VincentBlondeau/MooseOnWeb/main'.	
+			spec
+				project: 'ZincHTTPComponents'
+				with: [ 
+					spec
+						className: 'ConfigurationOfZincHTTPComponents';
+						versionString: #stable;
+						loads: #('REST');
+						repository: 'http://www.squeaksource.com/ZincHTTPComponents' ].
+			spec
+				project: 'BabyMock'
+				with: [ 
+					spec
+						className: 'ConfigurationOfBabyMock';
+						versionString: '1.0';
+						repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock/main' ].
+			spec
+				package: 'MooseOnWeb-REST-Api-Tests' with: [ spec requires: #('MooseOnWeb-REST-Api' 'BabyMock') ];
+				package: 'MooseOnWeb-REST-Api' with: [ spec requires: #('ZincHTTPComponents') ].
+
+			spec group: 'default' with: #( 'MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api').
+
+			]
+]
+
+{ #category : #baselines }
 ConfigurationOfMooseOnWeb >> default: spec [ 	
 	 ^ self development: spec
 ]
@@ -113,7 +146,7 @@ ConfigurationOfMooseOnWeb >> development: spec [
 	<symbolicVersion: #'development'>
 
 	"spec for: #'pharo1.4.x' version: '1.2'."
-	spec for: #'pharo2.x' version: '0.2-baseline'.
+	spec for: #'pharo2.x' version: '0.3-baseline'.
 
 ]
 
