@@ -31,9 +31,9 @@ ModelsHandlerWithIDTest >> testGet [
 	self assert: client isSuccess.
 	self assert: client response headers contentType equals: ZnMimeType applicationJson.
 	self assert: (output includesSubstring: root mooseName).
-	self assert: (output includesSubstring: root mooseID asString).
+	self deny: (output includesSubstring: root mooseID asString).
 	root entities
 		do: [ :e | 
-			self assert: (output includesSubstring: root mooseName).
-			self assert: (output includesSubstring: root mooseID asString) ]
+			self assert: (output includesSubstring: e mooseName).
+			self assert: (output includesSubstring: e mooseID asString) ]
 ]
