@@ -1,6 +1,16 @@
 "
 A ZnMooseJSONRestCall is a REST handler. 
-Extends the ZnJSONRestCall for use the NeoJSONMooseWriter.
+Extends the ZnJSONRestCall for use NeoJSONMooseWriter.
+
+To launch the server : 
+
+	server := ZnServer startOn: 8080.
+	server delegate: MooseOnWebRestServerDelegate new.
+	
+to stop the server : 
+	server stop.
+
+See http://localhost:8080/mooseOnWeb/help for the services provideed by the Api
 
 "
 Class {
