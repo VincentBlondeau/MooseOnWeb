@@ -14,6 +14,7 @@ ModelsHandler class >> pattern [
 
 { #category : #public }
 ModelsHandler >> get [
+	<mooseonweb:'GET' name:'/models' description:'Retourne la liste des models disponibles dans l''image' >
 	"the method asZnMimeType doesn't work properly !"
 	
 	"request accept asZnMimeType = ZnMimeType applicationJson ifTrue: [ "

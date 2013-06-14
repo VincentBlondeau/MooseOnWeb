@@ -24,6 +24,8 @@ EntitiesHandlerWithID class >> pattern [
 
 { #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> action [
+<mooseonweb:'GET' name:'/entities/<mooseID>?action=<nom action>[&<nom param>=<valeur>]*' description:'Permet d''effectuer une action avec plusieurs parametres (seul les actions sans parametres sont implementees)' >
+
 	| action |
 	action:= request uri queryAt: 'action'.
 	[answer:=entity perform: action asSymbol] on: MessageNotUnderstood do: [ InvalidSymbol signal ] .
@@ -43,6 +45,7 @@ EntitiesHandlerWithID >> entity: anEntity [
 
 { #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> get [
+	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Affiche les informations sur l''entitie ayant pour ID <mooseID>' >
 	| predicateKeys |
 [	[ 
 	self entity: (MooseEntity objectWithID: variables first asInteger).
@@ -65,6 +68,7 @@ EntitiesHandlerWithID >> get [
 
 { #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> query [
+<mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'Liste des operations permettant d''obtenir des proprietes sur l''entite d''Id <mooseID>' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
@@ -86,7 +90,8 @@ EntitiesHandlerWithID >> query [
 
 { #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> search [
-	" answer to a url of type : /entities/<mooseID>?q=search&<message>=<value>"
+	<mooseonweb:'GET' name:'/entities/<mooseID>?q=search&<message>=<valeur>' description:'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <message> = <valeur>' >
+
 
 	| keys message value |
 	keys := request uri query keys asArray.
