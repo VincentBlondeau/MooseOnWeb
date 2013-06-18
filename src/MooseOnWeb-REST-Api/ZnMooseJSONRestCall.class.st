@@ -39,7 +39,7 @@ ZnMooseJSONRestCall >> jsonResponse: data [
 				newLine: String crlf;
 				nextPut: data.
 			stream crlf ].
-	self response: (ZnResponse ok: (ZnEntity with: json type: ZnMimeType applicationJson))
+	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson))
 ]
 
 { #category : #'error handling' }
