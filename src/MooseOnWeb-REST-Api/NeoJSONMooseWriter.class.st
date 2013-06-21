@@ -15,6 +15,7 @@ NeoJSONMooseWriter >> initialize [
 
 { #category : #'as yet unclassified' }
 NeoJSONMooseWriter >> writeMooseEntity: mooseEntity [
+
 	self
 		writeMapStreamingDo: [ :jsonMapWriter | 
 			jsonMapWriter writeKey: 'id' value: mooseEntity mooseID.
@@ -25,11 +26,13 @@ NeoJSONMooseWriter >> writeMooseEntity: mooseEntity [
 					| list |
 					list := mooseEntity allDeclaredProperties.
 					(list sort: [ :a :b | a name < b name ])
-						do: [ :a | jsonMapWriter writeKey: a name value: (mooseEntity perform: a implementingSelector) ] ] ]	"ifFalse: [ 
-			books add: aBook id.
-			super writeObject: aBook ].
-	self writeObject: mooseGroup.
-	level < 1 ifTrue:[self writeList: mooseGroup entities.]."
+						do: [ :a | 
+							| value |
+							value := mooseEntity perform: a implementingSelector.
+							value isNil not
+								ifTrue: [ 
+									((value isKindOf: Collection) and: [value isEmpty])
+										ifFalse: [ jsonMapWriter writeKey: a name value: value ] ] ] ] ]
 ]
 
 { #category : #'as yet unclassified' }

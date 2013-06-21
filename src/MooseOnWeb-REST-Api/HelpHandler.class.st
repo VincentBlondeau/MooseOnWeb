@@ -19,11 +19,8 @@ HelpHandler class >> pattern [
 HelpHandler >> get [ 
 	<mooseonweb:'GET' name:'/help' description:'Liste des services disponibles' >
 	answer  := Dictionary new.
-
 	MooseOnWebRestCall allSubclasses do:[ :class | 
 		(Pragma allNamed: #mooseonweb:name:description: in: class )
 		do: [:p | answer at: (p arguments at:2) put: (p arguments at:3) ].].
 	self sendJson.
-
-
 ]

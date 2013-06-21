@@ -118,7 +118,7 @@ EntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
 	client addPathSegment: model mooseID asString.
 	client queryAt: 'action' put: 'doesnt exists !'.
 	client get.
-	self assert: client response statusLine equals: ZnStatusLine badRequest.
+	self assert: client response statusLine equals: ZnStatusLine notFound.
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
@@ -141,7 +141,7 @@ EntitiesHandlerWithIDServerTest >> testGetListAction [
 	self assert: MooseModel root size > 0.
 	model := MooseModel root last.
 	client addPathSegment: model mooseID asString.
-	client queryAt: 'q' put: 'action'.
+	client queryAt: 'q' put: 'actions'.
 	output := client get.
 	self assert: client isSuccess.
 	model allDeclaredProperties do: [ :p | self assert: (output includesSubstring: '"' , p implementingSelector , '"') ].
@@ -157,7 +157,7 @@ EntitiesHandlerWithIDServerTest >> testGetListAction2 [
 	self assert: MooseModel root size > 0.
 	model := MooseModel root last.
 	client addPathSegment: model mooseID asString.
-	client queryAt: 'q' put: 'actions'.
+	client queryAt: 'q' put: 'dontExists'.
 	client get.
 
 	self assert: client response statusLine equals: ZnStatusLine badRequest .

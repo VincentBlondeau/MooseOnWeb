@@ -28,7 +28,7 @@ EntitiesHandlerWithID >> action [
 
 	| action |
 	action:= request uri queryAt: 'action'.
-	[answer:=entity perform: action asSymbol] on: MessageNotUnderstood do: [ InvalidSymbol signal ] .
+	[answer:=entity perform: action asSymbol ] on: MessageNotUnderstood do: [ RessourceNotFound  signal ] .
 
 ]
 
@@ -67,21 +67,26 @@ EntitiesHandlerWithID >> get [
 ]
 
 { #category : #'as yet unclassified' }
+EntitiesHandlerWithID >> listActions: anEntity [
+	^ anEntity allPropertySelectors values
+		select: [ :aSelector | 
+			| r |
+			r := anEntity perform: aSelector.
+			r isMooseGroup
+				ifTrue: [ r isEmpty not ]
+				ifFalse: [ r isNil not ] ]
+]
+
+{ #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> query [
 <mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'Liste des operations permettant d''obtenir des proprietes sur l''entite d''Id <mooseID>' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
 	q := request uri queryAt: 'q'.
-	(q equalsTo: 'action')
+	(q equalsTo: 'actions')
 		ifTrue: [ 
-			answer := (entity allPropertySelectors values
-				select: [ :aSelector | 
-					| r |
-					r := entity perform: aSelector.
-					r isMooseGroup
-						ifTrue: [ r isEmpty not ]
-						ifFalse: [ r isNil not ] ]) sort ]
+			answer := (self listActions: entity) sort ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search ]
