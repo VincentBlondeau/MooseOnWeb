@@ -29,11 +29,7 @@ NeoJSONMooseWriterTests >> testWriteMooseEntity [
 '	"id" : ',entity mooseID asString,',',String crlf,
 '	"name" : "noname",',String crlf,
 '	"type" : "FAMIXComment",',String crlf,
-'	"comments" : [ ],',String crlf,
-'	"container" : null,',String crlf,
-'	"content" : "This is a test\"\r\t",',String crlf,
-'	"declaredSourceLanguage" : null,',String crlf,
-'	"sourceAnchor" : null',String crlf,
+'	"content" : "This is a test\"\r\t"',String crlf,
 '}'
 ]
 

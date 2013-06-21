@@ -76,7 +76,7 @@ EntitiesHandlerWithIDServerTest >> testGetEntity [
 		do: [ :p | 
 			| res |
 			res := entity perform: p implementingSelector.
-			res isNil not
+			(res isNil not and: [ ((res isKindOf: Collection) and: [ res isEmpty]) not ])
 				ifTrue: [ 
 					self assert: (output includesSubstring: '"',(p implementingSelector),'"').
 					self deny: res isMooseGroup.
@@ -84,7 +84,7 @@ EntitiesHandlerWithIDServerTest >> testGetEntity [
 						ifTrue: [ 
 							self assert: (output includesSubstring: res mooseID asString).
 							self assert: (output includesSubstring: res mooseName) ] ] ].
-	self assert: (output includesSubstring: '[').
+	self assert: (output includesSubstring: '{').
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
