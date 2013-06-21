@@ -56,7 +56,7 @@ EntitiesHandlerWithIDTest >> testAction2 [
 	entity should
 		receive: #anAction;
 		signals: MessageNotUnderstood.
-	self should: [ handler action ] raise: InvalidSymbol
+	self should: [ handler action ] raise: RessourceNotFound  
 ]
 
 { #category : #running }
@@ -78,7 +78,7 @@ EntitiesHandlerWithIDTest >> testQueryAction [
 	url should
 		receive: #queryAt:;
 		with: [ :a | a = 'q' ];
-		answers: 'action'.
+		answers: 'actions'.
 	entity should
 		receive: #allPropertySelectors;
 		answers: Dictionary new.
@@ -92,7 +92,7 @@ EntitiesHandlerWithIDTest >> testQueryAction2 [
 	url should
 		receive: #queryAt:;
 		with: [ :a | a = 'q' ];
-		answers: 'action'.
+		answers: 'actions'.
 	entity should
 		receive: #allPropertySelectors;
 		answers:
