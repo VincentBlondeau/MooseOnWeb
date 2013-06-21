@@ -123,6 +123,21 @@ EntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
 ]
 
 { #category : #testing }
+EntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
+	"teste la requete get"
+
+	| model |
+	self assert: MooseModel root size > 0.
+	model := MooseModel root last.
+	client addPathSegment: model mooseID asString.
+	client queryAt: 'action' put: 'browse'.
+	client get.
+	self assert: client response statusLine equals: ZnStatusLine notFound.
+	self deny: client response statusLine = ZnStatusLine internalServerError.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson
+]
+
+{ #category : #testing }
 EntitiesHandlerWithIDServerTest >> testGetInvalidID [
 	"teste la requete get"
 
