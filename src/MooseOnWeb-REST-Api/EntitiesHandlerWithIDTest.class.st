@@ -36,13 +36,16 @@ EntitiesHandlerWithIDTest >> setUp [
 
 { #category : #running }
 EntitiesHandlerWithIDTest >> testAction [
-	url should
+	url can
 		receive: #queryAt:;
 		with: [ :a | a = 'action' ];
 		answers: 'anAction'.
-	entity should
+	entity can
 		receive: #anAction;
 		answers: '1'.
+	entity should
+		receive: #allPropertySelectors;
+		answers: (IdentityDictionary new at: #anAction put: #anAction; yourself).
 	handler action.
 	self assert: (handler answer includesSubstring: '1').
 ]
@@ -53,9 +56,14 @@ EntitiesHandlerWithIDTest >> testAction2 [
 		receive: #queryAt:;
 		with: [ :a | a = 'action' ];
 		answers: 'anAction'.
+	entity shouldnt
+		receive: #anAction.
 	entity should
-		receive: #anAction;
-		signals: MessageNotUnderstood.
+		receive: #anNotPresentAction;
+		answers: MessageNotUnderstood .
+	entity can
+		receive: #allPropertySelectors;
+		answers: (IdentityDictionary new at: 'anNotPresentAction' put: 'anNotPresentAction'; yourself ).	
 	self should: [ handler action ] raise: RessourceNotFound  
 ]
 

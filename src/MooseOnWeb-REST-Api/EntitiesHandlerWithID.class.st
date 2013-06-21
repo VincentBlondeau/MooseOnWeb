@@ -24,12 +24,13 @@ EntitiesHandlerWithID class >> pattern [
 
 { #category : #'as yet unclassified' }
 EntitiesHandlerWithID >> action [
-<mooseonweb:'GET' name:'/entities/<mooseID>?action=<nom action>[&<nom param>=<valeur>]*' description:'Permet d''effectuer une action avec plusieurs parametres (seul les actions sans parametres sont implementees)' >
-
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<nom action>[&<nom param>=<valeur>]*' description:
+		'Permet d''effectuer une action avec plusieurs parametres (seul les actions sans parametres sont implementees)'>
 	| action |
-	action:= request uri queryAt: 'action'.
-	[answer:=entity perform: action asSymbol ] on: MessageNotUnderstood do: [ RessourceNotFound  signal ] .
-
+	action := request uri queryAt: 'action'.
+	(self listActions includes: action)
+		ifTrue: [ answer := entity perform: action asSymbol ]
+		ifFalse: [ RessourceNotFound signal ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,11 +68,11 @@ EntitiesHandlerWithID >> get [
 ]
 
 { #category : #'as yet unclassified' }
-EntitiesHandlerWithID >> listActions: anEntity [
-	^ anEntity allPropertySelectors values
+EntitiesHandlerWithID >> listActions [
+	^ self entity allPropertySelectors values
 		select: [ :aSelector | 
 			| r |
-			r := anEntity perform: aSelector.
+			r := self entity perform: aSelector.
 			r isMooseGroup
 				ifTrue: [ r isEmpty not ]
 				ifFalse: [ r isNil not ] ]
@@ -86,7 +87,7 @@ EntitiesHandlerWithID >> query [
 	q := request uri queryAt: 'q'.
 	(q equalsTo: 'actions')
 		ifTrue: [ 
-			answer := (self listActions: entity) sort ]
+			answer := (self listActions) sort ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search ]
