@@ -12,7 +12,8 @@ Class {
 	#name : #EntitiesHandlerWithID,
 	#superclass : #MooseOnWebRestCall,
 	#instVars : [
-		'entity'
+		'entity',
+		'uri'
 	],
 	#category : #'MooseOnWeb-REST-Api'
 }
@@ -22,38 +23,38 @@ EntitiesHandlerWithID class >> pattern [
 	^#( 'mooseOnWeb' 'entities' '*' )
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 EntitiesHandlerWithID >> action [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<nom action>[&<nom param>=<valeur>]*' description:
-		'Permet d''effectuer une action avec plusieurs parametres (seul les actions sans parametres sont implementees)'>
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<nom action>' description:
+		'Permet d''effectuer une action avec plusieurs parametres'>
 	| action |
-	action := request uri queryAt: 'action'.
-	(self listActions includes: action)
-		ifTrue: [ answer := entity perform: action asSymbol ]
-		ifFalse: [ RessourceNotFound signal ]
+	action := uri queryAt: 'action'.
+	answer := self performAction: action.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 EntitiesHandlerWithID >> entity [
 	^entity
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 EntitiesHandlerWithID >> entity: anEntity [
 	anEntity ifNil: [ RessourceNotFound signal ] ifNotNil: [ entity := anEntity ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 EntitiesHandlerWithID >> get [
 	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Affiche les informations sur l''entitie ayant pour ID <mooseID>' >
-	| predicateKeys |
+	
 [	[ 
 	self entity: (MooseEntity objectWithID: variables first asInteger).
-	predicateKeys := request uri queryKeys.
-	predicateKeys isEmpty
-		ifTrue: [ answer := entity ]
-		ifFalse: [ 
+	uri := request uri.
+	uri hasQuery
+		ifFalse: [ answer := entity ]
+		ifTrue: [ 
+			| predicateKeys |
+			predicateKeys := uri queryKeys.
 			(predicateKeys includes: 'q')
 				ifTrue: [ self query ]
 				ifFalse: [ 
@@ -67,7 +68,7 @@ EntitiesHandlerWithID >> get [
 			do: [ :ex | self badRequest: 'Erreur dans la requete' ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 EntitiesHandlerWithID >> listActions [
 	^ self entity allPropertySelectors values
 		select: [ :aSelector | 
@@ -78,34 +79,61 @@ EntitiesHandlerWithID >> listActions [
 				ifFalse: [ r isNil not ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
+EntitiesHandlerWithID >> performAction: action. [
+	(self listActions includes: action)
+		ifTrue: [ ^entity perform: action asSymbol ]
+		ifFalse: [ RessourceNotFound signal ]
+]
+
+{ #category : #query }
 EntitiesHandlerWithID >> query [
 <mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'Liste des operations permettant d''obtenir des proprietes sur l''entite d''Id <mooseID>' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
-	q := request uri queryAt: 'q'.
+	q := uri queryAt: 'q'.
 	(q equalsTo: 'actions')
 		ifTrue: [ 
 			answer := (self listActions) sort ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search ]
-				ifFalse: [ InvalidSymbol signal ] ]
+				ifFalse: [ RessourceNotFound  signal ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 EntitiesHandlerWithID >> search [
-	<mooseonweb:'GET' name:'/entities/<mooseID>?q=search&<message>=<valeur>' description:'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <message> = <valeur>' >
+	<mooseonweb:'GET' name:'/entities/<mooseID>?q=search&[action=<valeur>&]key=<propriete>&op=<op>&value=<valeur>' 
+		description:
+			'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <propriete> <op> <valeur>. Si action est précisee alors la recherche se fera dans le groupe resultat de l''action' >
 
+	| key op value action data  |
 
-	| keys message value |
-	keys := request uri query keys asArray.
-	keys size = 2
-		ifFalse: [ InvalidSymbol signal ].
-	message := keys at: 2.
-	value := request uri queryAt: message.
-	entity isMooseGroup
-		ifTrue: [ answer := entity select: [ :e | (e perform: message asSymbol) = value ] ]
-		ifFalse: [ NotYetImplemented signalFor: 'Requests on moose entities' ]
+	[ 
+		key := uri queryAt: 'key'.
+		value := uri queryAt: 'value'.
+		op := uri queryAt: 'op'.
+	] on: KeyNotFound do: [RessourceNotFound signal].
+	[ 
+		action := uri queryAt: 'action'.
+		data := self performAction: action.
+		
+	] on: KeyNotFound do: [ 
+		data := entity.
+	].
+	data isCollection ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
+	answer := (data select: [ :el |  el respondsTo: key asSymbol ]) select: [  :el | (el perform: key asSymbol ) asString perform: op asMessage with: value ].
+
+]
+
+{ #category : #query }
+EntitiesHandlerWithID >> uri [
+	uri
+]
+
+{ #category : #query }
+EntitiesHandlerWithID >> uri: anUri [
+	uri := anUri
+
 ]

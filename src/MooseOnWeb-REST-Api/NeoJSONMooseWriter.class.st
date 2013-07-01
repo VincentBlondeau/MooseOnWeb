@@ -39,16 +39,12 @@ NeoJSONMooseWriter >> writeMooseEntity: mooseEntity [
 NeoJSONMooseWriter >> writeMooseGroup: mooseGroup [
 	self
 		writeMapStreamingDo: [ :jsonMapWriter | 
-			((mooseGroup isKindOf: MooseModel) and: mooseGroup ~= MooseModel root)
+			((mooseGroup isKindOf: MooseModel) and: [mooseGroup ~= MooseModel root])
 				ifTrue: [ jsonMapWriter writeKey: 'id' value: mooseGroup mooseID ].
 			jsonMapWriter writeKey: 'name' value: mooseGroup mooseName.
 			jsonMapWriter writeKey: 'type' value: mooseGroup class name.
 			(root and: level < 2)
 				ifTrue: [ 
 					jsonMapWriter writeKey: 'entities' value: mooseGroup entities.
-					root := false ] ]	"ifFalse: [ 
-			books add: aBook id.
-			super writeObject: aBook ].
-	self writeObject: mooseGroup.
-	level < 1 ifTrue:[self writeList: mooseGroup entities.]."
+					root := false ] ]
 ]
