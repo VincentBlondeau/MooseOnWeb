@@ -175,7 +175,7 @@ EntitiesHandlerWithIDServerTest >> testGetListAction2 [
 	client queryAt: 'q' put: 'dontExists'.
 	client get.
 
-	self assert: client response statusLine equals: ZnStatusLine notFound .
+	self assert: client response statusLine equals: ZnStatusLine badRequest .
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
@@ -188,15 +188,12 @@ EntitiesHandlerWithIDServerTest >> testGetSearch [
 	model := MooseModel root last.
 	client addPathSegment: model mooseID asString.
 	client queryAt: 'q' put: 'search'.
-	client queryAt: 'key' put: 'fanIn'.
-	client queryAt: 'op' put: 'eq'.
-	client queryAt: 'value' put: '5'.
-	client queryAt: 'action' put: 'allClasses'.
+	client queryAt: 'mooseName' put: 'Smalltalk'.
 	output := client get.
 	self assert: client isSuccess.
-	model allClasses
+	model entities
 		do: [ :e | 
-			e fanIn = '5'
+			e mooseName = 'Smalltalk'
 				ifTrue: [ 
 					self assert: (output includesSubstring: e mooseName).
 					self assert: (output includesSubstring: e mooseID asString) ] ].
@@ -213,7 +210,7 @@ EntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 	client addPathSegment: model mooseID asString.
 	client queryAt: 'q' put: 'search'.
 	client get.
-	self assert: client response statusLine equals: ZnStatusLine notFound .
+	self assert: client response statusLine equals: ZnStatusLine badRequest .
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 

@@ -16,7 +16,6 @@ Class {
 
 { #category : #running }
 EntitiesHandlerWithIDTest >> setUp [
-	"The #class method aren't well understood by the mock so can't test #respondsTo: by this way"
 	request := context mock: 'request'.
 	url := context mock: 'url'.
 	entity := context mock: 'entity'.
@@ -29,8 +28,7 @@ EntitiesHandlerWithIDTest >> setUp [
 		yourself.
 	handler := EntitiesHandlerWithID new
 		request: request;
-		uri: url;
-		entity: entity	.
+		entity: entity	
 			
 	"For Debug purpose only !"
 	"context visualize: handler."
@@ -130,26 +128,18 @@ EntitiesHandlerWithIDTest >> testQueryAction2 [
 { #category : #running }
 EntitiesHandlerWithIDTest >> testQuerySearch [
 	"teste la recherche sur une entitié moose. "
-	url can
-		receive: #queryAt:;
-		with: [ :a | a = 'action' ];
-		signals: KeyNotFound.
+
 	url can
 		receive: #queryAt:;
 		with: [ :a | a = 'q' ];
 		answers: 'search'.
-	url should
+	url can
 		receive: #queryAt:;
-		with: [ :a | a = 'key' ];
-		answers: 'key'.
-	url should
-		receive: #queryAt:;
-		with: [ :a | a = 'value' ];
+		with: [ :a | a = 'anAction' ];
 		answers: 'value'.
-	url should
-		receive: #queryAt:;
-		with: [ :a | a = 'op' ];
-		answers: 'op'.
+	url can 
+		receive: #query;
+		answers: 	(Dictionary new at: #q put: 'search'; at: #anAction put: 'value'; yourself ).
 	handler entity: MooseEntity new.
 
 	self should: [handler search] raise:  NotYetImplemented  .
@@ -158,37 +148,57 @@ EntitiesHandlerWithIDTest >> testQuerySearch [
 
 { #category : #running }
 EntitiesHandlerWithIDTest >> testQuerySearch2 [
-	"teste la recherche sur un AbstractGroup moose qui ne contient pas la valeur recherchée. "
+	"teste la recherche sur un AbstréactGroup moose qui ne contient pas la valeur recherchée. "
 
-	url can
-		receive: #queryAt:;
-		with: [ :a | a = 'action' ];
-		signals: KeyNotFound.
 	url can
 		receive: #queryAt:;
 		with: [ :a | a = 'q' ];
 		answers: 'search'.
-	url should
+	url can
 		receive: #queryAt:;
-		with: [ :a | a = 'key' ];
-		answers: 'anAction'.
-	url should
-		receive: #queryAt:;
-		with: [ :a | a = 'value' ];
-		answers: true.
-	url should
-		receive: #queryAt:;
-		with: [ :a | a = 'op' ];
-		answers: 'eq'.
+		with: [ :a | a = 'anAction' ];
+		answers: 'value'.
+	url can 
+		receive: #query;
+		answers: 	(Dictionary new at: #q put: 'search'; at: #anAction put: 'value'; yourself ).
+	handler entity: theMooseGroup .	
+		
 
-			
-	handler entity: theMooseGroup.
-
-	entity can
+	entity should
 		receive: #anAction;
 		answers: true.
 	handler search.
 	
 	self assert: (handler answer isEmpty ).
+
+]
+
+{ #category : #running }
+EntitiesHandlerWithIDTest >> testQuerySearch3 [
+	"teste la recherche sur un AbstractGroup moose. "
+
+	url can
+		receive: #queryAt:;
+		with: [ :a | a = 'q' ];
+		answers: 'search'.
+	url can
+		receive: #queryAt:;
+		with: [ :a | a = 'anAction' ];
+		answers: 'value'.
+	url can 
+		receive: #query;
+		answers: 	(Dictionary new at: #q put: 'search'; at: #anAction put: 'value'; yourself ).
+	handler entity: theMooseGroup .	
+		
+
+	entity should
+		receive: #anAction;
+		answers: 'value'.
+
+	
+	handler search.
+	
+	self assert: handler answer size equals: 1.
+	self assert: (handler answer at:1) equals: entity.
 
 ]
