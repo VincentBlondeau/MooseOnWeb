@@ -17,6 +17,29 @@ MooseOnWebServerCommandLineHandler class >> description [
 { #category : #activation }
 MooseOnWebServerCommandLineHandler >> activate [
 	| port |
-	port := self arguments at: 1.
+	port := self optionAt: 'port' ifAbsent: '8080'.
+	self createModel.
+	self stderr nextPutAll: 'Models Loaded', String crlf.
 	MooseOnWebRestServerDelegate serverStartOn: port  asInteger.
+	self stderr nextPutAll: 'Server running on ' , port.
+]
+
+{ #category : #activation }
+MooseOnWebServerCommandLineHandler >> createModel [
+ 	MooseModel root add: ( self createModelFrom: #('Moose-Core')).
+]
+
+{ #category : #activation }
+MooseOnWebServerCommandLineHandler >> createModelFrom: packages [
+	| importer |
+	importer := MoosePharoImporterTask new.
+	importer importingContext mergeClassAndMetaclass.
+	importer candidateClass: CandidateListOperator;
+		importerClass: SmalltalkImporter.
+	importer model: MooseModel new; 
+		addFromPackagesNamed: packages;
+		run. 
+	 ^importer model.
+
+
 ]
