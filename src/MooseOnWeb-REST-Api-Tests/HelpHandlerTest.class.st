@@ -10,5 +10,5 @@ HelpHandlerTest >> testGet [
 	client addPathSegment: 'help'.
 	client get.
 	self assert: client response statusLine equals: ZnStatusLine ok  .
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
+	self assert: client response headers contentType equals: ZnMimeType textPlain 
 ]
