@@ -104,27 +104,26 @@ EntitiesHandlerWithID >> query [
 
 { #category : #query }
 EntitiesHandlerWithID >> search [
-	<mooseonweb:'GET' name:'/entities/<mooseID>?q=search&[action=<valeur>&]key=<propriete>&op=<op>&value=<valeur>' 
-		description:
-			'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <propriete> <op> <valeur>. Si action est précisee alors la recherche se fera dans le groupe resultat de l''action' >
-
-	| key op value action data  |
-
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[action=<valeur>&]key=<propriete>&op=<op>&value=<valeur>'
+	description:
+		'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <propriete> <op> <valeur>. Si action est précisee alors la recherche se fera dans le groupe resultat de l''action'>
+	| key op value action data |
 	[ 
-		key := uri queryAt: 'key'.
-		value := uri queryAt: 'value'.
-		op := uri queryAt: 'op'.
-	] on: KeyNotFound do: [RessourceNotFound signal].
+	key := uri queryAt: 'key'.
+	value := uri queryAt: 'value'.
+	op := uri queryAt: 'op' ]
+		on: KeyNotFound
+		do: [ RessourceNotFound signal ].
 	[ 
-		action := uri queryAt: 'action'.
-		data := self performAction: action.
-		
-	] on: KeyNotFound do: [ 
-		data := entity.
-	].
-	data isCollection ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
-	answer := (data select: [ :el |  el respondsTo: key asSymbol ]) select: [  :el | (el perform: key asSymbol ) asString perform: op asMessage with: value ].
-
+	action := uri queryAt: 'action'.
+	data := self performAction: action ]
+		on: KeyNotFound
+		do: [ data := entity ].
+	data isCollection
+		ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
+	answer := ((data select: [ :el | el respondsTo: key asSymbol ])
+		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection.
+	
 ]
 
 { #category : #query }

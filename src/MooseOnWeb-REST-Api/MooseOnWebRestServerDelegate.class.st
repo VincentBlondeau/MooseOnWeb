@@ -22,6 +22,7 @@ MooseOnWebRestServerDelegate class >> server [
 MooseOnWebRestServerDelegate class >> serverStartOn: port [
 	server := ZnServer startOn: port.
 	server delegate: MooseOnWebRestServerDelegate new.
+	server register.
 ]
 
 { #category : #'as yet unclassified' }
