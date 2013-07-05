@@ -13,24 +13,24 @@ Class {
 	#category : #'MooseOnWeb-REST-Api'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 MooseOnWebRestServerDelegate class >> server [
 	^server
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #managing }
 MooseOnWebRestServerDelegate class >> serverStartOn: port [
 	server := ZnServer startOn: port.
 	server delegate: MooseOnWebRestServerDelegate new.
 	server register.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #managing }
 MooseOnWebRestServerDelegate class >> serverStop [
 	server stop
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 MooseOnWebRestServerDelegate >> initialize [ 
 	self uriSpace: ZnCallHierarchyRestUriSpace new.
 	self uriSpace rootClass: MooseOnWebRestCall

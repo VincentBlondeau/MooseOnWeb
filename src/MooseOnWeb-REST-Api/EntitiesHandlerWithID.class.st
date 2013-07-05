@@ -25,8 +25,8 @@ EntitiesHandlerWithID class >> pattern [
 
 { #category : #query }
 EntitiesHandlerWithID >> action [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<nom action>' description:
-		'Permet d''effectuer une action avec plusieurs parametres'>
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description:
+		'Apply an action on an entity'>
 	| action |
 	action := uri queryAt: 'action'.
 	answer := self performAction: action.
@@ -45,7 +45,7 @@ EntitiesHandlerWithID >> entity: anEntity [
 
 { #category : #public }
 EntitiesHandlerWithID >> get [
-	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Affiche les informations sur l''entitie ayant pour ID <mooseID>' >
+	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Get the informations on the entity <mooseID>' >
 	
 [	[ 
 	self entity: (MooseEntity objectWithID: variables first asInteger).
@@ -88,7 +88,7 @@ EntitiesHandlerWithID >> performAction: action. [
 
 { #category : #query }
 EntitiesHandlerWithID >> query [
-<mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'Liste des operations permettant d''obtenir des proprietes sur l''entite d''Id <mooseID>' >
+<mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'List the operations getting the properties of the <mooseID> entities' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
@@ -104,9 +104,9 @@ EntitiesHandlerWithID >> query [
 
 { #category : #query }
 EntitiesHandlerWithID >> search [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[action=<valeur>&]key=<propriete>&op=<op>&value=<valeur>'
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[action=<value>&]key=<propriete>&op=<op>&value=<value>'
 	description:
-		'Permet de chercher les entites du groupe <mooseID> verifiant la condition :  <propriete> <op> <valeur>. Si action est précisee alors la recherche se fera dans le groupe resultat de l''action'>
+		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
 	| key op value action data |
 	[ 
 	key := uri queryAt: 'key'.

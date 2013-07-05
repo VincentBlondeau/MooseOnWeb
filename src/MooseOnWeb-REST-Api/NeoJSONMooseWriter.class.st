@@ -7,13 +7,13 @@ Class {
 	#category : #'MooseOnWeb-REST-Api'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 NeoJSONMooseWriter >> initialize [ 
 	super initialize .
 	root := true.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #writing }
 NeoJSONMooseWriter >> writeMooseEntity: mooseEntity [
 
 	self
@@ -35,7 +35,7 @@ NeoJSONMooseWriter >> writeMooseEntity: mooseEntity [
 										ifFalse: [ jsonMapWriter writeKey: a name value: value ] ] ] ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #writing }
 NeoJSONMooseWriter >> writeMooseGroup: mooseGroup [
 	self
 		writeMapStreamingDo: [ :jsonMapWriter | 

@@ -33,3 +33,9 @@ MooseOnWebRestCall >> sendJson [
 		ifTrue: [ self jsonResponseFromJson: aResult asJson ]
 		ifFalse: [ self jsonResponse: aResult ]"
 ]
+
+{ #category : #conversion }
+MooseOnWebRestCall >> sendText [	
+	self response: (ZnResponse ok: (ZnEntity with: self answer type: ZnMimeType textPlain)).
+	
+]

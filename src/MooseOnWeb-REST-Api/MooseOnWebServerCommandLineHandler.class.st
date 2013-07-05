@@ -26,18 +26,18 @@ MooseOnWebServerCommandLineHandler >> activate [
 
 { #category : #activation }
 MooseOnWebServerCommandLineHandler >> createModel [
- 	MooseModel root add: ( self createModelFrom: #('Moose-Core')).
+	(self createModelFrom:  [ :p | p name includesSubstring: 'Collections-']  withName: 'Collections') install.
 ]
 
 { #category : #activation }
-MooseOnWebServerCommandLineHandler >> createModelFrom: packages [
+MooseOnWebServerCommandLineHandler >> createModelFrom: aBlockMatching withName: name [
 	| importer |
 	importer := MoosePharoImporterTask new.
 	importer importingContext mergeClassAndMetaclass.
 	importer candidateClass: CandidateListOperator;
 		importerClass: SmalltalkImporter.
-	importer model: MooseModel new; 
-		addFromPackagesNamed: packages;
+	importer model: (MooseModel new name: name); 
+		addFromPackagesMatching: aBlockMatching;
 		run. 
 	 ^importer model.
 

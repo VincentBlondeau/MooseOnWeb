@@ -13,8 +13,23 @@ ModelsHandler class >> pattern [
 ]
 
 { #category : #public }
+ModelsHandler >> delete [
+	<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
+	| id model |
+	[ 
+		id := self request contents asInteger.
+		model := MooseModel root select: [ :m | m mooseID = id ].
+		model ifEmpty: [ RessourceNotFound signal ].
+		(model at: 1) remove.
+		self emptyOkResponse.
+	]
+		on: Error
+		do: [ self badRequest: 'Not deleted' ].
+]
+
+{ #category : #public }
 ModelsHandler >> get [
-	<mooseonweb:'GET' name:'/models' description:'Retourne la liste des models disponibles dans l''image' >
+	<mooseonweb:'GET' name:'/models' description:'Lists the models provided  by the API' >
 	"the method asZnMimeType doesn't work properly !"
 	
 	"request accept asZnMimeType = ZnMimeType applicationJson ifTrue: [ "
@@ -25,4 +40,21 @@ ModelsHandler >> get [
 { #category : #operations }
 ModelsHandler >> listMooseModels [
 	answer:= MooseModel root
+]
+
+{ #category : #public }
+ModelsHandler >> post [
+	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
+	| data model stream id |
+	[ 
+	data := self request contents.
+	model := MooseModel new.
+	stream := ReadStream on: data.
+	model importFromMSEStream: stream.
+	model name: 'Imported Model'.
+	model isEmpty ifTrue: [ EmptyRessource signal ].
+	id := model install mooseID.
+	self created: '/entities/' , id asString ]
+		on: Error
+		do: [ self badRequest: 'MSE file expected' ].
 ]

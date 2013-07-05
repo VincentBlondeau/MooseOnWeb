@@ -10,17 +10,24 @@ Class {
 	#category : #'MooseOnWeb-REST-Api'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 HelpHandler class >> pattern [
 	^ #('mooseOnWeb' 'help')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 HelpHandler >> get [ 
-	<mooseonweb:'GET' name:'/help' description:'Liste des services disponibles' >
-	answer  := Dictionary new.
+	<mooseonweb:'GET' name:'/help' description:'List the commands available' >
+	"answer  := Dictionary new.
 	MooseOnWebRestCall allSubclasses do:[ :class | 
 		(Pragma allNamed: #mooseonweb:name:description: in: class )
 		do: [:p | answer at: (p arguments at:2) put: (p arguments at:3) ].].
-	self sendJson.
+	"
+	answer := String
+		streamContents: [ :stream | 
+			MooseOnWebRestCall allSubclasses do:[ :class | 
+				(Pragma allNamed: #mooseonweb:name:description: in: class )
+				do: [:p | stream nextPutAll: (p arguments at:1), ' : ', (p arguments at:2), ' : ' , (p arguments at:3), String crlf  ].].
+		].
+	self sendText.
 ]
