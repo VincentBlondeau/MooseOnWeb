@@ -14,7 +14,7 @@ ModelsHandler class >> pattern [
 
 { #category : #public }
 ModelsHandler >> delete [
-	<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
+	"<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
 	| id model |
 	[ 
 		id := self request contents asInteger.
@@ -24,7 +24,8 @@ ModelsHandler >> delete [
 		self emptyOkResponse.
 	]
 		on: Error
-		do: [ self badRequest: 'Not deleted' ].
+		do: [ self badRequest: 'Not deleted' ]."
+	self notImplemented 
 ]
 
 { #category : #public }
@@ -44,7 +45,7 @@ ModelsHandler >> listMooseModels [
 
 { #category : #public }
 ModelsHandler >> post [
-	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
+	"<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
 	| data model stream id |
 	[ 
 	data := self request contents.
@@ -56,5 +57,6 @@ ModelsHandler >> post [
 	id := model install mooseID.
 	self created: '/entities/' , id asString ]
 		on: Error
-		do: [ self badRequest: 'MSE file expected' ].
+		do: [ self badRequest: 'MSE file expected' ]."
+	self notImplemented 
 ]
