@@ -161,3 +161,21 @@ ConfigurationOfMooseOnWeb >> project [
 		project := constructor project.
 		project]
 ]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfMooseOnWeb >> version10: spec [
+	<version: '1.0' imports: #('0.3-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'development'.
+		spec description: ''.
+		spec author: 'Vincent Blondeau'.
+		spec timestamp: '7/10/2013 15:00'.
+		spec 
+			project: 'ZincHTTPComponents' with: '2.4.3';
+			project: 'BabyMock' with: '1.0'.
+		spec 
+			package: 'MooseOnWeb-REST-Api' with: 'MooseOnWeb-REST-Api-VincentBlondeau.28';
+			package: 'MooseOnWeb-REST-Api-Tests' with: 'MooseOnWeb-REST-Api-Tests-VincentBlondeau.14'.
+	]
+]
