@@ -14,18 +14,18 @@ ModelsHandler class >> pattern [
 
 { #category : #public }
 ModelsHandler >> delete [
-	"<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
+	<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
 	| id model |
 	[ 
 		id := self request contents asInteger.
 		model := MooseModel root select: [ :m | m mooseID = id ].
 		model ifEmpty: [ RessourceNotFound signal ].
-		(model at: 1) remove.
+		model size > 1 ifTrue: [ Error signal ].
+		model first remove.
 		self emptyOkResponse.
 	]
 		on: Error
-		do: [ self badRequest: 'Not deleted' ]."
-	self notImplemented 
+		do: [ self badRequest: 'Not deleted' ].
 ]
 
 { #category : #public }
@@ -45,18 +45,18 @@ ModelsHandler >> listMooseModels [
 
 { #category : #public }
 ModelsHandler >> post [
-	"<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
+	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
 	| data model stream id |
+	self flag: 'Remove Notification on the next version'.
 	[ 
 	data := self request contents.
 	model := MooseModel new.
 	stream := ReadStream on: data.
-	model importFromMSEStream: stream.
+	[model importFromMSEStream: stream ] on: Notification do:  [ :e | e resume ].
 	model name: 'Imported Model'.
 	model isEmpty ifTrue: [ EmptyRessource signal ].
-	id := model install mooseID.
+	[ id := model install mooseID ] on: Notification do:  [ :e | e resume ].
 	self created: '/entities/' , id asString ]
 		on: Error
-		do: [ self badRequest: 'MSE file expected' ]."
-	self notImplemented 
+		do: [ :e | self badRequest: 'MSE file expected' ].
 ]
