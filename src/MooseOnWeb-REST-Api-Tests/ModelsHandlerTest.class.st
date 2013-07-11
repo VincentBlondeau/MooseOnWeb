@@ -34,7 +34,7 @@ ModelsHandlerTest >> testDelete [
 	self assert: client response headers contentType equals: ZnMimeType textPlain.
 	
 
-	self deny: (MooseModel root last mooseID = id).
+	self deny: ( (MooseModel root isEmpty not) and: [ MooseModel root last mooseID = id ]).
 	self model install
 ]
 
