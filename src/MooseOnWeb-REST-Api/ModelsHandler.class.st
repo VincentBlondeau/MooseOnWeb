@@ -14,7 +14,7 @@ ModelsHandler class >> pattern [
 
 { #category : #public }
 ModelsHandler >> delete [
-	<mooseonweb: 'POST' name: '/models' description: 'Delete a moose model'>
+	<mooseonweb: 'DELETE' name: '/models' description: 'Delete a moose model'>
 	| id model |
 	[ 
 		id := self request contents asInteger.
