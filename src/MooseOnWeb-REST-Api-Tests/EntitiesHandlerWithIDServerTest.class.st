@@ -64,14 +64,17 @@ EntitiesHandlerWithIDServerTest >> testGet [
 EntitiesHandlerWithIDServerTest >> testGetEntity [
 	"teste la requete get"
 
-	| entity output |
+	| entity output stream |
 	self assert: MooseModel root size > 0.
 	entity := MooseModel root last at: 1.
 	client addPathSegment: entity mooseID asString.
 	output := client get.
 	self assert: client isSuccess.
 	self assert: (output includesSubstring: entity mooseID asString).
-	self assert: (output includesSubstring: entity mooseName).
+	stream := WriteStream with: ''.
+	entity mooseDisplayStringOn: stream.
+	
+	self assert: (output includesSubstring: stream contents).
 	entity allDeclaredProperties
 		do: [ :p | 
 			| res |

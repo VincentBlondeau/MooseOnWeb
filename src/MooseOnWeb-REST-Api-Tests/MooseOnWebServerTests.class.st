@@ -23,7 +23,7 @@ MooseOnWebServerTests >> setUp [
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	MooseModel root add: self model
+	self model install
 ]
 
 { #category : #'initialize-release' }

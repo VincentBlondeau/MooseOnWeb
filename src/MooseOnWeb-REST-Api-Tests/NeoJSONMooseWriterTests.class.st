@@ -27,7 +27,7 @@ NeoJSONMooseWriterTests >> testWriteMooseEntity [
 	self assert: stream contents  equals: 
 '{',String crlf,
 '	"id" : ',entity mooseID asString,',',String crlf,
-'	"name" : "noname",',String crlf,
+'	"name" : "\"This is a ...\" in ",',String crlf,
 '	"type" : "FAMIXComment",',String crlf,
 '	"content" : "This is a test\"\r\t"',String crlf,
 '}'
@@ -53,7 +53,7 @@ NeoJSONMooseWriterTests >> testWriteMooseModel [
 '	"entities" : [',String crlf,
 '		{',String crlf,
 '			"id" : ',entity mooseID asString,',',String crlf,
-'			"name" : "noname",',String crlf,
+'			"name" : "\"This is a ...\" in ",',String crlf,
 '			"type" : "FAMIXComment"',String crlf,
 '		}',String crlf,
 '	]',String crlf,
