@@ -1,29 +1,29 @@
 Class {
-	#name : #ModelsHandlerTest,
-	#superclass : #MooseOnWebServerTests,
+	#name : #MWModelsHandlerTest,
+	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #'as yet unclassified' }
-ModelsHandlerTest >> testAccessibilityIDs [
-	| root clientTemp |
-	root := MooseModel root.
+MWModelsHandlerTest >> testAccessibilityIDs [
+	| model clientTemp |
+	model := MooseModel root last. " to change"
 	clientTemp := ZnClient new
 		url: server localUrl;
 		yourself.
 
-	root entities
+	model entities
 		do: [ :e | 
 			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
 			self assert: clientTemp isSuccess.
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson ].
-		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , root mooseID asString).
-			self deny: clientTemp isSuccess.
+		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , model mooseID asString).
+			self assert: clientTemp isSuccess.
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson.
 ]
 
 { #category : #'as yet unclassified' }
-ModelsHandlerTest >> testDelete [
+MWModelsHandlerTest >> testDelete [
 	|  id |
 	client addPathSegment: 'models'.
 	id := MooseModel root last mooseID.
@@ -39,7 +39,7 @@ ModelsHandlerTest >> testDelete [
 ]
 
 { #category : #'as yet unclassified' }
-ModelsHandlerTest >> testGet [
+MWModelsHandlerTest >> testGet [
 	| output root |
 	client addPathSegment: 'models'.
 	output := client get.
@@ -55,7 +55,7 @@ ModelsHandlerTest >> testGet [
 ]
 
 { #category : #'as yet unclassified' }
-ModelsHandlerTest >> testPost [
+MWModelsHandlerTest >> testPost [
 	|  size |
 	client addPathSegment: 'models'.
 	size := MooseModel root size.

@@ -1,5 +1,5 @@
 Class {
-	#name : #EntitiesHandlerWithIDTest,
+	#name : #MWEntitiesHandlerWithIDTest,
 	#superclass : #BabyMockTestCase,
 	#instVars : [
 		'server',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> setUp [
+MWEntitiesHandlerWithIDTest >> setUp [
 	"The #class method aren't well understood by the mock so can't test #respondsTo: by this way"
 	request := context mock: 'request'.
 	url := context mock: 'url'.
@@ -27,7 +27,7 @@ EntitiesHandlerWithIDTest >> setUp [
 	theMooseGroup := theEmptyMooseGroup
 		add: entity;
 		yourself.
-	handler := EntitiesHandlerWithID new
+	handler := MWEntitiesHandlerWithID new
 		request: request;
 		uri: url;
 		entity: entity	.
@@ -37,7 +37,7 @@ EntitiesHandlerWithIDTest >> setUp [
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testAction [
+MWEntitiesHandlerWithIDTest >> testAction [
 	url can
 		receive: #queryAt:;
 		with: [ :a | a = 'action' ];
@@ -53,7 +53,7 @@ EntitiesHandlerWithIDTest >> testAction [
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testAction2 [
+MWEntitiesHandlerWithIDTest >> testAction2 [
 	url should
 		receive: #queryAt:;
 		with: [ :a | a = 'action' ];
@@ -66,23 +66,23 @@ EntitiesHandlerWithIDTest >> testAction2 [
 	entity can
 		receive: #allPropertySelectors;
 		answers: (IdentityDictionary new at: 'anNotPresentAction' put: 'anNotPresentAction'; yourself ).	
-	self should: [ handler action ] raise: RessourceNotFound  
+	self should: [ handler action ] raise: MWRessourceNotFound  
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testEntity [
+MWEntitiesHandlerWithIDTest >> testEntity [
 	entity := nil.
-	self should: [ handler entity: entity ] raise: RessourceNotFound
+	self should: [ handler entity: entity ] raise: MWRessourceNotFound
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testEntity2 [
-	self shouldnt: [ handler entity: entity ] raise: RessourceNotFound.
+MWEntitiesHandlerWithIDTest >> testEntity2 [
+	self shouldnt: [ handler entity: entity ] raise: MWRessourceNotFound.
 	self assert: handler entity equals: entity
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testQueryAction [
+MWEntitiesHandlerWithIDTest >> testQueryAction [
 	"teste l'absence de resultats"
 
 	url should
@@ -98,7 +98,7 @@ EntitiesHandlerWithIDTest >> testQueryAction [
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testQueryAction2 [
+MWEntitiesHandlerWithIDTest >> testQueryAction2 [
 	url should
 		receive: #queryAt:;
 		with: [ :a | a = 'q' ];
@@ -128,7 +128,7 @@ EntitiesHandlerWithIDTest >> testQueryAction2 [
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testQuerySearch [
+MWEntitiesHandlerWithIDTest >> testQuerySearch [
 	"teste la recherche sur une entitié moose. "
 	url can
 		receive: #queryAt:;
@@ -157,7 +157,7 @@ EntitiesHandlerWithIDTest >> testQuerySearch [
 ]
 
 { #category : #running }
-EntitiesHandlerWithIDTest >> testQuerySearch2 [
+MWEntitiesHandlerWithIDTest >> testQuerySearch2 [
 	"teste la recherche sur un AbstractGroup moose qui ne contient pas la valeur recherchée. "
 
 	url can

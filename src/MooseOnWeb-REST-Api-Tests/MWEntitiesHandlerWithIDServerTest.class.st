@@ -1,17 +1,17 @@
 Class {
-	#name : #EntitiesHandlerWithIDServerTest,
-	#superclass : #MooseOnWebServerTests,
+	#name : #MWEntitiesHandlerWithIDServerTest,
+	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> setUp [
+MWEntitiesHandlerWithIDServerTest >> setUp [
 	super setUp.
 	client addPathSegment: #entities
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
+MWEntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
 	|  clientTemp |
 	
 	clientTemp := ZnClient new
@@ -34,7 +34,7 @@ EntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGet [
+MWEntitiesHandlerWithIDServerTest >> testGet [
 	"teste la requete get"
 	| output model |
 
@@ -61,7 +61,7 @@ EntitiesHandlerWithIDServerTest >> testGet [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetEntity [
+MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 	"teste la requete get"
 
 	| entity output stream |
@@ -92,7 +92,7 @@ EntitiesHandlerWithIDServerTest >> testGetEntity [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetExecuteAction [
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 	"teste la requete get"
 
 	| model output |
@@ -112,7 +112,7 @@ EntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
 	"teste la requete get"
 
 	| model |
@@ -126,7 +126,7 @@ EntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
 	"teste la requete get"
 
 	| model |
@@ -141,7 +141,7 @@ EntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetInvalidID [
+MWEntitiesHandlerWithIDServerTest >> testGetInvalidID [
 	"teste la requete get"
 
 	client addPathSegment: '0'.
@@ -152,7 +152,7 @@ EntitiesHandlerWithIDServerTest >> testGetInvalidID [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetListAction [
+MWEntitiesHandlerWithIDServerTest >> testGetListAction [
 	"teste la requete get"
 
 	| model output |
@@ -168,7 +168,7 @@ EntitiesHandlerWithIDServerTest >> testGetListAction [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetListAction2 [
+MWEntitiesHandlerWithIDServerTest >> testGetListAction2 [
 	"teste la requete get"
 
 	| model |
@@ -183,7 +183,7 @@ EntitiesHandlerWithIDServerTest >> testGetListAction2 [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetSearch [
+MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 	"teste la requete get"
 
 	| model output |
@@ -207,7 +207,7 @@ EntitiesHandlerWithIDServerTest >> testGetSearch [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
+MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 	"teste la requete get"
 
 	| model |
@@ -221,7 +221,7 @@ EntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 ]
 
 { #category : #testing }
-EntitiesHandlerWithIDServerTest >> testModelAccessibilityIDs [
+MWEntitiesHandlerWithIDServerTest >> testModelAccessibilityIDs [
 	| model clientTemp |
 	model := MooseModel root last.
 	clientTemp := ZnClient new
