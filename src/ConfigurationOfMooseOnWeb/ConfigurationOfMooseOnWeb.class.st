@@ -173,6 +173,42 @@ ConfigurationOfMooseOnWeb >> baseline11: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfMooseOnWeb >> baseline12: spec [
+	<version: '1.2-baseline'>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec description: 'MooseOnWeb on the Zinc REST API !'.
+			spec repository: 'http://www.smalltalkhub.com/mc/VincentBlondeau/MooseOnWeb/main'.
+			spec
+				project: 'ZincHTTPComponents'
+				with: [ 
+					spec
+						className: 'ConfigurationOfZincHTTPComponents';
+						versionString: #stable;
+						loads: #('REST');
+						repository: 'http://www.squeaksource.com/ZincHTTPComponents' ].
+			spec
+				project: 'BabyMock'
+				with: [ 
+					spec
+						className: 'ConfigurationOfBabyMock';
+						versionString: '1.0';
+						repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock/main' ].
+			spec
+				package: 'MooseOnWeb-MooseJSONWriter-Tests'
+					with: [ spec requires: #('ZincHTTPComponents' 'MooseOnWeb-MooseJSONWriter-Core') ];
+				package: 'MooseOnWeb-MooseJSONWriter-Core' with: [ spec requires: #('ZincHTTPComponents') ];
+				package: 'MooseOnWeb-REST-Api-Tests'
+					with: [ spec requires: #('MooseOnWeb-REST-Api-Core' 'BabyMock' 'MooseOnWeb-MooseJSONWriter-Core') ];
+				package: 'MooseOnWeb-REST-Api-Core' 
+					with: [ spec requires: #('ZincHTTPComponents' 'MooseOnWeb-MooseJSONWriter-Core') ].
+			spec group: 'default' 
+				with: #('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core'  'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-MooseJSONWriter-Tests') ]
+]
+
+{ #category : #baselines }
 ConfigurationOfMooseOnWeb >> default: spec [ 	
 	 ^ self development: spec
 ]
@@ -182,7 +218,7 @@ ConfigurationOfMooseOnWeb >> development: spec [
 	<symbolicVersion: #'development'>
 
 	"spec for: #'pharo1.4.x' version: '1.2'."
-	spec for: #'pharo2.x' version: '1.1-baseline'.
+	spec for: #'pharo2.x' version: '1.2-baseline'.
 
 ]
 
