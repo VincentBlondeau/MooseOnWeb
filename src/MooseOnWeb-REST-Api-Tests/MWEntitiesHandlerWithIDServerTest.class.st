@@ -11,29 +11,6 @@ MWEntitiesHandlerWithIDServerTest >> setUp [
 ]
 
 { #category : #testing }
-MWEntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
-	|  clientTemp |
-	
-	clientTemp := ZnClient new
-		url: server localUrl;
-		yourself.
-		
-	self modelTest do:[:entity|
-	entity allDeclaredProperties
-		do: [ :p | 
-			| res |
-			res := entity perform: p implementingSelector.
-			res isMooseEntity ifTrue: [
-			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , res mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ]].
-		
-	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , entity mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8].
-]
-
-{ #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGet [
 	"teste la requete get"
 	| output |	
@@ -95,6 +72,29 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 							self assert: (output includesSubstring: res mooseName) ] ] ].
 	self assert: (output includesSubstring: '{').
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+]
+
+{ #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetEntityActionResultAccessID [
+	|  clientTemp |
+	
+	clientTemp := ZnClient new
+		url: server localUrl;
+		yourself.
+		
+	self modelTest do:[:entity| 
+		entity allDeclaredProperties
+		do: [ :p | 
+			| res |
+			res := entity perform: p implementingSelector.
+			res isMooseEntity ifTrue: [
+			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , res mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ]].
+		
+	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , entity mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8].
 ]
 
 { #category : #testing }
@@ -161,6 +161,33 @@ MWEntitiesHandlerWithIDServerTest >> testGetListAction [
 ]
 
 { #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetModelEntitiesAccessID [
+	| clientTemp |
+	clientTemp := ZnClient new
+		url: server localUrl;
+		yourself.
+
+	self modelTest entities
+		do: [ :e | 
+			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ].
+	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 .
+	self assert: self rootModelForTestServer size > 0
+	
+		
+	
+	
+	
+
+	
+	
+
+]
+
+{ #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 
 	| output |
@@ -189,31 +216,4 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 	client get.
 	self assert: client response statusLine equals: ZnStatusLine notFound .
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
-]
-
-{ #category : #testing }
-MWEntitiesHandlerWithIDServerTest >> testModelAccessibilityIDs [
-	| clientTemp |
-	clientTemp := ZnClient new
-		url: server localUrl;
-		yourself.
-
-	self modelTest entities
-		do: [ :e | 
-			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ].
-	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 .
-	self assert: self rootModelForTestServer size > 0
-	
-		
-	
-	
-	
-
-	
-	
-
 ]

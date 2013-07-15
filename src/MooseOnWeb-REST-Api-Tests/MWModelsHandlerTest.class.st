@@ -4,25 +4,7 @@ Class {
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'as yet unclassified' }
-MWModelsHandlerTest >> testAccessibilityIDs [
-	|  clientTemp |
-
-	clientTemp := ZnClient new
-		url: server localUrl;
-		yourself.
-
-	self modelTest entities
-		do: [ :e | 
-			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8  ].
-		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
-			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'tests-public' }
 MWModelsHandlerTest >> testDelete [
 	|  id |
 	
@@ -53,6 +35,41 @@ MWModelsHandlerTest >> testGet [
 		do: [ :e | 
 			self assert: (output includesSubstring: e mooseName).
 			self assert: (output includesSubstring: e mooseID asString) ]
+]
+
+{ #category : #'as yet unclassified' }
+MWModelsHandlerTest >> testGetModelAccessIDFromAction [
+	
+	| clientTemp |
+	clientTemp := ZnClient new
+		url: server localUrl;
+		yourself.
+	self modelTest allDeclaredProperties
+		do: [ :p | 
+			| res |
+			res := self modelTest perform: p implementingSelector.
+			res isMooseEntity ifTrue: [
+			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , res mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ]].
+]
+
+{ #category : #'as yet unclassified' }
+MWModelsHandlerTest >> testGetModelEntitiesListAccessID [
+	|  clientTemp |
+
+	clientTemp := ZnClient new
+		url: server localUrl;
+		yourself.
+
+	self modelTest entities
+		do: [ :e | 
+			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8  ].
+		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
+			self assert: clientTemp isSuccess.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
 ]
 
 { #category : #'as yet unclassified' }
