@@ -17,6 +17,7 @@ MWModelsHandler >> delete [
 	<mooseonweb: 'DELETE' name: '/models' description: 'Delete a moose model (put the id in the body of the request)'>
 	| id model |
 	[ 
+		self flag: 'What we do if the same model is loaded several times ?'.
 		id := self request contents asInteger.
 		model := MooseModel root select: [ :m | m mooseID = id ].
 		model ifEmpty: [ MWRessourceNotFound signal ].
