@@ -47,7 +47,7 @@ MWRestCallHandler >> jsonResponse: data [
 				newLine: String crlf;
 				nextPut: data.
 			stream crlf ].
-	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson))
+	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson setCharSetUTF8))
 ]
 
 { #category : #'error handling' }

@@ -3,16 +3,32 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'server',
-		'client'
+		'client',
+		'modelTest'
 	],
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #'initialize-release' }
-MWServerTests >> model [
+MWServerTests >> createTestModel [
 	" to debug and avoid caching behavior: LANPackageTestResource reset."
 	^ LANPackageTestResource current model 
 	
+]
+
+{ #category : #accessing }
+MWServerTests >> modelTest [
+	^ modelTest
+]
+
+{ #category : #accessing }
+MWServerTests >> modelTest: anObject [
+	modelTest := anObject
+]
+
+{ #category : #'initialize-release' }
+MWServerTests >> rootModelForTestServer [
+	^ MooseModel root
 ]
 
 { #category : #'initialize-release' }
@@ -23,7 +39,8 @@ MWServerTests >> setUp [
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	self model install.
+	modelTest := self createTestModel.
+	modelTest install.
 	
 	server debugMode: true
 ]
@@ -32,7 +49,7 @@ MWServerTests >> setUp [
 MWServerTests >> tearDown [
 	client close.
 	server stop.
-	MooseModel root remove: 	self model.
+	self rootModelForTestServer remove: self modelTest.
 ]
 
 { #category : #'initialize-release' }

@@ -6,49 +6,50 @@ Class {
 
 { #category : #'as yet unclassified' }
 MWModelsHandlerTest >> testAccessibilityIDs [
-	| model clientTemp |
-	model := MooseModel root last. " to change"
+	|  clientTemp |
+
 	clientTemp := ZnClient new
 		url: server localUrl;
 		yourself.
 
-	model entities
+	self modelTest entities
 		do: [ :e | 
 			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson ].
-		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , model mooseID asString).
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8  ].
+		clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
 ]
 
 { #category : #'as yet unclassified' }
 MWModelsHandlerTest >> testDelete [
 	|  id |
+	
+	self assert: (self rootModelForTestServer includes: modelTest).
+	
 	client addPathSegment: 'models'.
-	id := MooseModel root last mooseID.
+	id := self modelTest mooseID.
 	client contents: id asString.
 	client delete.
 	
 	self assert: client isSuccess.
 	self assert: client response headers contentType equals: ZnMimeType textPlain.
 	
+	self deny: (self rootModelForTestServer includes: modelTest).
 
-	self deny: ( (MooseModel root isEmpty not) and: [ MooseModel root last mooseID = id ]).
-	self model install
 ]
 
 { #category : #'as yet unclassified' }
 MWModelsHandlerTest >> testGet [
-	| output root |
+	| output|
 	client addPathSegment: 'models'.
 	output := client get.
-	root := MooseModel root.
 	self assert: client isSuccess.
-	self assert: client response headers contentType equals: ZnMimeType applicationJson.
-	self assert: (output includesSubstring: root mooseName).
-	self deny: (output includesSubstring: '"id" : ',root mooseID asString,',').
-	root entities
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
+	self assert: (output includesSubstring: self rootModelForTestServer mooseName).
+	self deny: (output includesSubstring: '"id" : ',self rootModelForTestServer mooseID asString,',').
+	self rootModelForTestServer entities
 		do: [ :e | 
 			self assert: (output includesSubstring: e mooseName).
 			self assert: (output includesSubstring: e mooseID asString) ]
@@ -58,7 +59,7 @@ MWModelsHandlerTest >> testGet [
 MWModelsHandlerTest >> testPost [
 	|  size |
 	client addPathSegment: 'models'.
-	size := MooseModel root size.
+	size := self rootModelForTestServer size.
 	client contents: '(
 	(FAMIX.Namespace (id: 1) (name ''aNamespace''))
 
@@ -79,6 +80,6 @@ MWModelsHandlerTest >> testPost [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson .
 	
 
-	self assert: MooseModel root size equals: size +1.
-	MooseModel root remove: MooseModel root last.
+	self assert: self rootModelForTestServer size equals: size +1.
+	self rootModelForTestServer last remove
 ]

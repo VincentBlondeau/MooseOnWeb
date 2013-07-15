@@ -18,7 +18,7 @@ MWEntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
 		url: server localUrl;
 		yourself.
 		
-	MooseModel root last do:[:entity|
+	self modelTest do:[:entity|
 	entity allDeclaredProperties
 		do: [ :p | 
 			| res |
@@ -26,38 +26,45 @@ MWEntitiesHandlerWithIDServerTest >> testEntityAccessibilityIDs [
 			res isMooseEntity ifTrue: [
 			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , res mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson ]].
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ]].
 		
 	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , entity mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson].
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8].
 ]
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGet [
 	"teste la requete get"
-	| output model |
-
-	self assert: (MooseModel root size) > 0.
-	model := MooseModel root last.
-		
+	| output |	
 	
-	client addPathSegment: model mooseID asString.
+	client addPathSegment: self modelTest mooseID asString.
 	output := client get.
 	self assert: client isSuccess.
 	
-	model entities do: [:e |self assert: (output includesSubstring: e mooseID asString )].
-	self assert: (output includesSubstring:  model mooseID asString).
-	self assert: (output includesSubstring:  model mooseName).
+	self modelTest entities do: [:e |self assert: (output includesSubstring: e mooseID asString )].
+	self assert: (output includesSubstring:  self modelTest mooseID asString).
+	self assert: (output includesSubstring:  self modelTest mooseName).
 	self assert: client response statusLine equals: ZnStatusLine ok.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8
+
+
+	
+
+	
+	
+
+]
+
+{ #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetANonExistingQuery [
+
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'q' put: 'dontExists'.
+	client get.
+
+	self assert: client response statusLine equals: ZnStatusLine notFound .
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
-"	self assert: output equals: MooseModel root asJson."
-
-	
-
-	
-	
-
 ]
 
 { #category : #testing }
@@ -65,8 +72,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 	"teste la requete get"
 
 	| entity output stream |
-	self assert: MooseModel root size > 0.
-	entity := MooseModel root last at: 1.
+	entity := self modelTest first.
 	client addPathSegment: entity mooseID asString.
 	output := client get.
 	self assert: client isSuccess.
@@ -88,51 +94,32 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 							self assert: (output includesSubstring: res mooseID asString).
 							self assert: (output includesSubstring: res mooseName) ] ] ].
 	self assert: (output includesSubstring: '{').
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 	"teste la requete get"
 
-	| model output |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
+	| output |
+
+	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'action' put: 'allClasses'.
 	output := client get.
 	self assert: client isSuccess.
-	self deny: (output includesSubstring: model allClasses mooseID asString).
-	self assert: (output includesSubstring: model allClasses mooseName).
-	model allClasses entities
+	self deny: (output includesSubstring: self modelTest allClasses mooseID asString).
+	self assert: (output includesSubstring: self modelTest allClasses mooseName).
+	self modelTest allClasses entities
 		do: [ :p | 
 			self assert: (output includesSubstring: '"' , p mooseName , '"').
 			self assert: (output includesSubstring: p mooseID asString ) ].
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
 { #category : #testing }
-MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction2 [
-	"teste la requete get"
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionExistingButNotAllowed [
 
-	| model |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
-	client queryAt: 'action' put: 'doesnt exists !'.
-	client get.
-	self assert: client response statusLine equals: ZnStatusLine notFound.
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
-]
-
-{ #category : #testing }
-MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
-	"teste la requete get"
-
-	| model |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
+	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'action' put: 'browse'.
 	client get.
 	self assert: client response statusLine equals: ZnStatusLine notFound.
@@ -141,8 +128,17 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionNotSafety [
 ]
 
 { #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetExecutingAnNonExistingAction [
+
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'action' put: 'doesnt exists !'.
+	client get.
+	self assert: client response statusLine equals: ZnStatusLine notFound.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson
+]
+
+{ #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetInvalidID [
-	"teste la requete get"
 
 	client addPathSegment: '0'.
 	client get.
@@ -153,43 +149,22 @@ MWEntitiesHandlerWithIDServerTest >> testGetInvalidID [
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetListAction [
-	"teste la requete get"
 
-	| model output |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
+	|  output |
+	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'q' put: 'actions'.
 	output := client get.
 	self assert: client isSuccess.
-	model allDeclaredProperties do: [ :p | self assert: (output includesSubstring: '"' , p implementingSelector , '"') ].
+	self modelTest allDeclaredProperties do: [ :p | self assert: (output includesSubstring: '"' , p implementingSelector , '"') ].
 	self assert: (output includesSubstring: '[').
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
-]
-
-{ #category : #testing }
-MWEntitiesHandlerWithIDServerTest >> testGetListAction2 [
-	"teste la requete get"
-
-	| model |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
-	client queryAt: 'q' put: 'dontExists'.
-	client get.
-
-	self assert: client response statusLine equals: ZnStatusLine notFound .
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8
 ]
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetSearch [
-	"teste la requete get"
 
-	| model output |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
+	| output |
+	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'q' put: 'search'.
 	client queryAt: 'key' put: 'fanIn'.
 	client queryAt: 'op' put: 'eq'.
@@ -197,23 +172,19 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 	client queryAt: 'action' put: 'allClasses'.
 	output := client get.
 	self assert: client isSuccess.
-	model allClasses
+	self modelTest allClasses
 		do: [ :e | 
 			e fanIn = '5'
 				ifTrue: [ 
 					self assert: (output includesSubstring: e mooseName).
 					self assert: (output includesSubstring: e mooseID asString) ] ].
-	self assert: client response headers contentType equals: ZnMimeType applicationJson
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
-	"teste la requete get"
 
-	| model |
-	self assert: MooseModel root size > 0.
-	model := MooseModel root last.
-	client addPathSegment: model mooseID asString.
+	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'q' put: 'search'.
 	client get.
 	self assert: client response statusLine equals: ZnStatusLine notFound .
@@ -222,21 +193,20 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testModelAccessibilityIDs [
-	| model clientTemp |
-	model := MooseModel root last.
+	| clientTemp |
 	clientTemp := ZnClient new
 		url: server localUrl;
 		yourself.
 
-	model entities
+	self modelTest entities
 		do: [ :e | 
 			clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , e mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson ].
-	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , model mooseID asString).
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ].
+	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
 			self assert: clientTemp isSuccess.
-			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson.
-	self assert: (MooseModel root size) > 0.
+			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 .
+	self assert: self rootModelForTestServer size > 0
 	
 		
 	
