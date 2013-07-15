@@ -1,11 +1,11 @@
 Class {
-	#name : #HelpHandlerTest,
-	#superclass : #MooseOnWebServerTests,
+	#name : #MWHelpHandlerTest,
+	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #'as yet unclassified' }
-HelpHandlerTest >> testGet [
+MWHelpHandlerTest >> testGet [
 	
 	client addPathSegment: 'help'.
 	client get.

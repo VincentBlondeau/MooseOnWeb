@@ -1,11 +1,11 @@
 Class {
-	#name : #EntitiesHandlerTest,
-	#superclass : #MooseOnWebServerTests,
+	#name : #MWEntitiesHandlerTest,
+	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #'as yet unclassified' }
-EntitiesHandlerTest >> testGet [
+MWEntitiesHandlerTest >> testGet [
 	
 	client addPathSegment: 'entities'.
 	client get.

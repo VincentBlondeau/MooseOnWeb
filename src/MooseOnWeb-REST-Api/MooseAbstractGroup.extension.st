@@ -6,12 +6,6 @@ MooseAbstractGroup >> isMooseGroup [
 ]
 
 { #category : #'*MooseOnWeb-REST-Api' }
-MooseAbstractGroup >> neoJsonOn: neoJSONWriter [
-	neoJSONWriter writeMooseGroup: self.
-
-]
-
-{ #category : #'*MooseOnWeb-REST-Api' }
 MooseAbstractGroup >> objectWithID: elementID [
 	^ (self entityStorage includesID: elementID)
 		ifFalse: [ (self mooseID = elementID) ifTrue: [ ^self ] ifFalse: [ ^nil ] ]

@@ -5,7 +5,7 @@ Instance Variables
 
 "
 Class {
-	#name : #EmptyRessource,
+	#name : #MWEmptyRessource,
 	#superclass : #Error,
 	#category : #'MooseOnWeb-REST-Api'
 }

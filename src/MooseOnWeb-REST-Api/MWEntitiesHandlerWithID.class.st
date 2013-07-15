@@ -9,8 +9,8 @@ entity
 
 "
 Class {
-	#name : #EntitiesHandlerWithID,
-	#superclass : #MooseOnWebRestCall,
+	#name : #MWEntitiesHandlerWithID,
+	#superclass : #MWRestCallHandler,
 	#instVars : [
 		'entity',
 		'uri'
@@ -19,12 +19,12 @@ Class {
 }
 
 { #category : #accessing }
-EntitiesHandlerWithID class >> pattern [
+MWEntitiesHandlerWithID class >> pattern [
 	^#( 'mooseOnWeb' 'entities' '*' )
 ]
 
 { #category : #query }
-EntitiesHandlerWithID >> action [
+MWEntitiesHandlerWithID >> action [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description:
 		'Apply an action on an entity'>
 	| action |
@@ -33,18 +33,18 @@ EntitiesHandlerWithID >> action [
 ]
 
 { #category : #accessing }
-EntitiesHandlerWithID >> entity [
+MWEntitiesHandlerWithID >> entity [
 	^entity
 	
 ]
 
 { #category : #accessing }
-EntitiesHandlerWithID >> entity: anEntity [
-	anEntity ifNil: [ RessourceNotFound signal ] ifNotNil: [ entity := anEntity ]
+MWEntitiesHandlerWithID >> entity: anEntity [
+	anEntity ifNil: [ MWRessourceNotFound signal ] ifNotNil: [ entity := anEntity ]
 ]
 
 { #category : #public }
-EntitiesHandlerWithID >> get [
+MWEntitiesHandlerWithID >> get [
 	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Get the informations on the entity <mooseID>' >
 	
 [	[ 
@@ -60,16 +60,16 @@ EntitiesHandlerWithID >> get [
 				ifFalse: [ 
 					(predicateKeys includes: 'action')
 						ifTrue: [ self action ]
-						ifFalse: [ InvalidSymbol signal ] ] ].
+						ifFalse: [ MWInvalidSymbol signal ] ] ].
 	self sendJson ]
-		on: RessourceNotFound
+		on: MWRessourceNotFound
 			do: [ :ex | self notFound ]]
-		on: InvalidSymbol
+		on: MWInvalidSymbol
 			do: [ :ex | self badRequest: 'Erreur dans la requete' ]
 ]
 
 { #category : #private }
-EntitiesHandlerWithID >> listActions [
+MWEntitiesHandlerWithID >> listActions [
 	^ self entity allPropertySelectors values
 		select: [ :aSelector | 
 			| r |
@@ -80,14 +80,14 @@ EntitiesHandlerWithID >> listActions [
 ]
 
 { #category : #private }
-EntitiesHandlerWithID >> performAction: action. [
+MWEntitiesHandlerWithID >> performAction: action. [
 	(self listActions includes: action)
 		ifTrue: [ ^entity perform: action asSymbol ]
-		ifFalse: [ RessourceNotFound signal ]
+		ifFalse: [ MWRessourceNotFound signal ]
 ]
 
 { #category : #query }
-EntitiesHandlerWithID >> query [
+MWEntitiesHandlerWithID >> query [
 <mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'List the operations getting the properties of the <mooseID> entities' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
@@ -99,11 +99,11 @@ EntitiesHandlerWithID >> query [
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search ]
-				ifFalse: [ RessourceNotFound  signal ] ]
+				ifFalse: [ MWRessourceNotFound  signal ] ]
 ]
 
 { #category : #query }
-EntitiesHandlerWithID >> search [
+MWEntitiesHandlerWithID >> search [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[action=<value>&]key=<propriete>&op=<op>&value=<value>'
 	description:
 		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
@@ -113,7 +113,7 @@ EntitiesHandlerWithID >> search [
 	value := uri queryAt: 'value'.
 	op := uri queryAt: 'op' ]
 		on: KeyNotFound
-		do: [ RessourceNotFound signal ].
+		do: [ MWRessourceNotFound signal ].
 	[ 
 	action := uri queryAt: 'action'.
 	data := self performAction: action ]
@@ -127,12 +127,12 @@ EntitiesHandlerWithID >> search [
 ]
 
 { #category : #query }
-EntitiesHandlerWithID >> uri [
+MWEntitiesHandlerWithID >> uri [
 	uri
 ]
 
 { #category : #query }
-EntitiesHandlerWithID >> uri: anUri [
+MWEntitiesHandlerWithID >> uri: anUri [
 	uri := anUri
 
 ]

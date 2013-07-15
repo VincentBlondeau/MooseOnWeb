@@ -7,5 +7,5 @@ String >> asMessage [
 	self = 'lt' ifTrue: [ ^#< ].
 	self = 'ge' ifTrue: [ ^#>= ].
 	self = 'le' ifTrue: [ ^#<= ].
-	RessourceNotFound signal. 
+	MWRessourceNotFound signal. 
 ]

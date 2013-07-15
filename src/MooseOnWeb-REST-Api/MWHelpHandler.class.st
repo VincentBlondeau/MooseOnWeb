@@ -5,18 +5,18 @@ Instance Variables
 
 "
 Class {
-	#name : #HelpHandler,
-	#superclass : #MooseOnWebRestCall,
+	#name : #MWHelpHandler,
+	#superclass : #MWRestCallHandler,
 	#category : #'MooseOnWeb-REST-Api'
 }
 
 { #category : #accessing }
-HelpHandler class >> pattern [
+MWHelpHandler class >> pattern [
 	^ #('mooseOnWeb' 'help')
 ]
 
 { #category : #public }
-HelpHandler >> get [ 
+MWHelpHandler >> get [ 
 	<mooseonweb:'GET' name:'/help' description:'List the commands available' >
 	"answer  := Dictionary new.
 	MooseOnWebRestCall allSubclasses do:[ :class | 
@@ -25,9 +25,19 @@ HelpHandler >> get [
 	"
 	answer := String
 		streamContents: [ :stream | 
-			MooseOnWebRestCall allSubclasses do:[ :class | 
+			MWRestCallHandler allSubclasses do:[ :class | 
 				(Pragma allNamed: #mooseonweb:name:description: in: class )
-				do: [:p | stream nextPutAll: (p arguments at:1), ' : ', (p arguments at:2), ' : ' , (p arguments at:3), String crlf  ].].
+				do: [:p | 
+					stream 
+						nextPutAll: (p arguments first); 
+						nextPutAll: ' : ';
+						nextPutAll: (p arguments second);
+						nextPutAll: ' : ';
+						nextPutAll: (p arguments third);
+						nextPutAll: String crlf 
+				]
+			].
+				
 		].
 	self sendText.
 ]

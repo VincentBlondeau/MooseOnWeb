@@ -1,5 +1,5 @@
 Class {
-	#name : #MooseOnWebServerTests,
+	#name : #MWServerTests,
 	#superclass : #TestCase,
 	#instVars : [
 		'server',
@@ -9,31 +9,33 @@ Class {
 }
 
 { #category : #'initialize-release' }
-MooseOnWebServerTests >> model [
+MWServerTests >> model [
 	" to debug and avoid caching behavior: LANPackageTestResource reset."
 	^ LANPackageTestResource current model 
 	
 ]
 
 { #category : #'initialize-release' }
-MooseOnWebServerTests >> setUp [
+MWServerTests >> setUp [
 	server := ZnServer startOn: 1710 + 10 atRandom.
-	server delegate: MooseOnWebRestServerDelegate new.
+	server delegate: MWRestServerDelegate new.
 	client := ZnClient new
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	self model install
+	self model install.
+	
+	server debugMode: true
 ]
 
 { #category : #'initialize-release' }
-MooseOnWebServerTests >> tearDown [
+MWServerTests >> tearDown [
 	client close.
 	server stop.
 	MooseModel root remove: 	self model.
 ]
 
 { #category : #'initialize-release' }
-MooseOnWebServerTests >> testServer [
+MWServerTests >> testServer [
 	self assert: server isRunning
 ]
