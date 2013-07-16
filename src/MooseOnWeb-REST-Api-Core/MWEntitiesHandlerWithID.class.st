@@ -11,10 +11,6 @@ entity
 Class {
 	#name : #MWEntitiesHandlerWithID,
 	#superclass : #MWRestCallHandler,
-	#instVars : [
-		'entity',
-		'uri'
-	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
 
@@ -24,115 +20,114 @@ MWEntitiesHandlerWithID class >> pattern [
 ]
 
 { #category : #query }
-MWEntitiesHandlerWithID >> action [
+MWEntitiesHandlerWithID >> action: anEntity [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description:
 		'Apply an action on an entity'>
 	| action |
-	action := uri queryAt: 'action'.
-	answer := self performAction: action.
+	action := request uri queryAt: 'action'.
+	^ self performAction: action on: anEntity.
+]
+
+{ #category : #public }
+MWEntitiesHandlerWithID >> actionMapping [
+	^ {('q' -> [ :anEntity | self query: anEntity ]).
+	('action' -> [ :anEntity | self action: anEntity ]).
+	('actions' -> [ :anEntity | self actions: anEntity ])} asDictionary
+]
+
+{ #category : #query }
+MWEntitiesHandlerWithID >> actions: anEntity [
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?actions=<action1 name>,<action2 name>,...' description:
+		'Execute all actions on an Entity and return a dictionary with action name as keys and results as values'>
+	| actions actionList |
+	self halt.
+	actionList := self listActions: anEntity.
+	actions := (request uri queryAt: 'actions') subStrings: ','.
+	actions
+		do: [ :anAction | 
+			(actionList includes: anAction)
+				ifFalse: [ MWRessourceNotFound signalFor: anAction ] ].
+	^ (actions collect: [ :anAction | anAction -> (anEntity perform: anAction asSymbol) ]) asDictionary
 ]
 
 { #category : #accessing }
-MWEntitiesHandlerWithID >> entity [
-	^entity
-	
-]
-
-{ #category : #accessing }
-MWEntitiesHandlerWithID >> entity: anEntity [
-	anEntity ifNil: [ MWRessourceNotFound signal ] ifNotNil: [ entity := anEntity ]
+MWEntitiesHandlerWithID >> findEntityWithID: anEntityID [
+	^ (self listMooseModels collect: [ :m | m objectWithID: anEntityID ])
+		detect: [ :anEntity | anEntity notNil ]
+		ifNone: [ MWRessourceNotFound signalFor: anEntityID ]
 ]
 
 { #category : #public }
 MWEntitiesHandlerWithID >> get [
-	<mooseonweb:'GET' name:'/entities/<mooseID>' description:'Get the informations on the entity <mooseID>' >
-	
-[	[ 
-	self entity: (MooseEntity objectWithID: variables first asInteger).
+	<mooseonweb: 'GET' name: '/entities/<mooseID>' description: 'Get the informations on the entity <mooseID>'>
+	| mapping requestedActions currentEntity uri |
+	mapping := self actionMapping.
+	[ 
+	[ 
+	currentEntity := self findEntityWithID: variables first asInteger.
 	uri := request uri.
 	uri hasQuery
-		ifFalse: [ answer := entity ]
+		ifFalse: [ self sendJsonFrom: currentEntity ]
 		ifTrue: [ 
-			| predicateKeys |
-			predicateKeys := uri queryKeys.
-			(predicateKeys includes: 'q')
-				ifTrue: [ self query ]
-				ifFalse: [ 
-					(predicateKeys includes: 'action')
-						ifTrue: [ self action ]
-						ifFalse: [ MWInvalidSymbol signal ] ] ].
-	self sendJson ]
+			requestedActions := uri queryKeys select: [ :aKey | mapping includesKey: aKey ].
+			requestedActions size = 1
+				ifFalse: [ self badRequest: 'One action per request' ]
+				ifTrue: [ self sendJsonFrom: ((mapping at: requestedActions first) value: currentEntity) ] ] ]
 		on: MWRessourceNotFound
-			do: [ :ex | self notFound ]]
+		do: [ :ex | self notFound ] ]
 		on: MWInvalidSymbol
-			do: [ :ex | self badRequest: 'Erreur dans la requete' ]
+		do: [ :ex | self badRequest: 'Erreur dans la requete' ]
 ]
 
 { #category : #private }
-MWEntitiesHandlerWithID >> listActions [
-	^ self entity allPropertySelectors values
-		select: [ :aSelector | 
-			| r |
-			r := self entity perform: aSelector.
-			r isMooseGroup
-				ifTrue: [ r isEmpty not ]
-				ifFalse: [ r isNil not ] ]
+MWEntitiesHandlerWithID >> listActions: anEntity [
+	^ anEntity allPropertySelectors values
 ]
 
 { #category : #private }
-MWEntitiesHandlerWithID >> performAction: action. [
-	(self listActions includes: action)
-		ifTrue: [ ^entity perform: action asSymbol ]
-		ifFalse: [ MWRessourceNotFound signal ]
+MWEntitiesHandlerWithID >> performAction: action on: anEntity [
+	((self listActions:anEntity) includes: action)
+		ifTrue: [ ^anEntity perform: action asSymbol ]
+		ifFalse: [ MWRessourceNotFound signalFor: action ]
 ]
 
 { #category : #query }
-MWEntitiesHandlerWithID >> query [
+MWEntitiesHandlerWithID >> query: anEntity [
 <mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'List the operations getting the properties of the <mooseID> entities' >
 	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
-	q := uri queryAt: 'q'.
-	(q equalsTo: 'actions')
+	q := request uri queryAt: 'q'.
+	^ (q equalsTo: 'actions')
 		ifTrue: [ 
-			answer := (self listActions) sort ]
+			(self listActions: anEntity) sort ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
-				ifTrue: [ self search ]
+				ifTrue: [ self search: anEntity ]
 				ifFalse: [ MWRessourceNotFound  signal ] ]
 ]
 
 { #category : #query }
-MWEntitiesHandlerWithID >> search [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[action=<value>&]key=<propriete>&op=<op>&value=<value>'
+MWEntitiesHandlerWithID >> search: anEntity [
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<propriete>&op=<op>&value=<value>'
 	description:
 		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
-	| key op value action data |
+	| key op value action data uri |
 	[ 
+	uri:= request uri.
 	key := uri queryAt: 'key'.
 	value := uri queryAt: 'value'.
 	op := uri queryAt: 'op' ]
 		on: KeyNotFound
 		do: [ MWRessourceNotFound signal ].
 	[ 
-	action := uri queryAt: 'action'.
+	action := uri queryAt: 'onAction'.
 	data := self performAction: action ]
 		on: KeyNotFound
-		do: [ data := entity ].
+		do: [ data := anEntity ].
 	data isCollection
 		ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
-	answer := ((data select: [ :el | el respondsTo: key asSymbol ])
+	^ ((data select: [ :el | el respondsTo: key asSymbol ])
 		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection.
 	
-]
-
-{ #category : #query }
-MWEntitiesHandlerWithID >> uri [
-	uri
-]
-
-{ #category : #query }
-MWEntitiesHandlerWithID >> uri: anUri [
-	uri := anUri
-
 ]

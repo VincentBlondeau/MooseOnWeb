@@ -35,13 +35,8 @@ MWModelsHandler >> get [
 	"the method asZnMimeType doesn't work properly !"
 	
 	"request accept asZnMimeType = ZnMimeType applicationJson ifTrue: [ "
- 	self listMooseModels." ] ifFalse:  [ self unsupportedMediaType ]"
-	self sendJson 
-]
-
-{ #category : #operations }
-MWModelsHandler >> listMooseModels [
-	answer:= MooseModel root
+ 	self sendJsonFrom: self listMooseModels." ] ifFalse:  [ self unsupportedMediaType ]"
+	
 ]
 
 { #category : #public }

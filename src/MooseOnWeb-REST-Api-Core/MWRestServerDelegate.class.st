@@ -7,6 +7,9 @@ Instance Variables
 Class {
 	#name : #MWRestServerDelegate,
 	#superclass : #ZnJSONRestServerDelegate,
+	#instVars : [
+		'mooseModelList'
+	],
 	#classVars : [
 		'server'
 	],
@@ -20,9 +23,22 @@ MWRestServerDelegate class >> server [
 
 { #category : #managing }
 MWRestServerDelegate class >> serverStartOn: port [
+	self serverStartOn: port models: MooseModel root entities
+]
+
+{ #category : #managing }
+MWRestServerDelegate class >> serverStartOn: port models: aMooseModelCollection [
+	self server
+		ifNotNil: [ 
+			self server isRunning
+				ifTrue: [ self serverStop ] ].
 	server := ZnServer startOn: port.
-	server delegate: self class new.
-	server register.
+	server
+		delegate:
+			(self new
+				mooseModelList: aMooseModelCollection;
+				yourself).
+	server register
 ]
 
 { #category : #managing }
@@ -51,4 +67,14 @@ MWRestServerDelegate >> handleRequest: request [
 MWRestServerDelegate >> initialize [ 
 	self uriSpace: ZnCallHierarchyRestUriSpace new.
 	self uriSpace rootClass: MWRestCallHandler
+]
+
+{ #category : #'as yet unclassified' }
+MWRestServerDelegate >> mooseModelList [
+	^ mooseModelList
+]
+
+{ #category : #'as yet unclassified' }
+MWRestServerDelegate >> mooseModelList: aCollectionOfMooseModels [
+	mooseModelList := aCollectionOfMooseModels
 ]

@@ -50,6 +50,11 @@ MWRestCallHandler >> jsonResponse: data [
 	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson setCharSetUTF8))
 ]
 
+{ #category : #'as yet unclassified' }
+MWRestCallHandler >> listMooseModels [
+	^ self delegate mooseModelList
+]
+
 { #category : #'error handling' }
 MWRestCallHandler >> notImplemented [
 	response := self delegate 
@@ -59,15 +64,13 @@ MWRestCallHandler >> notImplemented [
 ]
 
 { #category : #conversion }
-MWRestCallHandler >> sendJson [
-	self jsonResponse: self answer	"aResult isMooseEntity
-		ifTrue: [ self jsonResponseFromJson: aResult asJson ]
-		ifFalse: [ self jsonResponse: aResult ]"
+MWRestCallHandler >> sendJsonFrom: aData [
+	self jsonResponse: aData
 ]
 
 { #category : #conversion }
-MWRestCallHandler >> sendText [	
-	self response: (ZnResponse ok: (ZnEntity with: self answer type: ZnMimeType textPlain)).
+MWRestCallHandler >> sendText: aText [
+	self response: (ZnResponse ok: (ZnEntity with: aText type: ZnMimeType textPlain)).
 	
 ]
 
