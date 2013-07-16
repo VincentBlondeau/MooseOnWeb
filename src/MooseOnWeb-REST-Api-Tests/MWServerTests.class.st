@@ -28,31 +28,36 @@ MWServerTests >> modelTest: anObject [
 
 { #category : #'initialize-release' }
 MWServerTests >> rootModelForTestServer [
-	^ MooseModel root
+	^ { self modelTest }
 ]
 
 { #category : #'initialize-release' }
 MWServerTests >> setUp [
+	self modelTest: self createTestModel.
 	server := ZnServer startOn: 1710 + 10 atRandom.
-	server delegate: MWRestServerDelegate new.
+	server
+		delegate:
+			(MWRestServerDelegate new
+				mooseModelList:  self rootModelForTestServer ;
+				yourself).
+	server register.
 	client := ZnClient new
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	modelTest := self createTestModel.
-	modelTest install.
 	
+	self flag: 'Only to debug mode'	.
 	server debugMode: true
 ]
 
 { #category : #'initialize-release' }
 MWServerTests >> tearDown [
 	client close.
-	server stop.
-	[ self rootModelForTestServer remove: self modelTest ] on: NotFound do: [ :e | ] .
+	server stop
 ]
 
 { #category : #'initialize-release' }
 MWServerTests >> testServer [
-	self assert: server isRunning
+	self assert: server isRunning.
+	self assert: server delegate mooseModelList size equals: 1
 ]

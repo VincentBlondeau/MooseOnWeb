@@ -128,6 +128,24 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionExistingButNotAllowed [
 ]
 
 { #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
+
+	| output |
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'actions' put: 'allClasses,numberOfPackages'.
+	output := client get.
+	self assert: client isSuccess.
+	self assert: (output includesSubstring: 'allClasses').
+	
+	self modelTest allClasses entities
+		do: [ :p | 
+			self assert: (output includesSubstring: '"' , p mooseName , '"').
+			self assert: (output includesSubstring: p mooseID asString ) ].
+	self assert: (output includesSubstring: '"numberOfPackages" : 7').
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+]
+
+{ #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetExecutingAnNonExistingAction [
 
 	client addPathSegment: self modelTest mooseID asString.
