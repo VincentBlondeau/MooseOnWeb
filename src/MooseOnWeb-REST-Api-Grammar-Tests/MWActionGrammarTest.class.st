@@ -15,6 +15,11 @@ MWActionGrammarTest >> testCombineActions1 [
 ]
 
 { #category : #'as yet unclassified' }
+MWActionGrammarTest >> testFullActionsSentence [
+	self parse: 'allClasses,allClasses!allFunctions;size' rule: #actionsExpression
+]
+
+{ #category : #'as yet unclassified' }
 MWActionGrammarTest >> testOnEachAction [
 	self parse: 'allClasses!numberOfMethods' rule: #actionExpression
 ]
@@ -22,6 +27,11 @@ MWActionGrammarTest >> testOnEachAction [
 { #category : #'as yet unclassified' }
 MWActionGrammarTest >> testOnResultAction [
 	self parse: 'allClasses;size' rule: #actionExpression
+]
+
+{ #category : #'as yet unclassified' }
+MWActionGrammarTest >> testSimpleActionsSentence [
+	self parse: 'allClasses,allPackages' rule: #actionsExpression
 ]
 
 { #category : #'as yet unclassified' }
