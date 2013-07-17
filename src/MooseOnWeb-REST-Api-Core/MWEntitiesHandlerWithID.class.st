@@ -40,7 +40,6 @@ MWEntitiesHandlerWithID >> actions: anEntity [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?actions=<action1 name>,<action2 name>,...' description:
 		'Execute all actions on an Entity and return a dictionary with action name as keys and results as values'>
 	| actions actionList |
-	self halt.
 	actionList := self listActions: anEntity.
 	actions := (request uri queryAt: 'actions') subStrings: ','.
 	actions
