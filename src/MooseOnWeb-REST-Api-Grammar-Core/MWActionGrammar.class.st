@@ -6,14 +6,15 @@ Class {
 		'action',
 		'selector',
 		'argument',
-		'actionExpression'
+		'actionExpression',
+		'actionsExpression'
 	],
 	#category : #'MooseOnWeb-REST-Api-Grammar-Core'
 }
 
 { #category : #accessing }
 MWActionGrammar >> action [
-	^ selector, argument optional
+	^ selector, ($: asParser, argument) optional
 
 ]
 
@@ -32,12 +33,12 @@ MWActionGrammar >> actionExpression [
 
 { #category : #accessing }
 MWActionGrammar >> actionsExpression [
-	actionExpression , ( $, actionExpression ) star
+	^ actionExpression , ( $, asParser, actionExpression ) star
 ]
 
 { #category : #accessing }
 MWActionGrammar >> argument [
-	^ $: asParser, #word asParser plus 
+	^ #word asParser plus 
 
 
 ]
@@ -54,7 +55,7 @@ MWActionGrammar >> onResultBlock [
 
 { #category : #accessing }
 MWActionGrammar >> parens [
-	^ $( asParser, actionExpression , $) asParser 
+	^ $( asParser, actionsExpression , $) asParser 
 ]
 
 { #category : #accessing }
@@ -64,7 +65,7 @@ MWActionGrammar >> selector [
 
 { #category : #accessing }
 MWActionGrammar >> start [
-	^ actionExpression
+	^ actionsExpression end
 ]
 
 { #category : #blocks }
