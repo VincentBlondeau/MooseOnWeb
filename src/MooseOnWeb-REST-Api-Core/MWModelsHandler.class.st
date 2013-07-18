@@ -24,11 +24,9 @@ MWModelsHandler >> delete [
 
 { #category : #public }
 MWModelsHandler >> deleteModel: id [
-	
 	| modelsToDelete |
 	modelsToDelete := self delegate mooseModelList select: [ :m | m mooseID = id ].
-	modelsToDelete ifEmpty: [ MWRessourceNotFound signalFor: self request contents ].
-	
+	modelsToDelete ifEmpty: [ MWRessourceNotFound signalFor: id ].
 	self delegate mooseModelList removeAllSuchThat: [ :m | m mooseID = id ] 
 ]
 
@@ -51,15 +49,12 @@ MWModelsHandler >> post [
 	data := self request contents.
 	model := MooseModel new.
 	stream := ReadStream on: data.
-	[ model importFromMSEStream: stream ]
-		on: Notification
-		do: [ :e | e resume ].
+	model importFromMSEStream: stream .
 	model name: 'Imported Model'.
 	model isEmpty
 		ifTrue: [ MWEmptyRessource signal ].
-	[ id := model install mooseID ]
-		on: Notification
-		do: [ :e | e resume ].
+	self delegate mooseModelList add: model.
+	id := model mooseID.
 	self created: '/entities/' , id asString ]
 		on: Error
 		do: [ :e | self badRequest: 'MSE file expected' ]
