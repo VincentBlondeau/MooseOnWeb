@@ -57,6 +57,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteAListOfActions [
 		answers: 3.
 	entity should
 		receive: #allPropertySelectors;
+		exactly: 3;
 		answers: selectors.
 	self assert: (handler actions: entity) equals: results
 ]
@@ -74,7 +75,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteANonExistingAction [
 						at: 'aNotPresentAction' put: 'aNotPresentAction';
 						yourself).
 	entity shouldnt receive: #anAction.
-	self should: [ handler action: entity ] raise: MWRessourceNotFound
+	self should: [ handler action: entity ] raise: MWInvalidAction 
 ]
 
 { #category : #running }
@@ -188,7 +189,7 @@ MWEntitiesHandlerWithIDTest >> testSearchANonExistingEntity [
 	model := context mock: 'model'.
 	model should receive: #objectWithID:; with: 42; answers: nil.
 	delegate should receive: #mooseModelList; answers: { model }.
-	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound
+	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound  
 ]
 
 { #category : #running }
