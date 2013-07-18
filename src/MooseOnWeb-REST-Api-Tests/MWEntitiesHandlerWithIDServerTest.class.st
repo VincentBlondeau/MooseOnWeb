@@ -136,11 +136,6 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
 	output := client get.
 	self assert: client isSuccess.
 	self assert: (output includesSubstring: 'allClasses').
-	
-	self modelTest allClasses entities
-		do: [ :p | 
-			self assert: (output includesSubstring: '"' , p mooseName , '"').
-			self assert: (output includesSubstring: p mooseID asString ) ].
 	self assert: (output includesSubstring: '"numberOfPackages" : 7').
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
@@ -214,7 +209,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 	client queryAt: 'key' put: 'fanIn'.
 	client queryAt: 'op' put: 'eq'.
 	client queryAt: 'value' put: '5'.
-	client queryAt: 'action' put: 'allClasses'.
+	client queryAt: 'actionOn' put: 'allClasses'.
 	output := client get.
 	self assert: client isSuccess.
 	self modelTest allClasses

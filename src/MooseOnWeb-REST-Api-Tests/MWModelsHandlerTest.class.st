@@ -29,9 +29,8 @@ MWModelsHandlerTest >> testGet [
 	output := client get.
 	self assert: client isSuccess.
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
-	self assert: (output includesSubstring: self rootModelForTestServer mooseName).
-	self deny: (output includesSubstring: '"id" : ',self rootModelForTestServer mooseID asString,',').
-	self rootModelForTestServer entities
+	self assert: (output includesSubstring: '[').
+	self rootModelForTestServer 
 		do: [ :e | 
 			self assert: (output includesSubstring: e mooseName).
 			self assert: (output includesSubstring: e mooseID asString) ]
