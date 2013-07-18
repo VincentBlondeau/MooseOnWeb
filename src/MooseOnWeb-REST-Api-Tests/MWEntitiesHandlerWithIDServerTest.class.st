@@ -209,7 +209,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 	client queryAt: 'key' put: 'fanIn'.
 	client queryAt: 'op' put: 'eq'.
 	client queryAt: 'value' put: '5'.
-	client queryAt: 'actionOn' put: 'allClasses'.
+	client queryAt: 'onAction' put: 'allClasses'.
 	output := client get.
 	self assert: client isSuccess.
 	self modelTest allClasses

@@ -34,7 +34,7 @@ MWEntitiesHandlerWithIDTest >> setUp [
 		delegate: delegate; yourself.
 			
 	"For Debug purpose only !"
-	"context visualize: handler."
+"	context visualize: handler."
 ]
 
 { #category : #running }
@@ -88,7 +88,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteANonValidListOfActions [
 	entity should
 		receive: #allPropertySelectors;
 		answers: selectors.
-	self should: [ handler actions: entity ] raise: MWRessourceNotFound 
+	self should: [ handler actions: entity ] raise: MWInvalidAction 
 ]
 
 { #category : #running }
