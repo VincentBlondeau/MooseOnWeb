@@ -71,8 +71,8 @@ MWEntitiesHandlerWithID >> get [
 				ifTrue: [ self sendJsonFrom: ((mapping at: requestedActions first) value: currentEntity) ] ] ]
 		on: MWRessourceNotFound
 		do: [ :ex | self notFound ] ]
-		on: MWInvalidSymbol
-		do: [ :ex | self badRequest: 'Erreur dans la requete' ]
+		on: MWInvalidAction
+		do: [ :ex | self notFound ]
 ]
 
 { #category : #private }
@@ -84,7 +84,7 @@ MWEntitiesHandlerWithID >> listActions: anEntity [
 MWEntitiesHandlerWithID >> performAction: action on: anEntity [
 	((self listActions:anEntity) includes: action)
 		ifTrue: [ ^anEntity perform: action asSymbol ]
-		ifFalse: [ MWRessourceNotFound signalFor: action ]
+		ifFalse: [ MWInvalidAction signalFor: action ]
 ]
 
 { #category : #query }
