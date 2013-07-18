@@ -39,14 +39,11 @@ MWEntitiesHandlerWithID >> actionMapping [
 MWEntitiesHandlerWithID >> actions: anEntity [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?actions=<action1 name>,<action2 name>,...' description:
 		'Execute all actions on an Entity and return a dictionary with action name as keys and results as values'>
-	| actions actionList |
-	actionList := self listActions: anEntity.
-	actions := (request uri queryAt: 'actions') subStrings: ','.
-	actions
-		do: [ :anAction | 
-			(actionList includes: anAction)
-				ifFalse: [ MWRessourceNotFound signalFor: anAction ] ].
-	^ (actions collect: [ :anAction | anAction -> (anEntity perform: anAction asSymbol) ]) asDictionary
+	^ (MWActionRequestBuilder parse: (request uri queryAt: 'actions'))
+		acceptVisitor:
+			(MWRequestExecutorVisitor new
+				currentEntity: anEntity;
+				yourself)
 ]
 
 { #category : #accessing }
@@ -121,7 +118,7 @@ MWEntitiesHandlerWithID >> search: anEntity [
 		do: [ MWRessourceNotFound signal ].
 	[ 
 	action := uri queryAt: 'onAction'.
-	data := self performAction: action ]
+	data := self performAction: action on: anEntity ]
 		on: KeyNotFound
 		do: [ data := anEntity ].
 	data isCollection
