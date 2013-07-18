@@ -42,14 +42,17 @@ MWRequestExecutorVisitor >> performAction: anAction on: anEntity [
 MWRequestExecutorVisitor >> visitMWRequestNodeAction: aMWRequestNodeAction [
 	(self checkActionsAreAllowed: {(aMWRequestNodeAction selector)} on: currentEntity)
 		ifFalse: [ MWInvalidAction signal ].
-	^ self performAction: aMWRequestNodeAction selector on: currentEntity
+	^ aMWRequestNodeAction selector -> (self performAction: aMWRequestNodeAction selector on: currentEntity)
 ]
 
 { #category : #visit }
 MWRequestExecutorVisitor >> visitMWRequestNodeMultipleExpression: aMWRequestNodeMultipleExpression [
 	| entity |
 	entity := self currentEntity.
-	^ aMWRequestNodeMultipleExpression expressions collect: [ :expr | self currentEntity: entity. expr acceptVisitor: self ]
+	^ (aMWRequestNodeMultipleExpression expressions
+		collect: [ :expr | 
+			self currentEntity: entity.
+			expr acceptVisitor: self ]) asDictionary
 ]
 
 { #category : #visit }
