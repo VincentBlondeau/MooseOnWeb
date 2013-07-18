@@ -28,7 +28,7 @@ MWServerTests >> modelTest: anObject [
 
 { #category : #'initialize-release' }
 MWServerTests >> rootModelForTestServer [
-	^ { self modelTest }
+	^ { self modelTest } asSet
 ]
 
 { #category : #'initialize-release' }
@@ -47,7 +47,7 @@ MWServerTests >> setUp [
 		yourself.
 	
 	self flag: 'Only to debug mode'	.
-	server debugMode: true
+	"server debugMode: true"
 ]
 
 { #category : #'initialize-release' }

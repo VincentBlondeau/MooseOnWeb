@@ -8,8 +8,8 @@ Class {
 MWModelsHandlerTest >> testDelete [
 	|  id |
 	
-	self assert: (self rootModelForTestServer includes: modelTest).
-	
+	self assert: (server delegate mooseModelList includes: modelTest).
+	self deny: server delegate mooseModelList isSequenceable .
 	client addPathSegment: 'models'.
 	id := self modelTest mooseID.
 	client contents: id asString.
@@ -18,7 +18,7 @@ MWModelsHandlerTest >> testDelete [
 	self assert: client isSuccess.
 	self assert: client response headers contentType equals: ZnMimeType textPlain.
 	
-	self deny: (self rootModelForTestServer includes: modelTest).
+	self deny: (server delegate mooseModelList includes: modelTest).
 
 ]
 
@@ -75,7 +75,7 @@ MWModelsHandlerTest >> testGetModelEntitiesListAccessID [
 MWModelsHandlerTest >> testPost [
 	|  size |
 	client addPathSegment: 'models'.
-	size := self rootModelForTestServer size.
+	size := server delegate mooseModelList size.
 	client contents: '(
 	(FAMIX.Namespace (id: 1) (name ''aNamespace''))
 
@@ -94,8 +94,8 @@ MWModelsHandlerTest >> testPost [
 	
 	self assert: client isSuccess.
 	self assert: client response headers contentType equals: ZnMimeType applicationJson .
-	
 
-	self assert: self rootModelForTestServer size equals: size +1.
-	self rootModelForTestServer last remove
+
+	self assert: server delegate mooseModelList size equals: size +1.
+	self fail: 'side effect use Mocks !'
 ]

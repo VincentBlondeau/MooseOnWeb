@@ -1,44 +1,23 @@
 Class {
-	#name : #MWEntitiesHandlerWithIDTest,
-	#superclass : #BabyMockTestCase,
-	#instVars : [
-		'server',
-		'client',
-		'url',
-		'request',
-		'entity',
-		'handler',
-		'theMooseGroup',
-		'theEmptyMooseGroup',
-		'delegate'
-	],
+	#name : #MWEntitiesHandlerWithIDTests,
+	#superclass : #MWMockTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> setUp [
-	"The #class method aren't well understood by the mock so can't test #respondsTo: by this way"
-	request := context mock: 'request'.
-	url := context mock: 'url'.
-	entity := context mock: 'entity'.
-	delegate := context mock: 'delegate'.
-	request can
-		receive: #uri;
-		answers: url.
-	theEmptyMooseGroup := MooseGroup new.
-	theMooseGroup := theEmptyMooseGroup
-		add: entity;
-		yourself.
+MWEntitiesHandlerWithIDTests >> setUp [
+	super setUp.
 	handler := MWEntitiesHandlerWithID new
 		request: request;
-		delegate: delegate; yourself.
-			
+		delegate: delegate;
+		yourself	
+	
 	"For Debug purpose only !"
-"	context visualize: handler."
+	"context visualize: handler."
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testExecuteAListOfActions [
+MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 	| selectors results |
 	selectors := {#anAction -> #anAction . #aSecondAction -> #aSecondAction .#aThirdAction -> #aThirdAction } asDictionary.
 	results := {#anAction -> '1' . #aSecondAction -> '2'.#aThirdAction -> 3} asDictionary.
@@ -63,7 +42,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteAListOfActions [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testExecuteANonExistingAction [
+MWEntitiesHandlerWithIDTests >> testExecuteANonExistingAction [
 	url should
 		receive: #queryAt:;
 		with: 'action';
@@ -79,7 +58,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteANonExistingAction [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testExecuteANonValidListOfActions [
+MWEntitiesHandlerWithIDTests >> testExecuteANonValidListOfActions [
 	| selectors |
 	selectors := {#anAction -> #anAction . #aSecondAction -> #aSecondAction .#aThirdAction -> #aThirdAction } asDictionary.
 	url can
@@ -93,7 +72,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteANonValidListOfActions [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testExecuteAction [
+MWEntitiesHandlerWithIDTests >> testExecuteAction [
 	url can
 		receive: #queryAt:;
 		with: 'action';
@@ -111,7 +90,7 @@ MWEntitiesHandlerWithIDTest >> testExecuteAction [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testQueryAction [
+MWEntitiesHandlerWithIDTests >> testQueryAction [
 	| selectors |
 	url should
 		receive: #queryAt:;
@@ -127,7 +106,7 @@ MWEntitiesHandlerWithIDTest >> testQueryAction [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testQuerySearch [
+MWEntitiesHandlerWithIDTests >> testQuerySearch [
 	"teste la recherche sur une entitié moose. "
 
 	url can
@@ -154,7 +133,7 @@ MWEntitiesHandlerWithIDTest >> testQuerySearch [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testQuerySearchWithEmptyResult [
+MWEntitiesHandlerWithIDTests >> testQuerySearchWithEmptyResult [
 	"test searching on a MooseGroup that does not contain a matching entity"
 
 	url can
@@ -184,7 +163,7 @@ MWEntitiesHandlerWithIDTest >> testQuerySearchWithEmptyResult [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testSearchANonExistingEntity [
+MWEntitiesHandlerWithIDTests >> testSearchANonExistingEntity [
 	| model |
 	model := context mock: 'model'.
 	model should receive: #objectWithID:; with: 42; answers: nil.
@@ -193,7 +172,7 @@ MWEntitiesHandlerWithIDTest >> testSearchANonExistingEntity [
 ]
 
 { #category : #running }
-MWEntitiesHandlerWithIDTest >> testSearchAnExistingEntity [
+MWEntitiesHandlerWithIDTests >> testSearchAnExistingEntity [
 	| model |
 	model := context mock: 'model'.
 	model should
