@@ -42,27 +42,24 @@ MWRequestExecutorVisitor >> performAction: anAction on: anEntity [
 MWRequestExecutorVisitor >> visitMWRequestNodeAction: aMWRequestNodeAction [
 	(self checkActionsAreAllowed: {(aMWRequestNodeAction selector)} on: currentEntity)
 		ifFalse: [ MWInvalidAction signal ].
-	^ aMWRequestNodeAction selector -> (self performAction: aMWRequestNodeAction selector on: currentEntity)
+	^ self performAction: aMWRequestNodeAction selector on: currentEntity
 ]
 
 { #category : #visit }
 MWRequestExecutorVisitor >> visitMWRequestNodeMultipleExpression: aMWRequestNodeMultipleExpression [
 	| entity |
 	entity := self currentEntity.
-	^ (aMWRequestNodeMultipleExpression expressions
-		collect: [ :expr | 
-			self currentEntity: entity.
-			expr acceptVisitor: self ]) asDictionary
+	^ aMWRequestNodeMultipleExpression expressions collect: [ :expr | self currentEntity: entity. expr acceptVisitor: self ]
 ]
 
 { #category : #visit }
 MWRequestExecutorVisitor >> visitMWRequestNodeOnEachExpression: aMWRequestNodeOnEachExpression [
 	| groupEntity |
 	groupEntity := aMWRequestNodeOnEachExpression left acceptVisitor: self.
-	^ groupEntity
+	^ (groupEntity
 		collect: [ :entity | 
 			self currentEntity: entity.
-			aMWRequestNodeOnEachExpression right acceptVisitor: self ]
+			aMWRequestNodeOnEachExpression right acceptVisitor: self ]) asOrderedCollection
 ]
 
 { #category : #visit }
@@ -77,5 +74,5 @@ MWRequestExecutorVisitor >> visitMWRequestNodeUnionExpression: aMWRequestNodeUni
 	entity := self currentEntity.
 	result := aMWRequestNodeUnionExpression left acceptVisitor: self.
 	self currentEntity: entity.
-	^ result, aMWRequestNodeUnionExpression right acceptVisitor: self
+	^ (result, aMWRequestNodeUnionExpression right acceptVisitor: self) asOrderedCollection 
 ]
