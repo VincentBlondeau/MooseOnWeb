@@ -11,9 +11,6 @@ MWEntitiesHandlerWithIDTests >> setUp [
 		request: request;
 		delegate: delegate;
 		yourself	.
-	
-	"For Debug purpose only !"
-	context visualize: handler.
 ]
 
 { #category : #running }
@@ -27,7 +24,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 	3}.
 	url can
 		receive: #queryAt:;
-		with: 'actions';
+		with: 'action';
 		answers: 'anAction,aSecondAction,aThirdAction'.
 	entity can
 		receive: #anAction;
@@ -42,7 +39,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 		receive: #allPropertySelectors;
 		exactly: 3;
 		answers: selectors.
-	self assert: (handler actions: entity) equals: results
+	self assert: (handler action: entity) equals: results
 ]
 
 { #category : #running }
@@ -67,12 +64,12 @@ MWEntitiesHandlerWithIDTests >> testExecuteANonValidListOfActions [
 	selectors := {#anAction -> #anAction . #aSecondAction -> #aSecondAction .#aThirdAction -> #aThirdAction } asDictionary.
 	url can
 		receive: #queryAt:;
-		with: 'actions';
+		with: 'action';
 		answers: 'anActionaSecondAction,aThirdAction'.
 	entity should
 		receive: #allPropertySelectors;
 		answers: selectors.
-	self should: [ handler actions: entity ] raise: MWInvalidAction 
+	self should: [ handler action: entity ] raise: MWInvalidAction 
 ]
 
 { #category : #running }

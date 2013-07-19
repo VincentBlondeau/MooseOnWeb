@@ -16,9 +16,7 @@ MWModelsHandlerMockTests >> setUp [
 		request: request;
 		delegate: delegate;
 		yourself.
-	
-	"For Debug purpose only !"
-	"context visualize: handler."
+
 ]
 
 { #category : #'as yet unclassified' }

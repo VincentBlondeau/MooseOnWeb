@@ -108,7 +108,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 	output := client get.
 	self assert: client isSuccess.
 	self deny: (output includesSubstring: self modelTest allClasses mooseID asString).
-	self assert: (output includesSubstring: self modelTest allClasses mooseName).
+	self assert: (output includesSubstring: self modelTest allClasses mooseName ).
 	self modelTest allClasses entities
 		do: [ :p | 
 			self assert: (output includesSubstring: '"' , p mooseName , '"').
@@ -132,11 +132,11 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
 
 	| output |
 	client addPathSegment: self modelTest mooseID asString.
-	client queryAt: 'actions' put: 'allClasses,numberOfPackages'.
+	client queryAt: 'action' put: 'allClasses,numberOfPackages'.
 	output := client get.
 	self assert: client isSuccess.
-	self assert: (output includesSubstring: 'allClasses').
-	self assert: (output includesSubstring: '"numberOfPackages" : 7').
+	self assert: (output includesSubstring: '"name" : "All famixclasses (46)"').
+	self assert: (output includesSubstring: '7').
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
@@ -169,7 +169,6 @@ MWEntitiesHandlerWithIDServerTest >> testGetListAction [
 	output := client get.
 	self assert: client isSuccess.
 	self modelTest allDeclaredProperties do: [ :p | self assert: (output includesSubstring: '"' , p implementingSelector , '"') ].
-	self assert: (output includesSubstring: '[').
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8
 ]
 
