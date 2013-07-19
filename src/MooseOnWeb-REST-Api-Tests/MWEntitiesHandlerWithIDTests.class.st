@@ -91,6 +91,20 @@ MWEntitiesHandlerWithIDTests >> testExecuteAction [
 ]
 
 { #category : #running }
+MWEntitiesHandlerWithIDTests >> testPerformAnActionOn [
+	entity should
+		receive: #anValidAction;
+		answers: 'anValidActionResult'.
+	entity should
+		receive: #allPropertySelectors;
+		answers:
+				(IdentityDictionary new
+						at: #anValidAction put: #anValidAction;
+						yourself).
+	self assert: (handler performAction: #anValidAction on: entity) equals: 'anValidActionResult'
+]
+
+{ #category : #running }
 MWEntitiesHandlerWithIDTests >> testQueryAction [
 	| selectors result |
 	url should
