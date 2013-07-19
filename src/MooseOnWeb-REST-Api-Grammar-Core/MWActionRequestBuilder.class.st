@@ -6,7 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 MWActionRequestBuilder >> action [
-	^ super action ==> [ :p | MWRequestNodeAction selector: p first argument: p second]
+	^ super action ==> [ :p | MWRequestNodeAction selector: p first argument: ((p second) ifNotNilDo: [ :arg | arg second ] )]
 ]
 
 { #category : #'as yet unclassified' }
