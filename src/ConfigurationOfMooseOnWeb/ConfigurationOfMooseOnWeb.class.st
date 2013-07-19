@@ -265,7 +265,7 @@ ConfigurationOfMooseOnWeb >> baseline13: spec [
 				
 			spec group: 'default' 
 				with: #('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core'  'MooseOnWeb-MooseJSONWriter-Core' 
-					'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions') ]
+					'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Tests') ]
 ]
 
 { #category : #baselines }
