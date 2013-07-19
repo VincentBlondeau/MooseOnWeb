@@ -13,8 +13,9 @@ MWActionRequestBuilder >> action [
 MWActionRequestBuilder >> actionsExpression [
 	^ super actionsExpression
 		==> [ :p | 
-			MWRequestNodeMultipleExpression
-				expressions: {(p first)} , (p second ifNotNilDo: [ :s | s collect: [ :e | e second ] ] ifNil: [ #() ]) ]
+			p second
+				ifEmpty: [ p first ]
+				ifNotEmpty: [ MWRequestNodeMultipleExpression expressions: {(p first)} , (p second collect: [ :e | e second ]) ] ]
 ]
 
 { #category : #'as yet unclassified' }
