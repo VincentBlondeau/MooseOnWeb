@@ -72,15 +72,21 @@ MWEntitiesHandlerWithID >> get [
 
 { #category : #private }
 MWEntitiesHandlerWithID >> listActions: anEntity [
-	^ anEntity allPropertySelectors values
+	^ (self listActionsSelectors: anEntity)
 		collect: [ :methodSymbol | methodSymbol -> (anEntity getCommentInMethod: methodSymbol) ]
 ]
 
+{ #category : #private }
+MWEntitiesHandlerWithID >> listActionsSelectors: anEntity [
+	^ anEntity allPropertySelectors values
+		
+]
+
 { #category : #query }
-MWEntitiesHandlerWithID >> performAction: action on: anEntity [
-	((self listActions:anEntity) includes: action)
-		ifTrue: [ ^anEntity perform: action asSymbol ]
-		ifFalse: [ MWInvalidAction signalFor: action ]
+MWEntitiesHandlerWithID >> performAction: anActionSymbol on: anEntity [
+	((self listActionsSelectors: anEntity) includes: anActionSymbol)
+		ifTrue: [ ^anEntity perform: anActionSymbol asSymbol ]
+		ifFalse: [ MWInvalidAction signalFor: anActionSymbol ]
 ]
 
 { #category : #query }
@@ -106,7 +112,7 @@ MWEntitiesHandlerWithID >> search: anEntity [
 		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
 	| key op value action data uri |
 	[ 
-	uri:= request uri.
+	uri := request uri.
 	key := uri queryAt: 'key'.
 	value := uri queryAt: 'value'.
 	op := uri queryAt: 'op' ]
@@ -114,12 +120,11 @@ MWEntitiesHandlerWithID >> search: anEntity [
 		do: [ MWRessourceNotFound signal ].
 	[ 
 	action := uri queryAt: 'onAction'.
-	data := self performAction: action on: anEntity ]
+	data := self performAction: action on: anEntity.  ]
 		on: KeyNotFound
 		do: [ data := anEntity ].
 	data isCollection
 		ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
 	^ ((data select: [ :el | el respondsTo: key asSymbol ])
-		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection.
-	
+		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection
 ]
