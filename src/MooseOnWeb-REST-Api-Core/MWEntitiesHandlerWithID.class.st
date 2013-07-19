@@ -21,11 +21,12 @@ MWEntitiesHandlerWithID class >> pattern [
 
 { #category : #query }
 MWEntitiesHandlerWithID >> action: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description:
-		'Apply an action on an entity'>
-	| action |
-	action := request uri queryAt: 'action'.
-	^ self performAction: action on: anEntity.
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description: 'Apply an action on an entity'>
+	^ ((MWActionRequestBuilder parse: (request uri queryAt: 'action'))
+		acceptVisitor:
+			(MWRequestExecutorVisitor new
+				currentEntity: anEntity;
+				yourself)) first
 ]
 
 { #category : #public }
@@ -78,6 +79,7 @@ MWEntitiesHandlerWithID >> get [
 { #category : #private }
 MWEntitiesHandlerWithID >> listActions: anEntity [
 	^ anEntity allPropertySelectors values
+		collect: [ :methodSymbol | methodSymbol -> (anEntity getCommentInMethod: methodSymbol) ]
 ]
 
 { #category : #private }
@@ -96,7 +98,7 @@ MWEntitiesHandlerWithID >> query: anEntity [
 	q := request uri queryAt: 'q'.
 	^ (q equalsTo: 'actions')
 		ifTrue: [ 
-			(self listActions: anEntity) sort ]
+			(self listActions: anEntity) sort asDictionary ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search: anEntity ]
