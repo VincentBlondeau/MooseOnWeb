@@ -21,30 +21,24 @@ MWEntitiesHandlerWithID class >> pattern [
 
 { #category : #query }
 MWEntitiesHandlerWithID >> action: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action name>' description: 'Apply an action on an entity'>
-	^ ((MWActionRequestBuilder parse: (request uri queryAt: 'action'))
-		acceptVisitor:
-			(MWRequestExecutorVisitor new
-				currentEntity: anEntity;
-				yourself)) first
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?action=<action1 name>,<action2 name>,...' description:
+		'Execute all actions on an Entity and return a dictionary with action name as keys and results as values'>
+	| parsedRequest |
+	parsedRequest := MWActionRequestBuilder parse: (request uri queryAt: 'action').
+	parsedRequest isPetitFailure
+		ifTrue: [ MWInvalidAction signalFor: (request uri queryAt: 'action') ]
+		ifFalse: [ 
+			^ parsedRequest
+				acceptVisitor:
+					(MWRequestExecutorVisitor new
+						currentEntity: anEntity;
+						yourself) ]
 ]
 
 { #category : #public }
 MWEntitiesHandlerWithID >> actionMapping [
 	^ {('q' -> [ :anEntity | self query: anEntity ]).
-	('action' -> [ :anEntity | self action: anEntity ]).
-	('actions' -> [ :anEntity | self actions: anEntity ])} asDictionary
-]
-
-{ #category : #query }
-MWEntitiesHandlerWithID >> actions: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?actions=<action1 name>,<action2 name>,...' description:
-		'Execute all actions on an Entity and return a dictionary with action name as keys and results as values'>
-	^ (MWActionRequestBuilder parse: (request uri queryAt: 'actions'))
-		acceptVisitor:
-			(MWRequestExecutorVisitor new
-				currentEntity: anEntity;
-				yourself)
+	('action' -> [ :anEntity | self action: anEntity ])} asDictionary
 ]
 
 { #category : #accessing }
@@ -82,7 +76,7 @@ MWEntitiesHandlerWithID >> listActions: anEntity [
 		collect: [ :methodSymbol | methodSymbol -> (anEntity getCommentInMethod: methodSymbol) ]
 ]
 
-{ #category : #private }
+{ #category : #query }
 MWEntitiesHandlerWithID >> performAction: action on: anEntity [
 	((self listActions:anEntity) includes: action)
 		ifTrue: [ ^anEntity perform: action asSymbol ]
