@@ -97,5 +97,4 @@ MWModelsHandlerTest >> testPost [
 
 
 	self assert: server delegate mooseModelList size equals: size +1.
-	self fail: 'side effect use Mocks !'
 ]

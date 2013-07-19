@@ -10,17 +10,21 @@ MWEntitiesHandlerWithIDTests >> setUp [
 	handler := MWEntitiesHandlerWithID new
 		request: request;
 		delegate: delegate;
-		yourself	
+		yourself	.
 	
 	"For Debug purpose only !"
-	"context visualize: handler."
+	context visualize: handler.
 ]
 
 { #category : #running }
 MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 	| selectors results |
-	selectors := {#anAction -> #anAction . #aSecondAction -> #aSecondAction .#aThirdAction -> #aThirdAction } asDictionary.
-	results := {#anAction -> '1' . #aSecondAction -> '2'.#aThirdAction -> 3} asDictionary.
+	selectors := {(#anAction -> #anAction).
+	(#aSecondAction -> #aSecondAction).
+	(#aThirdAction -> #aThirdAction)} asDictionary.
+	results := {'1'.
+	'2'.
+	3}.
 	url can
 		receive: #queryAt:;
 		with: 'actions';
@@ -91,17 +95,25 @@ MWEntitiesHandlerWithIDTests >> testExecuteAction [
 
 { #category : #running }
 MWEntitiesHandlerWithIDTests >> testQueryAction [
-	| selectors |
+	| selectors result |
 	url should
 		receive: #queryAt:;
 		with: 'q';
 		answers: 'actions'.
-	selectors := { 'action1' -> 'action1' . 'action2' -> 'action2' } asDictionary.
+	selectors := { #action1 -> #action1 . #action2 -> #action2 } asDictionary.
+    result := {   #action1 -> 'commentForAction1' . #action2 -> 'commentForAction2' } asDictionary.
 	entity should
 		receive: #allPropertySelectors;
 		answers: selectors.
-	
-	self assert: (handler query: entity) equals: selectors keys.
+	entity should 
+		receive: #getCommentInMethod: ;
+		with: #action1;
+		answers: 'commentForAction1'.
+	entity should 
+		receive: #getCommentInMethod: ;
+		with: #action2;
+		answers: 'commentForAction2'.
+	self assert: (handler query: entity) equals: result.
 
 ]
 
