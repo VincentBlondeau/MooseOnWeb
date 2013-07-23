@@ -48,10 +48,9 @@ MWNeoJSONWriter >> writeMooseEntity: mooseEntity [
 MWNeoJSONWriter >> writeMooseGroup: mooseGroup [
 	self writeMapStreamingDo: [ :jsonMapWriter | 
 			mooseGroup neoJsonHeaderOn: jsonMapWriter.
-			self detailled
-				ifTrue: [ 
-					jsonMapWriter writeKey: 'entities' value: mooseGroup entities.
-					root := false ] ]
+			jsonMapWriter writeKey: 'entities' value: mooseGroup entities.
+			root := false 
+	] 
 ]
 
 { #category : #writing }
