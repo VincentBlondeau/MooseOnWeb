@@ -141,6 +141,16 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
 ]
 
 { #category : #testing }
+MWEntitiesHandlerWithIDServerTest >> testGetExecuteComplexAction [
+
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'action' put: '(allClasses,allPackages)!size,allClasses*allPackages,allMethods!(name,cyclomaticComplexity)'.
+	client get.
+	self assert: client isSuccess.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+]
+
+{ #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> testGetExecutingAnNonExistingAction [
 
 	client addPathSegment: self modelTest mooseID asString.
