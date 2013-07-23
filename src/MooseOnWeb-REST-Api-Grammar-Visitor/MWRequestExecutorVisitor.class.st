@@ -30,7 +30,7 @@ MWRequestExecutorVisitor >> currentEntity: anObject [
 
 { #category : #visit }
 MWRequestExecutorVisitor >> listAllowedActions: anEntity [
-	^ ([anEntity allPropertySelectors values] on: MessageNotUnderstood do: [#()]) , { 'size' . 'sumInteger' . 'allClients' }
+	^ ([anEntity allPropertySelectors values] on: MessageNotUnderstood do: [#()]) , { 'size' . 'sumInteger' . 'sum' .'allClients' }
 ]
 
 { #category : #visit }
@@ -74,5 +74,5 @@ MWRequestExecutorVisitor >> visitMWRequestNodeUnionExpression: aMWRequestNodeUni
 	entity := self currentEntity.
 	result := aMWRequestNodeUnionExpression left acceptVisitor: self.
 	self currentEntity: entity.
-	^ (result, aMWRequestNodeUnionExpression right acceptVisitor: self) asOrderedCollection 
+	^ (result, (aMWRequestNodeUnionExpression right acceptVisitor: self)) asOrderedCollection 
 ]
