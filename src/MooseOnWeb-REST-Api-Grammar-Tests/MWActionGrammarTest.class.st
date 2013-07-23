@@ -46,5 +46,5 @@ MWActionGrammarTest >> testSingleActionWithParameter [
 
 { #category : #'as yet unclassified' }
 MWActionGrammarTest >> testUnionActions [
-	self parse: 'allClasses+allPackages' rule: #actionExpression
+	self parse: 'allClasses*allPackages' rule: #actionExpression
 ]

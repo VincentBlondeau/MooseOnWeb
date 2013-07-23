@@ -98,7 +98,7 @@ MWActionRequestBuilderTest >> testSingleActionWithParameter [
 { #category : #'as yet unclassified' }
 MWActionRequestBuilderTest >> testUnionActions [
 	| node |
-	node := self parse: 'allClasses+allPackages' rule: #actionExpression.
+	node := self parse: 'allClasses*allPackages' rule: #actionExpression.
 	self assert: node class equals: MWRequestNodeUnionExpression.
 	self assert: node left class equals: MWRequestNodeAction.
 	self assert: node left selector equals: 'allClasses'.
