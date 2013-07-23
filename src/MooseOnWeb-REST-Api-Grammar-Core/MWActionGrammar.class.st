@@ -27,7 +27,7 @@ MWActionGrammar >> actionExpression [
 		group: [ :g | 
 					g left: $! asParser token trim do: self onEachBlock.
 					g left: $; asParser token trim do: self onResultBlock ];
-		group: [ :g | g left: $+ asParser token trim do: self unionBlock ].
+		group: [ :g | g left: $* asParser token trim do: self unionBlock ].
 	^ expression
 ]
 
