@@ -11,11 +11,7 @@ Class {
 MWRequestExecutorVisitor >> checkActionsAreAllowed: aCollectionOfActions on: anEntity [
 	| allowedActionsList |
 	allowedActionsList := self listAllowedActions: anEntity.
-	aCollectionOfActions
-		do: [ :anAction | 
-			(allowedActionsList includes: anAction)
-				ifFalse: [ ^ false ] ].
-	^ true
+	^ aCollectionOfActions allSatisfy: [ :anAction | allowedActionsList includes: anAction ]
 ]
 
 { #category : #accessing }
