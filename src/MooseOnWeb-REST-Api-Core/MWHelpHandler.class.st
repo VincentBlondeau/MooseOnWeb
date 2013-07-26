@@ -18,7 +18,7 @@ MWHelpHandler class >> pattern [
 { #category : #public }
 MWHelpHandler >> get [ 
 	<mooseonweb:'GET' name:'/help' description:'List the commands available' >
-
+	<accept:'text/plain,application/xml'>
 	self sendText: (String
 		streamContents: [ :stream | 
 			MWRestCallHandler allSubclasses do:[ :class | 
