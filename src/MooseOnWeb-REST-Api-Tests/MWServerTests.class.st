@@ -46,8 +46,6 @@ MWServerTests >> setUp [
 		addPathSegment: #mooseOnWeb;
 		yourself.
 	
-	self flag: 'Only to debug mode'	.
-	"server debugMode: true"
 ]
 
 { #category : #'initialize-release' }
