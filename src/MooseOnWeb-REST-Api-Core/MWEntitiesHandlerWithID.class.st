@@ -73,7 +73,8 @@ MWEntitiesHandlerWithID >> get [
 { #category : #private }
 MWEntitiesHandlerWithID >> listActions: anEntity [
 	^ (self listActionsSelectors: anEntity)
-		collect: [ :methodSymbol | methodSymbol -> (anEntity getCommentInMethod: methodSymbol) ]
+		collect: [ :methodSymbol |
+			 methodSymbol -> (anEntity getCommentInMethod: methodSymbol) ]
 ]
 
 { #category : #private }
@@ -98,7 +99,7 @@ MWEntitiesHandlerWithID >> query: anEntity [
 	q := request uri queryAt: 'q'.
 	^ (q equalsTo: 'actions')
 		ifTrue: [ 
-			(self listActions: anEntity) sort asDictionary ]
+			(self listActions: anEntity)  asDictionary.  ]
 		ifFalse: [ 
 			(q equalsTo: 'search')
 				ifTrue: [ self search: anEntity ]

@@ -11,9 +11,6 @@ answer
 Class {
 	#name : #MWRestCallHandler,
 	#superclass : #ZnJSONRestCall,
-	#instVars : [
-		'answer'
-	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
 
@@ -65,6 +62,7 @@ MWRestCallHandler >> notImplemented [
 
 { #category : #conversion }
 MWRestCallHandler >> sendJsonFrom: aData [
+	
 	self jsonResponse: aData
 ]
 
