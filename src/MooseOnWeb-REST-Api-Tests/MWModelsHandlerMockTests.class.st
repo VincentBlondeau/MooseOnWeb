@@ -7,7 +7,7 @@ Class {
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 MWModelsHandlerMockTests >> setUp [
 	super setUp.
 	model := context mock: 'model'.
@@ -19,7 +19,7 @@ MWModelsHandlerMockTests >> setUp [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 MWModelsHandlerMockTests >> testDelete [
 	| collection |
 	collection := Set new add: model;yourself.

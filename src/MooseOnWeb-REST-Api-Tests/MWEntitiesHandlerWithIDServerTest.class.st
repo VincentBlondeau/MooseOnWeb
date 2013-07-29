@@ -197,7 +197,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetModelEntitiesAccessID [
 	clientTemp get: (ZnUrl fromString: 'mooseOnWeb/entities/' , self modelTest mooseID asString).
 			self assert: clientTemp isSuccess.
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 .
-	self assert: self rootModelForTestServer isNotEmpty 
+	self assert: self rootModelForTestServer isEmpty not
 	
 		
 	

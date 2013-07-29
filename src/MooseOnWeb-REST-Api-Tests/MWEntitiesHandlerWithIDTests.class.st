@@ -13,7 +13,7 @@ MWEntitiesHandlerWithIDTests >> setUp [
 		yourself	.
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 	| selectors results |
 	selectors := {(#anAction -> #anAction).
@@ -42,7 +42,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteAListOfActions [
 	self assert: (handler action: entity) equals: results
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testExecuteANonExistingAction [
 	url should
 		receive: #queryAt:;
@@ -58,7 +58,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteANonExistingAction [
 	self should: [ handler action: entity ] raise: MWInvalidAction 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testExecuteANonValidListOfActions [
 	| selectors |
 	selectors := {#anAction -> #anAction . #aSecondAction -> #aSecondAction .#aThirdAction -> #aThirdAction } asDictionary.
@@ -72,7 +72,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteANonValidListOfActions [
 	self should: [ handler action: entity ] raise: MWInvalidAction 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testExecuteAction [
 	url can
 		receive: #queryAt:;
@@ -90,7 +90,7 @@ MWEntitiesHandlerWithIDTests >> testExecuteAction [
 	self assert: (handler action: entity) equals: '1'
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testPerformAnActionOn [
 	entity should
 		receive: #anValidAction;
@@ -104,7 +104,7 @@ MWEntitiesHandlerWithIDTests >> testPerformAnActionOn [
 	self assert: (handler performAction: #anValidAction on: entity) equals: 'anValidActionResult'
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testQueryAction [
 	| selectors result |
 	url should
@@ -128,7 +128,7 @@ MWEntitiesHandlerWithIDTests >> testQueryAction [
 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testQuerySearch [
 	"teste la recherche sur une entitié moose. "
 
@@ -155,7 +155,7 @@ MWEntitiesHandlerWithIDTests >> testQuerySearch [
 	self should: [ handler search: MooseEntity new ] raise: NotYetImplemented
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testQuerySearchWithEmptyResult [
 	"test searching on a MooseGroup that does not contain a matching entity"
 
@@ -185,7 +185,7 @@ MWEntitiesHandlerWithIDTests >> testQuerySearchWithEmptyResult [
 	self assert: (handler search: theMooseGroup) isEmpty
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testSearchANonExistingEntity [
 	| model |
 	model := context mock: 'model'.
@@ -194,7 +194,7 @@ MWEntitiesHandlerWithIDTests >> testSearchANonExistingEntity [
 	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound  
 ]
 
-{ #category : #running }
+{ #category : #tests }
 MWEntitiesHandlerWithIDTests >> testSearchAnExistingEntity [
 	| model |
 	model := context mock: 'model'.
