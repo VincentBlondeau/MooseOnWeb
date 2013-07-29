@@ -16,6 +16,7 @@ MWModelsHandler class >> pattern [
 MWModelsHandler >> addModel: aMSEasString [
 	| model stream |
 	model := MooseModel new.
+	aMSEasString isEmptyOrNil ifTrue: [MWEmptyRessource signal].
 	stream := ReadStream on: aMSEasString.
 	model importFromMSEStream: stream.
 	model name: 'Imported Model'.
@@ -23,6 +24,12 @@ MWModelsHandler >> addModel: aMSEasString [
 		ifTrue: [ MWEmptyRessource signal ].
 	self delegate mooseModelList add: model.
 	^model
+]
+
+{ #category : #public }
+MWModelsHandler >> contentMatching [ 
+	^ {  ZnMimeType textPlain -> [ self request contents] .
+		ZnMimeType multiPartFormData -> [ self request contents first contents asString ] } asDictionary 
 ]
 
 { #category : #public }
@@ -47,7 +54,7 @@ MWModelsHandler >> deleteModel: id [
 MWModelsHandler >> get [
 	<mooseonweb:'GET' name:'/models' description:'Lists the models provided  by the API' >
 	"the method asZnMimeType doesn't work properly !"
-	(self isAcceptableRequest: request withAcceptedMimeType: { ZnMimeType textPlain }) ifTrue: [  
+	(self isAcceptableRequest: request withAcceptedMimeType: { ZnMimeType applicationJson  }) ifTrue: [  
 	 	self sendJsonFrom: self listMooseModels ] ifFalse: [ self notAcceptable ]
 	
 ]
@@ -55,14 +62,18 @@ MWModelsHandler >> get [
 { #category : #public }
 MWModelsHandler >> post [
 	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
-	| data model |
-	(self isAcceptableRequest: request withAcceptedMimeType: {(ZnMimeType textPlain)})
+	| data model contentType |
+	(self isAcceptableRequest: request withAcceptedMimeType: {ZnMimeType applicationJson . ZnMimeType textPlain})
 		ifTrue: [ 
-			[ 
-				data := self request contents.
+			[[ 
+				contentType := (self acceptedMimeTypesFrom: request containing: { ZnMimeType textPlain . ZnMimeType multiPartFormData } at: 'content-type' )first.
+				data := (self contentMatching at: contentType) value.
 				model := self addModel: data.
 				self created: '/entities/' , model mooseID asString ]
-			on: Error
-			do: [ :e | self badRequest: 'MSE file expected' ] ]
+			on: MWEmptyRessource  
+			do: [ :e | self badRequest: 'MSE file expected' ]]
+			on: FMSyntaxError
+			do: [ :e | self badRequest: 'MSE valid file expected' ]
+		]
 		ifFalse: [ self notAcceptable ]
 ]

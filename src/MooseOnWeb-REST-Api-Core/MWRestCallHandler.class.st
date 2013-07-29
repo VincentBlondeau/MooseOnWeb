@@ -21,8 +21,13 @@ MWRestCallHandler class >> isAbstract [
 
 { #category : #public }
 MWRestCallHandler >> acceptMimeTypesFrom: aRequest containing: aMimeTypeCollection [
+	^self acceptedMimeTypesFrom: aRequest containing: aMimeTypeCollection at: 'Accept'
+]
+
+{ #category : #public }
+MWRestCallHandler >> acceptedMimeTypesFrom: aRequest containing: aMimeTypeCollection at: aHeaderKey [
 	| accept  |
-	accept := (aRequest headers at: 'Accept' ifAbsent: [ ^OrderedCollection new ]) asMWComposedMimeType.
+	accept := (aRequest headers at: aHeaderKey ifAbsent: [ ^OrderedCollection new ]) asMWComposedMimeType.
 	^ accept findMatchesWith: aMimeTypeCollection.
 ]
 
