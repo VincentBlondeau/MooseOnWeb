@@ -45,7 +45,7 @@ MWServerTests >> setUp [
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	
+	server debugMode: true
 ]
 
 { #category : #'initialize-release' }

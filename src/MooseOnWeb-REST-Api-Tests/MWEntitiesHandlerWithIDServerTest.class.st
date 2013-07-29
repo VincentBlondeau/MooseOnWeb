@@ -7,7 +7,7 @@ Class {
 { #category : #testing }
 MWEntitiesHandlerWithIDServerTest >> setUp [
 	super setUp.
-	client addPathSegment: #entities
+	client headerAt: 'Accept' put: 'application/json'; addPathSegment: #entities
 ]
 
 { #category : #testing }
