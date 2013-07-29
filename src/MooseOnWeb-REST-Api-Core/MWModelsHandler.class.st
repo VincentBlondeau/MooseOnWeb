@@ -13,6 +13,19 @@ MWModelsHandler class >> pattern [
 ]
 
 { #category : #public }
+MWModelsHandler >> addModel: aMSEasString [
+	| model stream |
+	model := MooseModel new.
+	stream := ReadStream on: aMSEasString.
+	model importFromMSEStream: stream.
+	model name: 'Imported Model'.
+	model isEmpty
+		ifTrue: [ MWEmptyRessource signal ].
+	self delegate mooseModelList add: model.
+	^model
+]
+
+{ #category : #public }
 MWModelsHandler >> delete [
 	<mooseonweb: 'DELETE' name: '/models' description: 'Delete a moose model (put the id in the body of the request)'>
 	| id |
@@ -42,19 +55,14 @@ MWModelsHandler >> get [
 { #category : #public }
 MWModelsHandler >> post [
 	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
-	| data model stream id |
-	self flag: 'Remove Notification on the next version'.
-	[ 
-	data := self request contents.
-	model := MooseModel new.
-	stream := ReadStream on: data.
-	model importFromMSEStream: stream .
-	model name: 'Imported Model'.
-	model isEmpty
-		ifTrue: [ MWEmptyRessource signal ].
-	self delegate mooseModelList add: model.
-	id := model mooseID.
-	self created: '/entities/' , id asString ]
-		on: Error
-		do: [ :e | self badRequest: 'MSE file expected' ]
+	| data model |
+	(self isAcceptableRequest: request withAcceptedMimeType: {(ZnMimeType textPlain)})
+		ifTrue: [ 
+			[ 
+				data := self request contents.
+				model := self addModel: data.
+				self created: '/entities/' , model mooseID asString ]
+			on: Error
+			do: [ :e | self badRequest: 'MSE file expected' ] ]
+		ifFalse: [ self notAcceptable ]
 ]
