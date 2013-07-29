@@ -29,12 +29,12 @@ MWServerCommandLineHandler >> activate [
 
 ]
 
-{ #category : #activation }
+{ #category : #accessing }
 MWServerCommandLineHandler >> createModel [
 	(self createModelFrom:  [ :p | p name includesSubstring: 'Collections-']  withName: 'Collections') install.
 ]
 
-{ #category : #activation }
+{ #category : #accessing }
 MWServerCommandLineHandler >> createModelFrom: aBlockMatching withName: name [
 	| importer |
 	importer := MoosePharoImporterTask new.

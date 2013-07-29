@@ -1,6 +1,11 @@
 Extension { #name : #String }
 
 { #category : #'*MooseOnWeb-REST-Api-Core' }
+String >> asMWComposedMimeType [
+	^ MWComposedMimeType fromString: self
+]
+
+{ #category : #'*MooseOnWeb-REST-Api-Core' }
 String >> asMessage [
 	self = 'eq' ifTrue: [ ^#includesSubstring: ].
 	self = 'gt' ifTrue: [ ^#> ].

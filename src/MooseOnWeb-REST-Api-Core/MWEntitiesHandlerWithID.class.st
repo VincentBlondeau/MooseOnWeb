@@ -53,6 +53,7 @@ MWEntitiesHandlerWithID >> get [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>' description: 'Get the informations on the entity <mooseID>'>
 	| mapping requestedActions currentEntity uri |
 	mapping := self actionMapping.
+	(self isAcceptableRequest: request withAcceptedMimeType: { ZnMimeType applicationJson }) ifTrue: [  
 	[ 
 	[ 
 	currentEntity := self findEntityWithID: variables first asInteger.
@@ -68,6 +69,8 @@ MWEntitiesHandlerWithID >> get [
 		do: [ :ex | self notFound ] ]
 		on: MWInvalidAction
 		do: [ :ex | self notFound ]
+		]
+	ifFalse: [ self notAcceptable ]
 ]
 
 { #category : #private }

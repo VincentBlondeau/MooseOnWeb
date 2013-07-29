@@ -19,9 +19,11 @@ MWRestCallHandler class >> isAbstract [
 	^ self = MWRestCallHandler  
 ]
 
-{ #category : #conversion }
-MWRestCallHandler >> answer [
-	^answer
+{ #category : #public }
+MWRestCallHandler >> acceptMimeTypesFrom: aRequest containing: aMimeTypeCollection [
+	| accept  |
+	accept := (aRequest headers at: 'Accept' ifAbsent: [ ^OrderedCollection new ]) asMWComposedMimeType.
+	^ accept findMatchesWith: aMimeTypeCollection.
 ]
 
 { #category : #public }
@@ -34,7 +36,13 @@ MWRestCallHandler >> created: uri [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #public }
+MWRestCallHandler >> isAcceptableRequest: aRequest withAcceptedMimeType: aMimeTypeCollection [
+	^ (self acceptMimeTypesFrom: aRequest containing: aMimeTypeCollection) isEmpty not
+ 
+]
+
+{ #category : #public }
 MWRestCallHandler >> jsonResponse: data [
 	| json |
 	json := String
@@ -47,9 +55,17 @@ MWRestCallHandler >> jsonResponse: data [
 	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson setCharSetUTF8))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 MWRestCallHandler >> listMooseModels [
 	^ self delegate mooseModelList
+]
+
+{ #category : #'error handling' }
+MWRestCallHandler >> notAcceptable [
+	response := self delegate 
+		errorResponse: request 
+		code: 406 
+		message: 'Not Acceptable'
 ]
 
 { #category : #'error handling' }

@@ -34,9 +34,8 @@ MWModelsHandler >> deleteModel: id [
 MWModelsHandler >> get [
 	<mooseonweb:'GET' name:'/models' description:'Lists the models provided  by the API' >
 	"the method asZnMimeType doesn't work properly !"
-	
-	"request accept asZnMimeType = ZnMimeType applicationJson ifTrue: [ "
- 	self sendJsonFrom: self listMooseModels." ] ifFalse:  [ self unsupportedMediaType ]"
+	(self isAcceptableRequest: request withAcceptedMimeType: { ZnMimeType textPlain }) ifTrue: [  
+	 	self sendJsonFrom: self listMooseModels ] ifFalse: [ self notAcceptable ]
 	
 ]
 
