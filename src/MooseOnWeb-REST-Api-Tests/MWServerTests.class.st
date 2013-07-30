@@ -9,7 +9,7 @@ Class {
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
 MWServerTests >> createTestModel [
 	" to debug and avoid caching behavior: LANPackageTestResource reset."
 	^ LANPackageTestResource current model 
@@ -26,7 +26,7 @@ MWServerTests >> modelTest: anObject [
 	modelTest := anObject
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
 MWServerTests >> rootModelForTestServer [
 	^ { self modelTest } asSet
 ]
@@ -54,7 +54,7 @@ MWServerTests >> tearDown [
 	server stop
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #tests }
 MWServerTests >> testServer [
 	self assert: server isRunning.
 	self assert: server delegate mooseModelList size equals: 1

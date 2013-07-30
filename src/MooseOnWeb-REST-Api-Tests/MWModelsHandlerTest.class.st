@@ -4,7 +4,7 @@ Class {
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 MWModelsHandlerTest >> MSEtestfile [
 	^'(
 	(FAMIX.Namespace (id: 1) (name ''aNamespace''))
@@ -22,39 +22,41 @@ MWModelsHandlerTest >> MSEtestfile [
 )'
 ]
 
-{ #category : #'tests-public' }
-MWModelsHandlerTest >> testDelete [
+{ #category : #tests }
+MWModelsHandlerTest >> testDeleteAnEntityShouldNotWorking [
+	|  id |
+	
+	self assert: (server delegate mooseModelList includes: modelTest).
+	self deny: server delegate mooseModelList isSequenceable .
+	client addPathSegment: 'models'.
+	id := self modelTest entities first mooseID.
+	client queryAt: 'id' put: id asString.
+	client delete.
+	
+	self deny: client isSuccess.
+	self assert: client response statusLine equals: ZnStatusLine notFound.
+	
+	
+
+]
+
+{ #category : #tests }
+MWModelsHandlerTest >> testDeleteShouldRemoveTheModelFromTheList [
 	|  id |
 	
 	self assert: (server delegate mooseModelList includes: modelTest).
 	self deny: server delegate mooseModelList isSequenceable .
 	client addPathSegment: 'models'.
 	id := self modelTest mooseID.
-	client contents: id asString.
+	client queryAt: 'id' put: id asString.
 	client delete.
 	
-	self assert: client isSuccess.
-	self assert: client response headers contentType equals: ZnMimeType textPlain.
-	
+	self assert: client isSuccess.	
 	self deny: (server delegate mooseModelList includes: modelTest).
 
 ]
 
-{ #category : #'as yet unclassified' }
-MWModelsHandlerTest >> testGet [
-	| output|
-	client addPathSegment: 'models'.
-	output := client get.
-	self assert: client isSuccess.
-	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
-	self assert: (output includesSubstring: '[').
-	self rootModelForTestServer 
-		do: [ :e | 
-			self assert: (output includesSubstring: e mooseName).
-			self assert: (output includesSubstring: e mooseID asString) ]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 MWModelsHandlerTest >> testGetModelAccessIDFromAction [
 	
 	| clientTemp |
@@ -71,7 +73,7 @@ MWModelsHandlerTest >> testGetModelAccessIDFromAction [
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 ]].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 MWModelsHandlerTest >> testGetModelEntitiesListAccessID [
 	|  clientTemp |
 
@@ -89,7 +91,31 @@ MWModelsHandlerTest >> testGetModelEntitiesListAccessID [
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
+MWModelsHandlerTest >> testGetShouldContainsAllTheModelsAndBeSuccess [
+	| output|
+	client addPathSegment: 'models'.
+	output := client get.
+	self assert: client isSuccess.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8.
+	self assert: (output includesSubstring: '[').
+	self rootModelForTestServer 
+		do: [ :e | 
+			self assert: (output includesSubstring: e mooseName).
+			self assert: (output includesSubstring: e mooseID asString) ]
+]
+
+{ #category : #tests }
+MWModelsHandlerTest >> testOptionsShouldContainsTheGoodHeaders [
+	client addPathSegment: 'models'.
+	client method: #OPTIONS; execute.
+	self assert: client isSuccess.
+	self assert: (client response headers at: 'Access-Control-Allow-Methods') equals: 'POST, GET, DELETE'.
+	
+
+]
+
+{ #category : #tests }
 MWModelsHandlerTest >> testPost [
 	|  size |
 	client addPathSegment: 'models'.
@@ -117,14 +143,32 @@ MWModelsHandlerTest >> testPost [
 	self assert: server delegate mooseModelList size equals: size +1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 MWModelsHandlerTest >> testPostWithMultipart [
 	|  size content |
 	client addPathSegment: 'models';
 		headerAt: 'content-type' put: 'multipart/form-data';
 		multiPartFormDataEntity.
 	content := ZnEntity with: self MSEtestfile type: ZnMimeType applicationOctetStream .
-	client request entity addPart: (ZnMimePart fieldName: 'file' fileName: 'modelMSE.mse' entity: content).
+	client request entity addPart: (ZnMimePart fieldName: 'mseFile' fileName: 'modelMSE.mse' entity: content).
+	client request entity addPart: (ZnMimePart fieldName: 'nameModel' value: 'aMooseName') .
+	size := server delegate mooseModelList size.
+	client post.
+	self assert: client isSuccess.
+	self assert: client response headers contentType equals: ZnMimeType applicationJson .
+	self assert: (server delegate mooseModelList anySatisfy: [ :model | model mooseName = 'aMooseName' ]).
+	self assert: server delegate mooseModelList size equals: size +1.
+]
+
+{ #category : #tests }
+MWModelsHandlerTest >> testPostWithMultipartNameMissing [
+	|  size content |
+	client addPathSegment: 'models';
+		headerAt: 'content-type' put: 'multipart/form-data';
+		multiPartFormDataEntity.
+	content := ZnEntity with: self MSEtestfile type: ZnMimeType applicationOctetStream .
+	client request entity addPart: (ZnMimePart fieldName: 'mseFile' fileName: 'modelMSE.mse' entity: content).
+	
 	size := server delegate mooseModelList size.
 	client post.
 	self assert: client isSuccess.
