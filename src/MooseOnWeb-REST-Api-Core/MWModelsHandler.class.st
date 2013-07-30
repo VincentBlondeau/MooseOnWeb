@@ -13,13 +13,13 @@ MWModelsHandler class >> pattern [
 ]
 
 { #category : #public }
-MWModelsHandler >> addModel: aMSEasString [
+MWModelsHandler >> addModel: aMSEFile withName: aName [
 	| model stream |
 	model := MooseModel new.
-	aMSEasString isEmptyOrNil ifTrue: [MWEmptyRessource signal].
-	stream := ReadStream on: aMSEasString.
+	aMSEFile isEmptyOrNil ifTrue: [MWEmptyRessource signal].
+	stream := ReadStream on: aMSEFile asString.
 	model importFromMSEStream: stream.
-	model name: 'Imported Model'.
+	model name: (aName asString ifNil: [self defaultModelName ]).
 	model isEmpty
 		ifTrue: [ MWEmptyRessource signal ].
 	self delegate mooseModelList add: model.
@@ -27,19 +27,28 @@ MWModelsHandler >> addModel: aMSEasString [
 ]
 
 { #category : #public }
-MWModelsHandler >> contentMatching [ 
-	^ {  ZnMimeType textPlain -> [ self request contents] .
-		ZnMimeType multiPartFormData -> [ self request contents first contents asString ] } asDictionary 
+MWModelsHandler >> contentMatching [
+	^ {(ZnMimeType textPlain -> [ self addModel: self request contents withName: self defaultModelName ]).
+	(ZnMimeType multiPartFormData -> [ 
+			self
+				addModel: (request entity partNamed: 'mseFile') contents
+				withName: (request entity partNamed: 'nameModel' ifNone: [ self defaultModelName ]) contents ])} asDictionary
+]
+
+{ #category : #public }
+MWModelsHandler >> defaultModelName [ 
+	^ 'Imported Model-', ($- join: Date dateAndTimeNow)
 ]
 
 { #category : #public }
 MWModelsHandler >> delete [
-	<mooseonweb: 'DELETE' name: '/models' description: 'Delete a moose model (put the id in the body of the request)'>
+	<mooseonweb: 'DELETE' name: '/models?id=<mooseID>' description: 'Delete a moose model knowing its ID'>
 	| id |
-	id := self request contents asInteger ifNil: [ MWRessourceNotFound signalFor: self request contents ].
-	self deleteModel: id.
-	self emptyOkResponse.
-
+	[ 
+	id := (self request uri queryAt: 'id') ifNil: [ MWRessourceNotFound signalFor: self request contents ].
+	self deleteModel: id asInteger.
+	self okWithNoContent .
+	] on: MWRessourceNotFound do: [ :ex | self notFound ] 
 ]
 
 { #category : #public }
@@ -60,15 +69,27 @@ MWModelsHandler >> get [
 ]
 
 { #category : #public }
+MWModelsHandler >> options [
+	self response: (
+		ZnResponse new
+		statusLine: (ZnStatusLine code: 204);	"No content response"
+		headers:
+				(ZnHeaders
+						defaultRestResponseHeaders
+						at: 'Access-Control-Allow-Methods' put: 'POST, GET, DELETE';
+						yourself);				
+		yourself)
+]
+
+{ #category : #public }
 MWModelsHandler >> post [
-	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file'>
-	| data model contentType |
+	<mooseonweb: 'POST' name: '/models' description: 'Create a new moose model from a MSE file (works with text/plain or multipart/form'>
+	| model contentType |
 	(self isAcceptableRequest: request withAcceptedMimeType: {ZnMimeType applicationJson . ZnMimeType textPlain})
 		ifTrue: [ 
 			[[ 
 				contentType := (self acceptedMimeTypesFrom: request containing: { ZnMimeType textPlain . ZnMimeType multiPartFormData } at: 'content-type' )first.
-				data := (self contentMatching at: contentType) value.
-				model := self addModel: data.
+				model := (self contentMatching at: contentType) value.
 				self created: '/entities/' , model mooseID asString ]
 			on: MWEmptyRessource  
 			do: [ :e | self badRequest: 'MSE file expected' ]]

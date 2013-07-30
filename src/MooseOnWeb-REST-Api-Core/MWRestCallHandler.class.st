@@ -81,6 +81,15 @@ MWRestCallHandler >> notImplemented [
 		message: 'Not Implemented !'.
 ]
 
+{ #category : #'error handling' }
+MWRestCallHandler >> okWithNoContent [
+	self
+		response:
+			(ZnResponse new
+				statusLine: (ZnStatusLine code: 204);
+				headers: ZnHeaders defaultRestResponseHeaders)
+]
+
 { #category : #conversion }
 MWRestCallHandler >> sendJsonFrom: aData [
 	
