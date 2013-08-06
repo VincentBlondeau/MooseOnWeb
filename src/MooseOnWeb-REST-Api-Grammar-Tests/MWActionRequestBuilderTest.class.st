@@ -46,6 +46,17 @@ MWActionRequestBuilderTest >> testFullActionsSentence [
 ]
 
 { #category : #'as yet unclassified' }
+MWActionRequestBuilderTest >> testMultipleExpressionActionsSentence [
+	| node |
+	node := self parse: 'allClasses,allPackages' rule: #actionsExpression.
+	self assert: node class equals: MWRequestNodeMultipleExpression.
+	self assert: node expressions first class equals: MWRequestNodeAction.
+	self assert: node expressions first selector equals: 'allClasses'.
+	self assert: node expressions second class equals: MWRequestNodeAction.
+	self assert: node expressions second selector equals: 'allPackages'.
+]
+
+{ #category : #'as yet unclassified' }
 MWActionRequestBuilderTest >> testOnEachAction [
 	| node |
 	node := self parse: 'allClasses!numberOfMethods' rule: #actionExpression.
@@ -65,17 +76,6 @@ MWActionRequestBuilderTest >> testOnResultAction [
 	self assert: node left selector equals: 'allClasses'.
 	self assert: node right class equals: MWRequestNodeAction.
 	self assert: node right selector equals: 'size'.
-]
-
-{ #category : #'as yet unclassified' }
-MWActionRequestBuilderTest >> testSimpleActionsSentence [
-	| node |
-	node := self parse: 'allClasses,allPackages' rule: #actionsExpression.
-	self assert: node class equals: MWRequestNodeMultipleExpression.
-	self assert: node expressions first class equals: MWRequestNodeAction.
-	self assert: node expressions first selector equals: 'allClasses'.
-	self assert: node expressions second class equals: MWRequestNodeAction.
-	self assert: node expressions second selector equals: 'allPackages'.
 ]
 
 { #category : #'as yet unclassified' }

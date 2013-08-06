@@ -12,94 +12,129 @@ Class {
 MWRequestExecutorVisitorTests >> setUp [
 	super setUp.
 	entity := context mock: 'entity'.
-	entity can 
+	entity can
 		receive: #allPropertySelectors;
-		answers: { #validAction1 -> #validAction1 .  #validAction2 -> #validAction2 .  #validAction3 -> #validAction3 } asDictionary.
-
-	visitor := (MWRequestExecutorVisitor new currentEntity: entity;yourself)
-]
-
-{ #category : #'as yet unclassified' }
-MWRequestExecutorVisitorTests >> testCombineActions1 [
-	| node |
-	self fail.
-	node:= self parse: 'allClasses!allFunctions;size' rule: #actionExpression.
-	self assert: node class equals: MWRequestNodeOnResultExpression.
-	self assert: node left class equals: MWRequestNodeOnEachExpression.
-	self assert: node right class equals: MWRequestNodeAction.	
-	self assert: node right selector equals: 'size'.	
-	self assert: node right argument equals: nil.	
-	self assert: node left left class equals: MWRequestNodeAction.
-	self assert: node left left selector equals: 'allClasses'.	
-	self assert: node left left argument equals: nil.	
-	self assert: node left right class equals: MWRequestNodeAction.
-	self assert: node left right selector equals: 'allFunctions'.	
-	self assert: node left right argument equals: nil.	
-	
+		answers:
+				{(#validActionLeft -> #validActionLeft).
+					(#validActionRight -> #validActionRight).
+					(#validActionFirst -> #validActionFirst).
+					(#validActionSecond -> #validActionSecond).
+					(#validAction1 -> #validAction1).
+					(#validAction2 -> #validAction2).
+					(#validAction3 -> #validAction3).
+					(#actionNodeRoot -> #actionNodeRoot).
+					(#actionNodeOnRootResult -> #actionNodeOnRootResult).
+					(#actionNodeLast -> #actionNodeLast)} asDictionary.
+	visitor := MWRequestExecutorVisitor new
+		currentEntity: entity;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
 MWRequestExecutorVisitorTests >> testFullActionsSentence [
-	| node rightSide |
-	self fail.
-	node := self parse: 'allClasses,allMethods!allFunctions;size' rule: #actionsExpression.
-	self assert: node class equals: MWRequestNodeMultipleExpression.
-	self assert: node expressions first class equals: MWRequestNodeAction.
-	self assert: node expressions first selector equals: 'allClasses'.
-	rightSide := node expressions second.
-	self assert: rightSide class equals: MWRequestNodeOnResultExpression.
-	self assert: rightSide right class equals: MWRequestNodeAction.
-	self assert: rightSide right selector equals: 'size'.	
-	self assert: rightSide left class equals: MWRequestNodeOnEachExpression.
-	self assert: rightSide left left class equals: MWRequestNodeAction.
-	self assert: rightSide left left selector equals: 'allMethods'.
-	self assert: rightSide left right class equals: MWRequestNodeAction.
-	self assert: rightSide left right selector equals: 'allFunctions'.
+	| result actionNodeRoot actionNodeOnRootResult actionNodeLast groupResult entityResult1 entityResult2 onEachExpressionsNode onResultExpressionsNode entityFinal |
+	
+	actionNodeRoot := MWRequestNodeAction new selector: #actionNodeRoot.
+	actionNodeOnRootResult := MWRequestNodeAction new selector: #actionNodeOnRootResult.
+	actionNodeLast := MWRequestNodeAction new selector: #size.
+	onEachExpressionsNode :=MWRequestNodeOnEachExpression new left: actionNodeRoot ; right: actionNodeOnRootResult.
+	onResultExpressionsNode :=MWRequestNodeOnEachExpression new left: onEachExpressionsNode ; right: actionNodeLast.
+	entityResult1 := context mock: 'entityResult1'.
+	entityResult2 := context mock: 'entityResult2'.
+	entityFinal      := context mock: 'entityFinal'.
+	groupResult := { entityResult1 . entityResult2 }. 
+	entity should 
+		receive: #actionNodeRoot;
+		answers: groupResult.
+	groupResult do: [ :ent | ent should  
+			receive: #allPropertySelectors;
+			answers: { #actionNodeOnRootResult -> #actionNodeOnRootResult } asDictionary. 	
+		ent should 
+			receive: #actionNodeOnRootResult;
+			answers: entityFinal
+	].
+	result := visitor visitMWRequestNodeOnResultExpression: onResultExpressionsNode.
+	self assert: result equals: 2
+	
+]
+
+{ #category : #'as yet unclassified' }
+MWRequestExecutorVisitorTests >> testMultipleExpressionActionsSentence [
+	| result multipleExpressionsNode actionNodeFirst actionNodeSecond groupResult1 groupResult2 |
+	multipleExpressionsNode := context mock: 'multipleExpressionNode'.
+	actionNodeFirst := MWRequestNodeAction new selector: #validActionFirst.
+	actionNodeSecond := MWRequestNodeAction new selector: #validActionSecond.
+	multipleExpressionsNode should
+		receive: #expressions;
+		answers: { actionNodeFirst . actionNodeSecond }.
+	groupResult1 := #( 'resultItem1'  'resultItem2'). 
+	groupResult2 := #( 'resultItem3'  'resultItem4'). 
+	entity should
+		receive: #validActionFirst;
+		answers: groupResult1.
+	entity should
+		receive: #validActionSecond;
+		answers: groupResult2.
+	
+	result := visitor visitMWRequestNodeMultipleExpression: multipleExpressionsNode.
+	self assert: result equals: { groupResult1 . groupResult2 }
 ]
 
 { #category : #'as yet unclassified' }
 MWRequestExecutorVisitorTests >> testOnEachAction [
-	| node |
-	self fail.
-	node := self parse: 'allClasses!numberOfMethods' rule: #actionExpression.
-	self assert: node class equals: MWRequestNodeOnEachExpression.
-	self assert: node left class equals: MWRequestNodeAction.
-	self assert: node left selector equals: 'allClasses'.
-	self assert: node right class equals: MWRequestNodeAction.
-	self assert: node right selector equals: 'numberOfMethods'.
+	| actionNodeLeft onEachNode actionNodeRight result actionLeftResponseEntity1 actionLeftResponseEntity2 groupResult |
+	onEachNode := context mock: 'onEachNode'.
+	actionLeftResponseEntity1 := context mock: 'actionLeftResponseEntity1'.
+	actionLeftResponseEntity2 := context mock: 'actionLeftResponseEntity2'.
+	actionNodeLeft := MWRequestNodeAction new selector: #validActionLeft.
+	actionNodeRight := MWRequestNodeAction new selector: #validActionOnEntities.
+	onEachNode should 
+		receive: #left;
+		answers: actionNodeLeft.
+	onEachNode should 
+		receive: #right;
+		exactly: #twice;
+		answers: actionNodeRight.
+	groupResult := { actionLeftResponseEntity1 . actionLeftResponseEntity2 }.
+	entity should 
+		receive: #validActionLeft;
+		answers: groupResult.
+	groupResult do: [ :ent | ent should  
+			receive: #allPropertySelectors;
+			answers: { #validActionOnEntities -> #validActionOnEntities } asDictionary. 	
+		ent should 
+			receive: #validActionOnEntities;
+			answers: 'validActionOnEntitiesResponse'
+	].
+	result := visitor visitMWRequestNodeOnEachExpression: onEachNode.
+	self assert: result equals: #('validActionOnEntitiesResponse' 'validActionOnEntitiesResponse') asOrderedCollection 
+
 ]
 
 { #category : #'as yet unclassified' }
 MWRequestExecutorVisitorTests >> testOnResultAction [
-	| node |
-	self fail.
-	node := self parse: 'allClasses;size' rule: #actionExpression.
-	self assert: node class equals: MWRequestNodeOnResultExpression.
-	self assert: node left class equals: MWRequestNodeAction.
-	self assert: node left selector equals: 'allClasses'.
-	self assert: node right class equals: MWRequestNodeAction.
-	self assert: node right selector equals: 'size'.
-]
-
-{ #category : #'as yet unclassified' }
-MWRequestExecutorVisitorTests >> testSimpleActionsSentence [
-	| node |
-	self fail.
-	node := self parse: 'allClasses,allPackages' rule: #actionsExpression.
-	self assert: node class equals: MWRequestNodeMultipleExpression.
-	self assert: node expressions first class equals: MWRequestNodeAction.
-	self assert: node expressions first selector equals: 'allClasses'.
-	self assert: node expressions second class equals: MWRequestNodeAction.
-	self assert: node expressions second selector equals: 'allPackages'.
-]
-
-{ #category : #'as yet unclassified' }
-MWRequestExecutorVisitorTests >> testSingleAction [
-	| node |
-	self fail.
-	node := self parse: 'allClasses' rule: #action.
-	self assert: node class equals: MWRequestNodeAction.
-	self assert: node selector equals: 'allClasses'
+	| actionNodeLeft actionNodeRight result groupResult onResultNode |
+	onResultNode := context mock: 'onResultNode'.
+	actionNodeLeft := MWRequestNodeAction new selector: #validActionLeft.
+	actionNodeRight := MWRequestNodeAction new selector: #validActionOnResult.
+	onResultNode should
+		receive: #left;
+		answers: actionNodeLeft.
+	onResultNode should
+		receive: #right;
+		answers: actionNodeRight.
+	groupResult := context mock: 'groupResult'.
+	entity should
+		receive: #validActionLeft;
+		answers: groupResult.
+	groupResult should  
+		receive: #allPropertySelectors;
+		answers: { #validActionOnResult -> #validActionOnResult } asDictionary. 	
+	groupResult should
+		receive: #validActionOnResult;
+		answers: 42.
+	result := visitor visitMWRequestNodeOnResultExpression: onResultNode.
+	self assert: result equals: 42	
 ]
 
 { #category : #'as yet unclassified' }
@@ -115,16 +150,6 @@ MWRequestExecutorVisitorTests >> testSingleActionNode [
 		answers: 'validAction1Response'.
 	result := visitor visitMWRequestNodeAction: actionNode.
 	self assert: result equals: 'validAction1Response'
-]
-
-{ #category : #'as yet unclassified' }
-MWRequestExecutorVisitorTests >> testSingleActionWithParameter [
-	| node |
-	self fail.
-	node := self parse: 'value:toto' rule: #action.
-	self assert: node class equals: MWRequestNodeAction.
-	self assert: node selector equals: 'value'.
-	self assert: node argument equals: 'toto'.
 ]
 
 { #category : #'as yet unclassified' }
