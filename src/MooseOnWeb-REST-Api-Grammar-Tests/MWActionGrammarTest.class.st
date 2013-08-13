@@ -1,3 +1,6 @@
+"
+A MWActionGrammarTest is a test class for the parsing of action expressions in package MooseOnWeb-REST-Api-Grammar-Core
+"
 Class {
 	#name : #MWActionGrammarTest,
 	#superclass : #PPCompositeParserTest,

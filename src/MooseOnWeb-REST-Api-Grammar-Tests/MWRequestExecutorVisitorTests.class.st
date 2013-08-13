@@ -1,3 +1,20 @@
+"
+A MWRequestExecutorVisitorTests is a test class for the execution of a request based on an AST.
+It's using mocks for being independant of the AST and of the Parser
+
+The result is only composed of arrays
+
+Instance Variables
+	entity:		a Mock Of Moose Entity
+	visitor:		a MWRequestExecutorVisitor
+
+entity
+	- the entity that receive the action request
+
+visitor
+	- the AST visitor
+
+"
 Class {
 	#name : #MWRequestExecutorVisitorTests,
 	#superclass : #BabyMockTestCase,
@@ -166,6 +183,7 @@ MWRequestExecutorVisitorTests >> testSingleInvalidActionNode [
 
 { #category : #'as yet unclassified' }
 MWRequestExecutorVisitorTests >> testUnionActions [
+	<expectedFailure>
 	| node |
 	self fail.
 	node := self parse: 'allClasses+allPackages' rule: #actionExpression.

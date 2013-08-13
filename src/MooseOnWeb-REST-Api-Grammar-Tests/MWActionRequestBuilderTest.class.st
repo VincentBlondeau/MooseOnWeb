@@ -1,3 +1,7 @@
+"
+A MWActionRequestBuilderTest is the test class for the Abstract Syntax Tree builder in MooseOnWeb-REST-Api-Grammar-AST.
+
+"
 Class {
 	#name : #MWActionRequestBuilderTest,
 	#superclass : #PPCompositeParserTest,
