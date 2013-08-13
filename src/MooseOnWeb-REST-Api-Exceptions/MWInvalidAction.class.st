@@ -1,3 +1,6 @@
+"
+A MWInvalidAction is raise when the action we want to perform an an object is not allowed or possible.
+"
 Class {
 	#name : #MWInvalidAction,
 	#superclass : #MWError,

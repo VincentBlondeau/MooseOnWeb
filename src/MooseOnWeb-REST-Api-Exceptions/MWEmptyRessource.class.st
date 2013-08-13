@@ -1,7 +1,5 @@
 "
-An EmptyRessource is an Error throw when the ressource we want create is empty.
-
-Instance Variables
+An EmptyRessource is an Error thrown when the ressource we want create is empty.
 
 "
 Class {

@@ -1,5 +1,5 @@
 "
-If the Id provided doesn't anwser a existing object.
+A MWRessourceNotFound is risen when the provided Id doesn't match to an existing object.
 "
 Class {
 	#name : #MWRessourceNotFound,
