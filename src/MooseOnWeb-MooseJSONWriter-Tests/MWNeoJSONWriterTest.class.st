@@ -1,3 +1,13 @@
+"
+A MWNeoJSONWriterTest is testing class for the MooseOnWeb-MooseJSONWriter-Core package.
+
+Instance Variables
+	model:		a MooseModel
+
+model
+	- use as mock to see the printing of the objects.
+
+"
 Class {
 	#name : #MWNeoJSONWriterTest,
 	#superclass : #TestCase,
