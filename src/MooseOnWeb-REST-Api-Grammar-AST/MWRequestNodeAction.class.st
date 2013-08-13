@@ -1,3 +1,17 @@
+"
+A MWRequestNodeAction is a node representing an action in the AST.
+
+Instance Variables
+	argument:		a string 
+	selector:		a string
+
+argument
+	- the argument of the action
+
+selector
+	- the message
+
+"
 Class {
 	#name : #MWRequestNodeAction,
 	#superclass : #MWRequestNode,

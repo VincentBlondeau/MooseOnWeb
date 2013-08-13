@@ -1,3 +1,17 @@
+"
+A MWRequestNodeBinaryExpression is a node representing a binary expression.
+
+Instance Variables
+	left:		a MWRequestNode
+	right:		a MWRequestNode
+
+left
+	- Node preceding the separator
+
+right
+	- Node following the separator
+
+"
 Class {
 	#name : #MWRequestNodeBinaryExpression,
 	#superclass : #MWRequestNode,

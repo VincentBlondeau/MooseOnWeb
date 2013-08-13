@@ -1,3 +1,6 @@
+"
+A MWRequestNodeUnionExpression is a node representing the union of the elements in the left and right parameters
+"
 Class {
 	#name : #MWRequestNodeUnionExpression,
 	#superclass : #MWRequestNodeBinaryExpression,

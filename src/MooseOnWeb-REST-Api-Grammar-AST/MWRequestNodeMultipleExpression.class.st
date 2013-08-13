@@ -1,3 +1,13 @@
+"
+A MWRequestNodeMultipleExpression is a node representing an collection of expressions.
+
+Instance Variables
+	expressions:		Array of MWRequestNodes
+
+expressions
+	- each element of the array is representing an expression node
+
+"
 Class {
 	#name : #MWRequestNodeMultipleExpression,
 	#superclass : #MWRequestNode,
