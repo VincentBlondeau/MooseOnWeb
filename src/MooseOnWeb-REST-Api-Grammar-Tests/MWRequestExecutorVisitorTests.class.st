@@ -1,5 +1,5 @@
 "
-A MWRequestExecutorVisitorTests is a test class for the execution of a request based on an AST.
+A MWRequestExecutorVisitorTests is a test unit for the execution of a request based on an AST.
 It's using mocks for being independant of the AST and of the Parser
 
 The result is only composed of arrays
