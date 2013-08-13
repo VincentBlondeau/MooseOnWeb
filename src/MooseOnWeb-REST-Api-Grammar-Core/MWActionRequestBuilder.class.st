@@ -1,3 +1,8 @@
+"
+A MWActionRequestBuilder is creating a AST representing the parsing of the string. 
+The AST is build with classes in MooseOnWeb-REST-Api-Grammar-AST
+
+"
 Class {
 	#name : #MWActionRequestBuilder,
 	#superclass : #MWActionGrammar,

@@ -1,3 +1,23 @@
+"
+A MWActionGrammar is a grammar parser for complex actions.
+
+Instance Variables represents the elements of the grammar
+	action:		composition of argument and selector (e.g. : allClasses)
+	actionExpression:		a combinaition of actions : allClasses;comments;size
+	actionsExpression:		a concatenation of actionExpression: (allClasses;size),allPackages
+	argument:		an argument of the message (not used)
+	parens:		an parenthesis for actions
+	selector:		the message itself
+
+So you can parse:
+
+allClasses!(cyclomaticComplexity,nameLength),allMethods*allPackages;size
+
+- ! apply an action on each element of a group
+- ; apply an action on a group
+- , allow the call of several actions 
+- * is the concatenation of groups
+"
 Class {
 	#name : #MWActionGrammar,
 	#superclass : #PPCompositeParser,
