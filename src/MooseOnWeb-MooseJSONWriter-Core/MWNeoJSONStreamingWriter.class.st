@@ -1,3 +1,9 @@
+"
+A MWNeoJSONStreamingWriter is a serializer for moose headers. Extend the NeoJSONStreamingWriter used for write Json Dictionaries.
+
+Using the double dispatch, MWNeoJSONStreamingWriter choose which elements of moose to serialize for the header of the JSON depending of the class.
+
+"
 Class {
 	#name : #MWNeoJSONStreamingWriter,
 	#superclass : #NeoJSONStreamingWriter,

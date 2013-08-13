@@ -1,3 +1,15 @@
+"
+A MWNeoJSONWriter is a json serializer for Moose Entities. The JSON is composed of 2 parts: 
+- the header : contains id (if accessible by the MWApi), type and name of the entity
+- the content : contains the result of each property described in the meta model. If the result is a group of entities, only the entities headers are displayed.
+
+Instance Variables
+	root:		boolean
+
+root
+	- true if is the first level of recursivity in the moose entity
+
+"
 Class {
 	#name : #MWNeoJSONWriter,
 	#superclass : #NeoJSONWriter,
