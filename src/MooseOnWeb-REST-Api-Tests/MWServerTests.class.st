@@ -1,3 +1,21 @@
+"
+A MWServerTests is the superclass of all the REST API where a server is used.
+
+Instance Variables
+	client:		a ZnClient
+	modelTest:		a MooseModel
+	server:		a ZnServer
+
+client
+	- a web client
+
+modelTest
+	- a model
+
+server
+	- a web server
+
+"
 Class {
 	#name : #MWServerTests,
 	#superclass : #TestCase,
@@ -31,7 +49,7 @@ MWServerTests >> rootModelForTestServer [
 	^ { self modelTest } asSet
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #running }
 MWServerTests >> setUp [
 	self modelTest: self createTestModel.
 	server := ZnServer startOn: 1710 + 10 atRandom.
@@ -48,7 +66,7 @@ MWServerTests >> setUp [
 	server debugMode: true
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #running }
 MWServerTests >> tearDown [
 	client close.
 	server stop

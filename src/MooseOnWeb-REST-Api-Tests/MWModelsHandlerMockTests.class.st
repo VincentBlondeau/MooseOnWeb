@@ -1,3 +1,13 @@
+"
+A MWModelsHandlerMockTests is a test unit for MWModelsHandler.
+
+Instance Variables
+	model:		<Object>
+
+model
+	- xxxxx
+
+"
 Class {
 	#name : #MWModelsHandlerMockTests,
 	#superclass : #MWMockTests,

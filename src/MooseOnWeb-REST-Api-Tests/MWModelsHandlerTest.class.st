@@ -1,3 +1,7 @@
+"
+A MWEntitiesHandlerWithIDServerTest is a test unit for MWModels.
+
+"
 Class {
 	#name : #MWModelsHandlerTest,
 	#superclass : #MWServerTests,

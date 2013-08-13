@@ -1,10 +1,16 @@
+"
+A MWAcceptTests is a test unit for MWComposedMimeType applied on a request.
+
+Instance Variables
+
+"
 Class {
 	#name : #MWAcceptTests,
 	#superclass : #MWMockTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 MWAcceptTests >> setUp [
 	super setUp.
 	handler := MWRestCallHandler new

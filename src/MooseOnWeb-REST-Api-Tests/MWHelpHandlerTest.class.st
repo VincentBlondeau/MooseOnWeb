@@ -1,10 +1,14 @@
+"
+A MWEntitiesHandlerWithIDServerTest is a test unit for MWHelpHandler 
+
+"
 Class {
 	#name : #MWHelpHandlerTest,
 	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 MWHelpHandlerTest >> testGet [
 	client headerAt: 'Accept' put: 'text/*'; addPathSegment: 'help'.
 	client get.

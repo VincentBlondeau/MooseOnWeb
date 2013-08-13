@@ -1,16 +1,19 @@
+"
+A MWEntitiesHandlerWithIDServerTest is a test unit for MWEntitiesHandlerWithID.
+"
 Class {
 	#name : #MWEntitiesHandlerWithIDServerTest,
 	#superclass : #MWServerTests,
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> setUp [
 	super setUp.
 	client headerAt: 'Accept' put: 'application/json'; addPathSegment: #entities
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGet [
 	"teste la requete get"
 	| output |	
@@ -33,7 +36,7 @@ MWEntitiesHandlerWithIDServerTest >> testGet [
 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetANonExistingQuery [
 
 	client addPathSegment: self modelTest mooseID asString.
@@ -44,7 +47,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetANonExistingQuery [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 	"teste la requete get"
 
@@ -74,7 +77,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntity [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetEntityActionResultAccessID [
 	|  clientTemp |
 	
@@ -97,7 +100,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntityActionResultAccessID [
 			self assert: clientTemp response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8].
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 	"teste la requete get"
 
@@ -116,7 +119,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteAction [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionExistingButNotAllowed [
 
 	client addPathSegment: self modelTest mooseID asString.
@@ -127,7 +130,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActionExistingButNotAllowed [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
 
 	| output |
@@ -140,7 +143,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteActions [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetExecuteComplexAction [
 
 	client addPathSegment: self modelTest mooseID asString.
@@ -150,7 +153,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecuteComplexAction [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetExecutingAnNonExistingAction [
 
 	client addPathSegment: self modelTest mooseID asString.
@@ -160,7 +163,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetExecutingAnNonExistingAction [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetInvalidID [
 
 	client addPathSegment: '0'.
@@ -170,7 +173,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetInvalidID [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetListAction [
 
 	|  output |
@@ -182,7 +185,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetListAction [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetModelEntitiesAccessID [
 	| clientTemp |
 	clientTemp := ZnClient new
@@ -209,7 +212,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetModelEntitiesAccessID [
 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 
 	| output |
@@ -230,7 +233,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 
 	client addPathSegment: self modelTest mooseID asString.

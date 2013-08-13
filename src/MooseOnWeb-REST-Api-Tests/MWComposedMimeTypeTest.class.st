@@ -1,5 +1,5 @@
 "
-A ZnComposedMimeTypeTest is a test class for testing the behavior of ZnComposedMimeType
+A ZnComposedMimeTypeTest is a test unit for testing the behavior of MWComposedMimeType
 "
 Class {
 	#name : #MWComposedMimeTypeTest,
