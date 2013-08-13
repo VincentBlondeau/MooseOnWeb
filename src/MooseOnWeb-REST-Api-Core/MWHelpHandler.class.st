@@ -1,8 +1,8 @@
 "
-A HelpHandler is a catcher for the GET help request.
+A HelpHandler is a handler for the GET /help request. It uses the #mooseonweb:name:description: pragma to create the online help.
+So if you want to add a line to the help just add a pragma to your method.
 
-Instance Variables
-
+The response will be in text/plain.
 "
 Class {
 	#name : #MWHelpHandler,

@@ -1,11 +1,17 @@
 "
-An EntitiesHandlerWithID is a catcher for the GET entities/ID request. 
+An EntitiesHandlerWithID is a handler for the GET entities/ID request. 
 
-Instance Variables
-	entity:		<MooseEntity>
+The entry point is the get method which dispatch all the subrequests (the parameter is always the entity of the request):
+- entities/ID?action= is handled by the action: method which use actionMapping to go to the right method.
+- entities/ID?q= is handled by query: 
+- entities/ID?search=  is handled by search: 
 
-entity
-	- MooseEntity associated to the Id in the request
+The lookup of the entity in the model is made by findEntityWithID:.
+The execution of a method on an entity is made by performAction: on: . It raise MWInvalidAction if the action is not allowed or not existing.
+
+listActionsSelectors: retrieves the executable actions on an moose entity. Using allPropertySelectors which uses pragmas and metamodel to sees what are the understandable methods. If the methods doesn't exists and you want to add it, add a pragma and do MooseModel resetMeta to refresh the meta model.
+
+The action exectution is delegated to an expression parser. It's allowing complex requests. See MooseOnWeb-REST-API-Grammar-*.
 
 "
 Class {
@@ -96,7 +102,6 @@ MWEntitiesHandlerWithID >> performAction: anActionSymbol on: anEntity [
 { #category : #query }
 MWEntitiesHandlerWithID >> query: anEntity [
 <mooseonweb:'GET' name:'/entities/<mooseID>?q=actions' description:'List the operations getting the properties of the <mooseID> entities' >
-	"/entities/<mooseID>?q=actions : liste des opérations de lecture applicable sur l'entité : allPropertySelectors"
 
 	| q |
 	q := request uri queryAt: 'q'.

@@ -1,8 +1,19 @@
 "
 A MooseOnWebRestServerDelegate is the entry point of the mooseOnWeb REST Api.
 
-Instance Variables
+To launch the server (look class side): 
+Do: MWRestServerDelegate serverStartOn: 8080 to launch the mooseOnWeb server on http://localhost:8080 with the models presents in MooseModels root.
 
+If you want provide accesses to others models you can precise a MooseModels collections with the serverStartOn:models: method.
+Only one server is runable by the Api so when you start a new server it will be stop the old.
+If you want to stop the server, you can do: MWRestServerDelegate serverStop.
+The server instance is accessible by 'server'. 
+
+By default all exceptions are catched by Zinc-Rest and converted to html error codes. So for debugs it in pharo do:
+MWRestServerDelegate server debugMode: true
+
+To browse the api with a server go to: 
+http://localhost:8080/mooseOnWeb/help
 "
 Class {
 	#name : #MWRestServerDelegate,

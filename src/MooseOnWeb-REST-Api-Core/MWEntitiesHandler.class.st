@@ -1,5 +1,7 @@
 "
-An EntitiesHandler is a catcher for the GET entities request
+An EntitiesHandler is a handler for entities request.
+The uri to come here is mooseOnWeb/entities (see class side).
+
 "
 Class {
 	#name : #MWEntitiesHandler,
@@ -14,6 +16,6 @@ MWEntitiesHandler class >> pattern [
 
 { #category : #public }
 MWEntitiesHandler >> get [
-	self notImplemented
+	self notFound 
 	
 ]

@@ -1,5 +1,10 @@
 "
-A ModelsHandler is a catcher for the GET models request.
+A ModelsHandler is a catcher for the GET /models request. You can:
+
+- GET the list of the models 
+- DELETE a model from is id
+- POST (create) a new model from a MSE file (support multiPartFormData add model name else the name of the model is unique and generated)
+- OPTIONS send the acceptable methods by the server.
 "
 Class {
 	#name : #MWModelsHandler,
