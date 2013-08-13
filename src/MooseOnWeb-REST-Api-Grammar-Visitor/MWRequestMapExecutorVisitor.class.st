@@ -1,3 +1,16 @@
+"
+A MWRequestExecutorVisitor is a visitor of AST created by MooseOnWeb-REST-Api-Grammar-AST.
+A verification of the actions's validity is realized. If the action isn't valide a MWInvalidAction is risen
+
+The result is composed of dictionary where the key is the name of the action and the value is the result of the action.
+
+Instance Variables
+	currentEntity:		a Moose Entity
+
+currentEntity
+	- the current entity on which the action will be executed
+
+"
 Class {
 	#name : #MWRequestMapExecutorVisitor,
 	#superclass : #MWRequestVisitor,

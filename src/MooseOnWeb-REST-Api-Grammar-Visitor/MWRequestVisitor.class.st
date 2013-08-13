@@ -1,3 +1,8 @@
+"
+A MWRequestVisitor is an abstract visitor for AST created:  in MooseOnWeb-REST-Api-Grammar-AST.
+
+
+"
 Class {
 	#name : #MWRequestVisitor,
 	#superclass : #Object,
