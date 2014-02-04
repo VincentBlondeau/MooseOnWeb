@@ -19,6 +19,13 @@ MWNeoJSONStreamingWriter >> mooseName: mooseObject [
 ]
 
 { #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderClonedFragment: mooseEntity [
+	self writeKey: 'id' value: mooseEntity mooseID.
+	self writeKey: 'name' value: mooseEntity formattedName.
+	self writeKey: 'type' value: mooseEntity class name.
+]
+
+{ #category : #writing }
 MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
