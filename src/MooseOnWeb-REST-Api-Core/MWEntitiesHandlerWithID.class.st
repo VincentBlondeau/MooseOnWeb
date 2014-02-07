@@ -116,9 +116,9 @@ MWEntitiesHandlerWithID >> query: anEntity [
 
 { #category : #query }
 MWEntitiesHandlerWithID >> search: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<propriete>&op=<op>&value=<value>'
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<property>&op=<op>&value=<value>'
 	description:
-		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
+		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action. The action is one of the available actions, the property is a action available on the precedent result, op is an operator in { eq lt le gt ge }, and value is a value comparable with the property result'>
 	| key op value action data uri |
 	[ 
 	uri := request uri.
