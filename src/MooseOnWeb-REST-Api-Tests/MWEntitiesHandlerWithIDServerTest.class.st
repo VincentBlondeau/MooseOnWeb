@@ -234,6 +234,58 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearch [
 ]
 
 { #category : #tests }
+MWEntitiesHandlerWithIDServerTest >> testGetSearchLt1 [
+
+	| output |
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'q' put: 'search'.
+	client queryAt: 'key' put: 'cyclomaticComplexity'.
+	client queryAt: 'op' put: 'lt'.
+	client queryAt: 'value' put: '10'.
+	client queryAt: 'onAction' put: 'allMethods'.
+	output := client get.
+	self assert: client isSuccess.
+	self modelTest allMethods
+		do: [ :e | |cyclo|
+			cyclo := e cyclomaticComplexity.
+			 cyclo < 10
+				ifTrue: [ 
+					self assert: (output includesSubstring: e mooseName).
+					self assert: (output includesSubstring: e mooseID asString) ]
+				ifFalse: [
+					self deny: (output includesSubstring: e mooseName).
+					self deny: (output includesSubstring: e mooseID asString)
+					]].
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+]
+
+{ #category : #tests }
+MWEntitiesHandlerWithIDServerTest >> testGetSearchLt2 [
+
+	| output |
+	client addPathSegment: self modelTest mooseID asString.
+	client queryAt: 'q' put: 'search'.
+	client queryAt: 'key' put: 'cyclomaticComplexity'.
+	client queryAt: 'op' put: 'lt'.
+	client queryAt: 'value' put: '2'.
+	client queryAt: 'onAction' put: 'allMethods'.
+	output := client get.
+	self assert: client isSuccess.
+	self modelTest allMethods
+		do: [ :e | |cyclo|
+			cyclo := e cyclomaticComplexity.
+			 cyclo < 2
+				ifTrue: [ 
+					self assert: (output includesSubstring: e mooseName).
+					self assert: (output includesSubstring: e mooseID asString) ]
+				ifFalse: [
+					self deny: (output includesSubstring: e mooseName).
+					self deny: (output includesSubstring: e mooseID asString)
+					]].
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+]
+
+{ #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetSearchWithoutParameters [
 
 	client addPathSegment: self modelTest mooseID asString.
