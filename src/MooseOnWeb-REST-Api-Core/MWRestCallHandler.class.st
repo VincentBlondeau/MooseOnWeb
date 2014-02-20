@@ -80,6 +80,11 @@ MWRestCallHandler >> listMooseModels [
 	^ self delegate mooseModelList
 ]
 
+{ #category : #'as yet unclassified' }
+MWRestCallHandler >> listMooseProjects [
+	^self delegate mooseProjectList
+]
+
 { #category : #'error handling' }
 MWRestCallHandler >> notAcceptable [
 	response := self delegate 

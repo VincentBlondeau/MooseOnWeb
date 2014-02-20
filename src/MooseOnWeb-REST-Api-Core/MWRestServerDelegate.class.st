@@ -19,7 +19,8 @@ Class {
 	#name : #MWRestServerDelegate,
 	#superclass : #ZnJSONRestServerDelegate,
 	#instVars : [
-		'mooseModelList'
+		'mooseModelList',
+		'mooseProjectList'
 	],
 	#classVars : [
 		'server'
@@ -48,6 +49,22 @@ MWRestServerDelegate class >> serverStartOn: port models: aMooseModelCollection 
 		delegate:
 			(self new
 				mooseModelList: aMooseModelCollection;
+				yourself).
+	server register
+]
+
+{ #category : #managing }
+MWRestServerDelegate class >> serverStartOn: port projects: aProjectCollection [
+	self server
+		ifNotNil: [ 
+			self server isRunning
+				ifTrue: [ self serverStop ] ].
+	server := ZnServer startOn: port.
+	server
+		delegate:
+			(self new
+				mooseModelList: (Array with: aProjectCollection first latestGeneratedVersion mooseModel);
+				mooseProjectList: aProjectCollection;
 				yourself).
 	server register
 ]
@@ -88,4 +105,16 @@ MWRestServerDelegate >> mooseModelList [
 { #category : #'as yet unclassified' }
 MWRestServerDelegate >> mooseModelList: aCollectionOfMooseModels [
 	mooseModelList := aCollectionOfMooseModels
+]
+
+{ #category : #accessing }
+MWRestServerDelegate >> mooseProjectList [
+	
+	^ mooseProjectList
+]
+
+{ #category : #accessing }
+MWRestServerDelegate >> mooseProjectList: anObject [
+	
+	mooseProjectList := anObject
 ]

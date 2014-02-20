@@ -47,16 +47,32 @@ MWEntitiesHandlerWithID >> actionMapping [
 	('action' -> [ :anEntity | self action: anEntity ])} asDictionary
 ]
 
-{ #category : #query }
-MWEntitiesHandlerWithID >> compare: aStringOrANumberOrABoolean to: anOtherObject withOp: operator [
-	^ aStringOrANumberOrABoolean compareTo: anOtherObject withOp: operator
+{ #category : #accessing }
+MWEntitiesHandlerWithID >> findEntityWithID: anEntityID [
+	| entity |
+	entity:= self findProjectWithID: anEntityID .
+	entity ifNotNil: [ ^entity ].
+	entity:= self findVersionWithID: anEntityID.
+	entity ifNotNil: [ ^entity ].
+	entity:= self findModelWithID: anEntityID.
+	entity ifNotNil: [ ^entity first ].
+MWRessourceNotFound signalFor: anEntityID 
 ]
 
 { #category : #accessing }
-MWEntitiesHandlerWithID >> findEntityWithID: anEntityID [
-	^ (self listMooseModels collect: [ :m | m objectWithID: anEntityID ])
-		detect: [ :anEntity | anEntity notNil ]
-		ifNone: [ MWRessourceNotFound signalFor: anEntityID ]
+MWEntitiesHandlerWithID >> findModelWithID: anEntityID [
+	^(self listMooseModels collect: [ :m | m objectWithID: anEntityID ])
+]
+
+{ #category : #accessing }
+MWEntitiesHandlerWithID >> findProjectWithID: anEntityID [
+	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj] ifFalse:[^ nil]].
+]
+
+{ #category : #accessing }
+MWEntitiesHandlerWithID >> findVersionWithID: anEntityID [
+	self listMooseProjects do: [:p | p versions do: [:v | v mooseID = anEntityID 
+					ifTrue: [ ^ v ] ifFalse: [ ^ nil ] ] ].
 ]
 
 { #category : #public }
@@ -121,9 +137,9 @@ MWEntitiesHandlerWithID >> query: anEntity [
 
 { #category : #query }
 MWEntitiesHandlerWithID >> search: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<propriete>&op=<op>&value=<value>'
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<property>&op=<op>&value=<value>'
 	description:
-		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
+		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action. The action is one of the available actions, the property is a action available on the precedent result, op is an operator in { eq lt le gt ge }, and value is a value comparable with the property result'>
 	| key op value action data uri |
 	[ 
 	uri := request uri.
@@ -134,11 +150,11 @@ MWEntitiesHandlerWithID >> search: anEntity [
 		do: [ MWRessourceNotFound signal ].
 	[ 
 	action := uri queryAt: 'onAction'.
-	data := self performAction: action on: anEntity ]
+	data := self performAction: action on: anEntity.  ]
 		on: KeyNotFound
 		do: [ data := anEntity ].
 	data isCollection
 		ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
 	^ ((data select: [ :el | el respondsTo: key asSymbol ])
-		select: [ :el | self compare: (el perform: key asSymbol) to: value withOp: op asMessage  ]) asOrderedCollection
+		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection
 ]
