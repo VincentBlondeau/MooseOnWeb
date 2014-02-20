@@ -76,6 +76,24 @@ MWNeoJSONWriter >> writeMooseModel: mooseModel [
 ]
 
 { #category : #writing }
+MWNeoJSONWriter >> writeQueryConcernEntity: mooseEntity [
+	self writeMapStreamingDo: [ :jsonMapWriter |
+			mooseEntity neoJsonHeaderOn: jsonMapWriter.
+			self detailled
+				ifTrue: [ 
+					| list |
+					list := mooseEntity allDeclaredProperties.
+					(list sort: [ :a :b | a name < b name ])
+						do: [ :a | 
+							| value |
+							value := mooseEntity perform: a implementingSelector.
+							value isNil
+								ifFalse: [ 
+									((value isKindOf: Collection) and: [value isEmpty])
+										ifFalse: [ jsonMapWriter writeKey: a name value: value ] ] ] ] ]
+]
+
+{ #category : #writing }
 MWNeoJSONWriter >> writeStreamingDo: block [
 	| mapWriter |
 	mapWriter := MWNeoJSONStreamingWriter on: self.

@@ -38,3 +38,12 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseModel: mooseModel [
 	self writeKey: 'name' value: (self mooseName: mooseModel).
 	self writeKey: 'type' value: mooseModel class name.
 ]
+
+{ #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderQueryConcern: aQueryConcern [
+	self writeKey: 'id' value: aQueryConcern mooseID.
+	self writeKey: 'label' value: aQueryConcern label.
+	self writeKey: 'explanation' value: aQueryConcern explanation.
+	self writeKey: 'result' value: aQueryConcern result.
+	
+]
