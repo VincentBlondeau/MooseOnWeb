@@ -76,6 +76,16 @@ MWNeoJSONWriter >> writeMooseModel: mooseModel [
 ]
 
 { #category : #writing }
+MWNeoJSONWriter >> writeProjectVersion: projectVersion [
+	self writeMapStreamingDo: [ :jsonMapWriter | 
+			projectVersion neoJsonHeaderOn: jsonMapWriter.
+			self detailled
+				ifTrue: [ 
+					jsonMapWriter writeKey: 'model' value: projectVersion mooseModel .
+					root := false ] ]
+]
+
+{ #category : #writing }
 MWNeoJSONWriter >> writeQueryConcernEntity: mooseEntity [
 	self writeMapStreamingDo: [ :jsonMapWriter |
 			mooseEntity neoJsonHeaderOn: jsonMapWriter.
