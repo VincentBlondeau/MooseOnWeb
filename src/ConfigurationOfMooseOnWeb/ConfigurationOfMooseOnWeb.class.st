@@ -279,6 +279,7 @@ ConfigurationOfMooseOnWeb >> development: spec [
 
 	"spec for: #'pharo1.4.x' version: '1.2'."
 	spec for: #'pharo2.x' version: '1.3-baseline'.
+	spec for: #'pharo3.x' version: '1.3-baseline'.
 
 ]
 
