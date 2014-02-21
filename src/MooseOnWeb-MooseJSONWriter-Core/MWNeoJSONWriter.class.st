@@ -75,6 +75,12 @@ MWNeoJSONWriter >> writeMooseModel: mooseModel [
 					root := false ] ]
 ]
 
+{ #category : #'as yet unclassified' }
+MWNeoJSONWriter >> writeMooseProject: mooseProject [
+	self writeMapStreamingDo: [ :jsonMapWriter | 
+			mooseProject neoJsonHeaderOn: jsonMapWriter.]
+]
+
 { #category : #writing }
 MWNeoJSONWriter >> writeProjectVersion: projectVersion [
 	self writeMapStreamingDo: [ :jsonMapWriter | 
