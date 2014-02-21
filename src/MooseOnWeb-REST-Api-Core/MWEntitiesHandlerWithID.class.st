@@ -55,24 +55,26 @@ MWEntitiesHandlerWithID >> findEntityWithID: anEntityID [
 	entity:= self findVersionWithID: anEntityID.
 	entity ifNotNil: [ ^entity ].
 	entity:= self findModelWithID: anEntityID.
-	entity ifNotNil: [ ^entity first ].
+	entity first ifNotNil: [ ^entity first ].
 MWRessourceNotFound signalFor: anEntityID 
 ]
 
 { #category : #accessing }
 MWEntitiesHandlerWithID >> findModelWithID: anEntityID [
-	^(self listMooseModels collect: [ :m | m objectWithID: anEntityID ])
+	^ ((self listMooseModels collect: [ :m | m objectWithID: anEntityID ])asArray )ifEmpty: [ nil ]
 ]
 
 { #category : #accessing }
 MWEntitiesHandlerWithID >> findProjectWithID: anEntityID [
-	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj] ifFalse:[^ nil]].
+	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj]].
+	^ nil
 ]
 
 { #category : #accessing }
 MWEntitiesHandlerWithID >> findVersionWithID: anEntityID [
 	self listMooseProjects do: [:p | p versions do: [:v | v mooseID = anEntityID 
-					ifTrue: [ ^ v ] ifFalse: [ ^ nil ] ] ].
+					ifTrue: [ ^ v ] ] ].
+			^ nil
 ]
 
 { #category : #public }
