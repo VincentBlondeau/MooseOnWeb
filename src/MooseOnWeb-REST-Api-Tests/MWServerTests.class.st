@@ -57,6 +57,7 @@ MWServerTests >> setUp [
 		delegate:
 			(MWRestServerDelegate new
 				mooseModelList:  self rootModelForTestServer ;
+				mooseProjectList: {  } asArray;
 				yourself).
 	server register.
 	client := ZnClient new

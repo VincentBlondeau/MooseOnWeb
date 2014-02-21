@@ -191,11 +191,12 @@ MWEntitiesHandlerWithIDMockTests >> testQuerySearchWithEmptyResult [
 
 { #category : #tests }
 MWEntitiesHandlerWithIDMockTests >> testSearchANonExistingEntity [
-	| model |
+	| model  |
 	model := context mock: 'model'.
-	model should receive: #objectWithID:; with: 42; answers: nil.
-	delegate should receive: #mooseModelList; answers: { model }.
-	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound  
+	model can receive: #objectWithID:; with: 42; answers: nil.
+	delegate can receive: #mooseProjectList; answers: {}.
+	delegate can receive: #mooseModelList; answers: { model }.
+	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound  .
 ]
 
 { #category : #tests }
@@ -209,5 +210,8 @@ MWEntitiesHandlerWithIDMockTests >> testSearchAnExistingEntity [
 	delegate should
 		receive: #mooseModelList;
 		answers: {model}.
+	delegate can
+		receive: #mooseProjectList;
+		answers: {  }.
 	self shouldnt: [ self assert: (handler findEntityWithID: 42) equals: entity ] raise: MWRessourceNotFound
 ]
