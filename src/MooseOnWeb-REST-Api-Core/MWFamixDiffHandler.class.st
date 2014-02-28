@@ -32,8 +32,8 @@ MWFamixDiffHandler >> diff [
 		on: KeyNotFound
 		do: [ MWRessourceNotFound signal ].
 	^  ((FamixDiff new
-		base: (self findEntityInModelWithID: id1 asNumber)first;
-		target: (self findEntityInModelWithID: id2 asNumber)first;
+		base: (self findEntityWithID: id1 asNumber);
+		target: (self findEntityWithID: id2 asNumber);
 		diff;
 		yourself) changes reject: #isVersion) asSet
 	

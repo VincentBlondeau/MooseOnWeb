@@ -56,6 +56,38 @@ MWRestCallHandler >> created: uri [
 		yourself
 ]
 
+{ #category : #accessing }
+MWRestCallHandler >> findEntityInModelWithID: anEntityID [
+	^ ((self listMooseModels collect: [ :m | m objectWithID: anEntityID ]) select: [ :anElement | anElement isNotNil ])
+		ifEmpty: [ Array with: nil ]
+]
+
+{ #category : #accessing }
+MWRestCallHandler >> findEntityWithID: anEntityID [
+	| entity |
+	self updateListModel.
+	entity:= self findProjectWithID: anEntityID .
+	entity ifNotNil: [ ^entity ].
+	entity:= self findVersionWithID: anEntityID.
+	entity ifNotNil: [ ^entity ].
+	entity:= self findEntityInModelWithID: anEntityID.
+	entity first ifNotNil: [ ^entity first ].
+MWRessourceNotFound signalFor: anEntityID 
+]
+
+{ #category : #accessing }
+MWRestCallHandler >> findProjectWithID: anEntityID [
+	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj]].
+	^ nil
+]
+
+{ #category : #accessing }
+MWRestCallHandler >> findVersionWithID: anEntityID [
+	self listMooseProjects do: [:p | p versions do: [:v | v mooseID = anEntityID 
+					ifTrue: [ ^ v ] ] ].
+			^ nil
+]
+
 { #category : #public }
 MWRestCallHandler >> isAcceptableRequest: aRequest withAcceptedMimeType: aMimeTypeCollection [
 	^ (self acceptMimeTypesFrom: aRequest containing: aMimeTypeCollection) isEmpty not
@@ -128,4 +160,9 @@ MWRestCallHandler >> unsupportedMediaType [
 		errorResponse: request 
 		code: 415
 		message: 'Unsupported Media Type ', request accept.
+]
+
+{ #category : #'as yet unclassified' }
+MWRestCallHandler >> updateListModel [
+	self delegate mooseModelList:  (self listMooseProjects flatCollect: [:p | p versions collect: [:v | v mooseModel ] ] )
 ]

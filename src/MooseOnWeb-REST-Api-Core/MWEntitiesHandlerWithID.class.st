@@ -52,36 +52,6 @@ MWEntitiesHandlerWithID >> compare: aStringOrANumberOrABoolean to: anOtherObject
 	^ aStringOrANumberOrABoolean compareTo: anOtherObject withOp: operator
 ]
 
-{ #category : #accessing }
-MWEntitiesHandlerWithID >> findEntityWithID: anEntityID [
-	| entity |
-	entity:= self findProjectWithID: anEntityID .
-	entity ifNotNil: [ ^entity ].
-	entity:= self findVersionWithID: anEntityID.
-	entity ifNotNil: [ ^entity ].
-	entity:= self findModelWithID: anEntityID.
-	entity first ifNotNil: [ ^entity first ].
-MWRessourceNotFound signalFor: anEntityID 
-]
-
-{ #category : #accessing }
-MWEntitiesHandlerWithID >> findModelWithID: anEntityID [
-	^ ((self listMooseModels collect: [ :m | m objectWithID: anEntityID ])asArray )ifEmpty: [ nil ]
-]
-
-{ #category : #accessing }
-MWEntitiesHandlerWithID >> findProjectWithID: anEntityID [
-	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj]].
-	^ nil
-]
-
-{ #category : #accessing }
-MWEntitiesHandlerWithID >> findVersionWithID: anEntityID [
-	self listMooseProjects do: [:p | p versions do: [:v | v mooseID = anEntityID 
-					ifTrue: [ ^ v ] ] ].
-			^ nil
-]
-
 { #category : #public }
 MWEntitiesHandlerWithID >> get [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>' description: 'Get the informations on the entity <mooseID>'>
