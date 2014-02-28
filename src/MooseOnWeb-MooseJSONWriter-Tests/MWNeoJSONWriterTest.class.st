@@ -64,7 +64,7 @@ MWNeoJSONWriterTest >> testWriteMooseModel [
 '		{',String crlf,
 '			"id" : ',entity mooseID asString,',',String crlf,
 '			"name" : "\"This is a ...\" in ",',String crlf,
-'			"type" : "FAMIXComment",',String crlf,
+'			"type" : "FAMIXComment"',String crlf,
 '		}',String crlf,
 '	]',String crlf,
 '}'	
