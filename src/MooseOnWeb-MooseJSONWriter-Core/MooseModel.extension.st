@@ -9,5 +9,4 @@ MooseModel >> neoJsonHeaderOn: jsonMapWriter [
 { #category : #'*MooseOnWeb-MooseJSONWriter-Core' }
 MooseModel >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMooseModel: self.
-
 ]
