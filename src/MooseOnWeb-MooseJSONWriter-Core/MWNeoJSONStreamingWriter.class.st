@@ -23,7 +23,6 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
 	self writeKey: 'type' value: mooseEntity class name.
-	self writeKey: 'children' value: mooseEntity children size.
 ]
 
 { #category : #writing }
