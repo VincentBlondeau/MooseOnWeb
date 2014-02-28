@@ -164,5 +164,5 @@ MWRestCallHandler >> unsupportedMediaType [
 
 { #category : #'as yet unclassified' }
 MWRestCallHandler >> updateListModel [
-	self delegate mooseModelList:  (self listMooseProjects flatCollect: [:p | p versions collect: [:v | v mooseModel ] ] )
+	self delegate mooseModelList:  ((self listMooseProjects flatCollect: [:p | p versions collect: [:v | v mooseModel ] ] ), self delegate mooseModelList asArray)asSet asArray
 ]
