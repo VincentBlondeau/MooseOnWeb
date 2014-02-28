@@ -208,7 +208,7 @@ MWEntitiesHandlerWithIDMockTests >> testSearchAnExistingEntity [
 		receive: #objectWithID:;
 		with: 42;
 		answers: entity.
-	delegate should
+	delegate can
 		receive: #mooseModelList;
 		answers: {model}.
 	delegate can
