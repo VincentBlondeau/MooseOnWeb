@@ -17,7 +17,6 @@ MWEntitiesHandlerWithIDServerTest >> setUp [
 MWEntitiesHandlerWithIDServerTest >> testGet [
 	"teste la requete get"
 	| output |	
-	
 	client addPathSegment: self modelTest mooseID asString.
 	output := client get.
 	self assert: client isSuccess.

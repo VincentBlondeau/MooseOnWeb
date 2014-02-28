@@ -195,6 +195,7 @@ MWEntitiesHandlerWithIDMockTests >> testSearchANonExistingEntity [
 	model := context mock: 'model'.
 	model can receive: #objectWithID:; with: 42; answers: nil.
 	delegate can receive: #mooseProjectList; answers: {}.
+	delegate can receive: #mooseModelList:.
 	delegate can receive: #mooseModelList; answers: { model }.
 	self should: [ handler findEntityWithID: 42 ] raise: MWRessourceNotFound  .
 ]
@@ -213,5 +214,6 @@ MWEntitiesHandlerWithIDMockTests >> testSearchAnExistingEntity [
 	delegate can
 		receive: #mooseProjectList;
 		answers: {  }.
+	delegate can receive: #mooseModelList:.
 	self shouldnt: [ self assert: (handler findEntityWithID: 42) equals: entity ] raise: MWRessourceNotFound
 ]
