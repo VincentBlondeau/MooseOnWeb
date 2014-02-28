@@ -23,6 +23,7 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
 	self writeKey: 'type' value: mooseEntity class name.
+	self writeKey: 'children' value: mooseEntity children size.
 ]
 
 { #category : #writing }
@@ -33,24 +34,7 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseGroup: mooseGroup [
 
 { #category : #writing }
 MWNeoJSONStreamingWriter >> writeHeaderMooseModel: mooseModel [
-	mooseModel ~= MooseModel root
-		ifTrue: [ self writeKey: 'id' value: mooseModel mooseID ].
+	self writeKey: 'id' value: mooseModel mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseModel).
 	self writeKey: 'type' value: mooseModel class name.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderMooseProject: mooseProject [
-	self writeKey: 'id' value: (mooseProject mooseID).
-	self writeKey: 'name' value: (self mooseName: mooseProject).
-	self writeKey: 'type' value: mooseProject class name.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderQueryConcern: aQueryConcern [
-	self writeKey: 'id' value: aQueryConcern mooseID.
-	self writeKey: 'label' value: aQueryConcern label.
-	self writeKey: 'explanation' value: aQueryConcern explanation.
-	self writeKey: 'result' value: aQueryConcern result.
-	
 ]

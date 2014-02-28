@@ -39,6 +39,12 @@ MWNeoJSONWriter >> mooseName: mooseObject [
 ]
 
 { #category : #writing }
+MWNeoJSONWriter >> writeFamixChange: aFamixChange [
+	self writeMapStreamingDo: [ :jsonMapWriter | 
+			aFamixChange neoJsonHeaderOn: jsonMapWriter ]
+]
+
+{ #category : #writing }
 MWNeoJSONWriter >> writeMooseEntity: mooseEntity [
 	self writeMapStreamingDo: [ :jsonMapWriter |
 			mooseEntity neoJsonHeaderOn: jsonMapWriter.
@@ -73,40 +79,6 @@ MWNeoJSONWriter >> writeMooseModel: mooseModel [
 				ifTrue: [ 
 					jsonMapWriter writeKey: 'entities' value: mooseModel entities.
 					root := false ] ]
-]
-
-{ #category : #'as yet unclassified' }
-MWNeoJSONWriter >> writeMooseProject: mooseProject [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			mooseProject neoJsonHeaderOn: jsonMapWriter.]
-]
-
-{ #category : #writing }
-MWNeoJSONWriter >> writeProjectVersion: projectVersion [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			projectVersion neoJsonHeaderOn: jsonMapWriter.
-			self detailled
-				ifTrue: [ 
-					jsonMapWriter writeKey: 'model' value: projectVersion mooseModel .
-					root := false ] ]
-]
-
-{ #category : #writing }
-MWNeoJSONWriter >> writeQueryConcernEntity: mooseEntity [
-	self writeMapStreamingDo: [ :jsonMapWriter |
-			mooseEntity neoJsonHeaderOn: jsonMapWriter.
-			self detailled
-				ifTrue: [ 
-					| list |
-					list := mooseEntity allDeclaredProperties.
-					(list sort: [ :a :b | a name < b name ])
-						do: [ :a | 
-							| value |
-							value := mooseEntity perform: a implementingSelector.
-							value isNil
-								ifFalse: [ 
-									((value isKindOf: Collection) and: [value isEmpty])
-										ifFalse: [ jsonMapWriter writeKey: a name value: value ] ] ] ] ]
 ]
 
 { #category : #writing }
