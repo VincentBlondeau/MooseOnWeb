@@ -19,6 +19,20 @@ MWNeoJSONStreamingWriter >> mooseName: mooseObject [
 ]
 
 { #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderClonedFragment: mooseEntity [
+	self writeKey: 'id' value: mooseEntity mooseID.
+	self writeKey: 'name' value: mooseEntity formattedName.
+	self writeKey: 'type' value: mooseEntity class name.
+]
+
+{ #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderFamixChange: aFamixChange [
+	self writeKey: 'name' value: (aFamixChange name).
+	self writeKey: 'color' value: (aFamixChange color asHTMLColor).
+	self writeKey: 'entityID' value: (aFamixChange entity mooseID)
+]
+
+{ #category : #writing }
 MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
@@ -36,4 +50,13 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseModel: mooseModel [
 	self writeKey: 'id' value: mooseModel mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseModel).
 	self writeKey: 'type' value: mooseModel class name.
+]
+
+{ #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderProjectVersion: projectVersion [
+	self writeKey: 'id' value: projectVersion mooseID.
+	self writeKey: 'name' value: (self mooseName: projectVersion).
+	self writeKey: 'type' value: projectVersion class name.
+	self writeKey: 'date' value: projectVersion date asUnixTime.
+	self writeKey: 'modelID' value: projectVersion mooseModel mooseID.
 ]
