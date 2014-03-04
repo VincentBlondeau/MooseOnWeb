@@ -1,6 +1,9 @@
 Class {
 	#name : #MWFamixDiffHandler,
 	#superclass : #MWRestCallHandler,
+	#instVars : [
+		'changesComputation'
+	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
 
@@ -19,6 +22,18 @@ MWFamixDiffHandler >> authorizedActions [
 	^ (self class methodsInProtocol: 'actions') collect: [ :aMethod | aMethod selector ]
 ]
 
+{ #category : #accessing }
+MWFamixDiffHandler >> changesComputation [
+	
+	^ changesComputation
+]
+
+{ #category : #accessing }
+MWFamixDiffHandler >> changesComputation: anObject [
+	
+	changesComputation := anObject
+]
+
 { #category : #actions }
 MWFamixDiffHandler >> diff [
 	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=diff&id1=<value>&id2=<value>'
@@ -31,12 +46,11 @@ MWFamixDiffHandler >> diff [
 	id2 := uri queryAt: 'id2']
 		on: KeyNotFound
 		do: [ MWRessourceNotFound signal ].
-	^  ((FamixDiff new
-		base: (self findEntityWithID: id1 asNumber);
-		target: (self findEntityWithID: id2 asNumber);
-		diff;
-		yourself) changes reject: #isVersion) asSet
-	
+	self changesComputation: (FamixDiffChangesComputation new initializeDiffwith: (self findEntityWithID: id1 asNumber) and: (self findEntityWithID: id2 asNumber)) .
+	^  Dictionary new 
+		at: 'changeTypes' put: self changesComputation changeTypes;
+		at: 'typesChanged' put: self changesComputation changeMetrics;
+		yourself
 ]
 
 { #category : #public }
