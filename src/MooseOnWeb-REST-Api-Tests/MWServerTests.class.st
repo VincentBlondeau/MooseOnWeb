@@ -22,7 +22,8 @@ Class {
 	#instVars : [
 		'server',
 		'client',
-		'modelTest'
+		'modelTest',
+		'isProxyUsed'
 	],
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
@@ -64,13 +65,16 @@ MWServerTests >> setUp [
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
-	server debugMode: true
+	isProxyUsed := NetworkSystemSettings useHTTPProxy.
+	NetworkSystemSettings useHTTPProxy: false.
+	"server debugMode: true"
 ]
 
 { #category : #running }
 MWServerTests >> tearDown [
 	client close.
-	server stop
+	server stop.
+	NetworkSystemSettings useHTTPProxy: isProxyUsed 
 ]
 
 { #category : #tests }
