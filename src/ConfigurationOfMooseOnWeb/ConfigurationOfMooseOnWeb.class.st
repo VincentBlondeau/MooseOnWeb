@@ -25,6 +25,11 @@ ConfigurationOfMooseOnWeb class >> isMetacelloConfig [
 ]
 
 { #category : #loading }
+ConfigurationOfMooseOnWeb class >> load [
+	self loadDevelopment
+]
+
+{ #category : #loading }
 ConfigurationOfMooseOnWeb class >> loadDefault [
 	self loadDevelopment
 ]
@@ -224,7 +229,7 @@ ConfigurationOfMooseOnWeb >> baseline13: spec [
 						className: 'ConfigurationOfZincHTTPComponents';
 						versionString: #stable;
 						loads: #('REST');
-						repository: 'http://www.squeaksource.com/ZincHTTPComponents' ].
+						repository:  'http://smalltalkhub.com/mc/SvenVanCaekenberghe/ZincHTTPComponents/main/' ].
 			spec
 				project: 'BabyMock'
 				with: [ 
