@@ -29,6 +29,7 @@ MWNeoJSONWriterTest >> testWriteMooseEntity [
 		content:
 			'This is a test"
 	'.
+	entity mooseModel: model.
 	stream := WriteStream with: ''.
 		(MWNeoJSONWriter on: stream)
 				prettyPrint: true;
@@ -39,6 +40,7 @@ MWNeoJSONWriterTest >> testWriteMooseEntity [
 '	"id" : ',entity mooseID asString,',',String crlf,
 '	"name" : "\"This is a ...\" in ",',String crlf,
 '	"type" : "FAMIXComment",',String crlf,
+'	"numberOfViolatedRules" : 0,',String crlf,
 '	"content" : "This is a test\"\r\t"',String crlf,
 '}'
 ]
@@ -64,7 +66,8 @@ MWNeoJSONWriterTest >> testWriteMooseModel [
 '		{',String crlf,
 '			"id" : ',entity mooseID asString,',',String crlf,
 '			"name" : "\"This is a ...\" in ",',String crlf,
-'			"type" : "FAMIXComment"',String crlf,
+'			"type" : "FAMIXComment",',String crlf,
+'			"numberOfViolatedRules" : 0',String crlf,
 '		}',String crlf,
 '	]',String crlf,
 '}'	
