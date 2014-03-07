@@ -80,5 +80,6 @@ MWServerTests >> tearDown [
 { #category : #tests }
 MWServerTests >> testServer [
 	self assert: server isRunning.
-	self assert: server delegate mooseModelList size equals: 1
+	self assert: server delegate mooseModelList size equals: 1.
+	self shouldnt: (client get: client request url asString,'?action=&firstParameter=["Value"]&secondParameter=["Value"]&lastParameter={ "Key":["firstValue","secondValue"]}') raise: [ ZnUnknownHttpVersion ]
 ]
