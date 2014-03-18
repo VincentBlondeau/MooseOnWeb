@@ -63,28 +63,23 @@ MWFamixDiffHandler >> diff [
 
 { #category : #actions }
 MWFamixDiffHandler >> filter [
-	<mooseonweb: 'GET' name: 'famixDiff?q=filter&metrics=<value>&typesChanged=<value>&changesType=<value>' description:
+	<mooseonweb: 'GET' name: 'famixDiff?q=filter&metrics=<value>&typesChanged=<value>&changesType=<value>'
+	description:
 		'Filters the changes you want to display'>
-	| uri metrics changesType typesChanged filterParameters |
+	| uri   metrics changesType typesChanged filterParameters |
 	[ 
 	uri := request uri.
 	changesType := uri queryAt: 'changesType'.
 	typesChanged := uri queryAt: 'typesChanged'.
-	metrics := uri queryAt: 'metrics' ]
+	metrics := uri queryAt: 'metrics'.]
 		on: KeyNotFound
 		do: [ MWRessourceNotFound signal ].
 	filterParameters := FamixDiffFilterParameters new
-		changes: (NeoJSONReader fromString: changesType);
+		changes:  (NeoJSONReader fromString: changesType );
 		types: (NeoJSONReader fromString: typesChanged);
-		metrics:
-				((NeoJSONReader fromString: metrics) associations
-						collect: [ :anAssociation | 
-							anAssociation key
-								->
-									{(anAssociation value first asNumber).
-									(anAssociation value last asNumber)} ]) asDictionary;
+		metrics: (NeoJSONReader fromString: metrics);
 		yourself.
-	^ self changesComputation filterChangesWith: filterParameters
+		^ self changesComputation filterChangesWith: filterParameters.
 ]
 
 { #category : #public }
