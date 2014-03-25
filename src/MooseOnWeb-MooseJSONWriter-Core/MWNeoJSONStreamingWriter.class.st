@@ -26,6 +26,13 @@ MWNeoJSONStreamingWriter >> writeHeaderClonedFragment: mooseEntity [
 ]
 
 { #category : #writing }
+MWNeoJSONStreamingWriter >> writeHeaderDisplayProperty: aProperty [
+	self writeKey: 'label' value: aProperty label.
+	self writeKey: 'textIntervalSelector' value: aProperty textIntervalSelector.
+	self writeKey: 'color' value: aProperty color printHtmlString.
+]
+
+{ #category : #writing }
 MWNeoJSONStreamingWriter >> writeHeaderFamixChange: aFamixChange [
 	self writeKey: 'name' value: (aFamixChange name).
 	self writeKey: 'color' value: (aFamixChange color asHTMLColor).

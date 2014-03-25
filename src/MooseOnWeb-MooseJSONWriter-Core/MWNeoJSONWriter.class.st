@@ -39,6 +39,13 @@ MWNeoJSONWriter >> mooseName: mooseObject [
 ]
 
 { #category : #writing }
+MWNeoJSONWriter >> writeDisplayProperty: aProperty [
+	self writeMapStreamingDo: [ :jsonMapWriter | 
+			aProperty neoJsonHeaderOn: jsonMapWriter.
+]
+]
+
+{ #category : #writing }
 MWNeoJSONWriter >> writeFamixChange: aFamixChange [
 	self writeMapStreamingDo: [ :jsonMapWriter | 
 			aFamixChange neoJsonHeaderOn: jsonMapWriter ]
