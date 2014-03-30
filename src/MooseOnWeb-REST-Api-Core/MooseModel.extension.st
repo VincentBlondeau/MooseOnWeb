@@ -12,6 +12,5 @@ MooseModel >> objectWithID: elementID [
 
 { #category : #'*MooseOnWeb-REST-Api-Core' }
 MooseModel >> violatedRulesFor: anEntity [
-	<navigation: 'Rule voilations for a given entity'>
 	^ { }
 ]

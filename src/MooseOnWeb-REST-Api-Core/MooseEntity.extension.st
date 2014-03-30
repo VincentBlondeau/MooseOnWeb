@@ -25,9 +25,3 @@ MooseEntity classSide >> objectWithID: elementID [
 		ifTrue: [ ^ nil ]
 		ifFalse: [ ^ collection first ]
 ]
-
-{ #category : #'*MooseOnWeb-REST-Api-Core' }
-MooseEntity >> violatedRules [
-	<navigation: 'Get all the rules violated by this entity'>
-	^ self mooseModel violatedRulesFor: self.
-]
