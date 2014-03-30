@@ -85,7 +85,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntityActionResultAccessID [
 		yourself.
 		
 	self modelTest do:[:entity| 
-		entity allDeclaredProperties
+		(entity allDeclaredProperties reject: [ :p | p implementingSelector = '#accesses' ])
 		do: [ :p | 
 			| res |
 			res := entity perform: p implementingSelector.
@@ -260,7 +260,6 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearchLt1 [
 
 { #category : #tests }
 MWEntitiesHandlerWithIDServerTest >> testGetSearchLt2 [
-
 	| output |
 	client addPathSegment: self modelTest mooseID asString.
 	client queryAt: 'q' put: 'search'.
@@ -271,17 +270,17 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearchLt2 [
 	output := client get.
 	self assert: client isSuccess.
 	self modelTest allMethods
-		do: [ :e | |cyclo|
+		do: [ :e | 
+			| cyclo |
 			cyclo := e cyclomaticComplexity.
-			 cyclo < 2
+			cyclo < 2
 				ifTrue: [ 
 					self assert: (output includesSubstring: e mooseName).
-					self assert: (output includesSubstring: e mooseID asString) ]
-				ifFalse: [
+					self assert: (output includesSubstring: '"id" : ' , e mooseID asString , ',') ]
+				ifFalse: [ 
 					self deny: (output includesSubstring: e mooseName).
-					self deny: (output includesSubstring: e mooseID asString)
-					]].
-	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8 
+					self deny: (output includesSubstring: '"id" : ' , e mooseID asString , ',') ] ].
+	self assert: client response headers contentType equals: ZnMimeType applicationJson setCharSetUTF8
 ]
 
 { #category : #tests }
