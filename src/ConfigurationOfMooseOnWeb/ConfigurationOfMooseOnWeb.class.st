@@ -216,61 +216,46 @@ ConfigurationOfMooseOnWeb >> baseline12: spec [
 { #category : #baselines }
 ConfigurationOfMooseOnWeb >> baseline13: spec [
 	<version: '1.3-baseline'>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec description: 'MooseOnWeb on the Zinc REST API !'.
-			spec repository: 'http://www.smalltalkhub.com/mc/VincentBlondeau/MooseOnWeb/main'.
-			spec
-				project: 'ZincHTTPComponents'
-				with: [ 
-					spec
-						className: 'ConfigurationOfZincHTTPComponents';
-						versionString: #stable;
-						loads: #('REST');
-						repository:  'http://smalltalkhub.com/mc/SvenVanCaekenberghe/ZincHTTPComponents/main/' ].
-			spec
-				project: 'BabyMock'
-				with: [ 
-					spec
-						className: 'ConfigurationOfBabyMock';
-						versionString: '1.0';
-						repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock/main' ].
-			spec
-				package: 'MooseOnWeb-REST-Api-Exceptions';
-				package: 'MooseOnWeb-MooseJSONWriter-Tests'
-					with: [ 
-						spec requires: #( 'MooseOnWeb-MooseJSONWriter-Core' ) 
-					];
-				package: 'MooseOnWeb-MooseJSONWriter-Core' 
-					with: [ 
-						spec requires: #('ZincHTTPComponents') 
-					];
-				package: 'MooseOnWeb-REST-Api-Tests'
-					with: [ 
-						spec requires: #('MooseOnWeb-REST-Api-Core' 'BabyMock') 
-					];
-				package: 'MooseOnWeb-REST-Api-Core' 
-					with: [ 
-						spec requires: #('ZincHTTPComponents' 'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Core') 
-					];
-				package: 'MooseOnWeb-REST-Api-Grammar-Core' with: [ 
-						spec requires: #('MooseOnWeb-REST-Api-Grammar-AST') 
-					];
-				package: 'MooseOnWeb-REST-Api-Grammar-AST' with: [ 
-						spec requires: #('MooseOnWeb-REST-Api-Grammar-Visitor') 
-					];
-				package: 'MooseOnWeb-REST-Api-Grammar-Visitor' with: [ 
-						spec requires: #( 'MooseOnWeb-REST-Api-Exceptions') 
-					];
-				package: 'MooseOnWeb-REST-Api-Grammar-Tests' with: [ 
-						spec requires: #('MooseOnWeb-REST-Api-Grammar-Core') 
-					].
-				
-			spec group: 'default' 
-				with: #('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core'  'MooseOnWeb-MooseJSONWriter-Core' 
-					'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Tests') ]
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec repository: 'http://www.smalltalkhub.com/mc/VincentBlondeau/MooseOnWeb/main'.
+		spec 
+			project: 'ZincHTTPComponents' with: [
+				spec
+					className: #ConfigurationOfZincHTTPComponents;
+					versionString: #'stable';
+					loads: #('REST' );
+					repository: 'http://smalltalkhub.com/mc/SvenVanCaekenberghe/ZincHTTPComponents/main/' ];
+			project: 'BabyMock' with: [
+				spec
+					className: #ConfigurationOfBabyMock;
+					versionString: '1.0';
+					repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock/main' ].
+		spec 
+			package: 'MooseOnWeb-REST-Api-Exceptions';
+			package: 'MooseOnWeb-MooseJSONWriter-Core' with: [
+				spec requires: #('ZincHTTPComponents' ). ];
+			package: 'MooseOnWeb-MooseJSONWriter-Tests' with: [
+				spec requires: #('MooseOnWeb-MooseJSONWriter-Core' ). ];
+			package: 'MooseOnWeb-REST-Api-Grammar-Visitor' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Exceptions' ). ];
+			package: 'MooseOnWeb-REST-Api-Grammar-AST' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Grammar-Visitor' ). ];
+			package: 'MooseOnWeb-REST-Api-Grammar-Core' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Grammar-AST' ). ];
+			package: 'MooseOnWeb-REST-Api-Core' with: [
+				spec requires: #('ZincHTTPComponents' 'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Core' ). ];
+			package: 'MooseOnWeb-REST-Api-Tests' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Core' 'BabyMock' ). ];
+			package: 'MooseOnWeb-REST-Api-Grammar-Tests' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Grammar-Core' ). ];
+			package: #'MooseOnWeb-REST-Api-Extensions-FamixDiff' with: [
+				spec requires: #('MooseOnWeb-REST-Api-Core' 'MooseOnWeb-MooseJSONWriter-Core' ). ];
+			package: #'MooseOnWeb-REST-Api-Extensions-Tests' with: [
+				spec requires: #(#'MooseOnWeb-REST-Api-Extensions-FamixDiff' 'MooseOnWeb-REST-Api-Tests' ). ].
+		spec group: 'default' with: #('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core' 'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Tests' ). ].
+
 ]
 
 { #category : #baselines }
