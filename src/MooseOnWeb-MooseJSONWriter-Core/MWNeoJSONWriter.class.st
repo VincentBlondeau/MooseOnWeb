@@ -3,6 +3,8 @@ A MWNeoJSONWriter is a json serializer for Moose Entities. The JSON is composed 
 - the header : contains id (if accessible by the MWApi), type and name of the entity
 - the content : contains the result of each property described in the meta model. If the result is a group of entities, only the entities headers are displayed.
 
+You can extend the writer by subclass it and change the class returned by mapWriteClass if you want to use your JSON Streaming Writer
+
 Instance Variables
 	root:		boolean
 
@@ -30,25 +32,17 @@ MWNeoJSONWriter >> initialize [
 	root := true.
 ]
 
+{ #category : #accessing }
+MWNeoJSONWriter >> mapWriterClass [
+	^ MWNeoJSONStreamingWriter
+]
+
 { #category : #writing }
 MWNeoJSONWriter >> mooseName: mooseObject [
 	| stream |
 	stream := WriteStream with: ''.
 	mooseObject mooseDisplayStringOn: stream.
-	^stream contents
-]
-
-{ #category : #writing }
-MWNeoJSONWriter >> writeDisplayProperty: aProperty [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			aProperty neoJsonHeaderOn: jsonMapWriter.
-]
-]
-
-{ #category : #writing }
-MWNeoJSONWriter >> writeFamixChange: aFamixChange [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			aFamixChange neoJsonHeaderOn: jsonMapWriter ]
+	^ stream contents
 ]
 
 { #category : #writing }
@@ -96,18 +90,10 @@ MWNeoJSONWriter >> writeMooseProject: aProject [
 ]
 
 { #category : #writing }
-MWNeoJSONWriter >> writeQueryConcern: aQueryConcern [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			aQueryConcern neoJsonHeaderOn: jsonMapWriter.
-]
-]
-
-{ #category : #writing }
 MWNeoJSONWriter >> writeStreamingDo: block [
 	| mapWriter |
-	mapWriter := MWNeoJSONStreamingWriter on: self.
-	self indentedDo: [
-		block value: mapWriter ].
+	mapWriter := self mapWriterClass on: self.
+	self indentedDo: [ block value: mapWriter ].
 	mapWriter wasUsed
 		ifTrue: [ self newlineIndent ]
 		ifFalse: [ self prettyPrintSpace ]

@@ -19,32 +19,10 @@ MWNeoJSONStreamingWriter >> mooseName: mooseObject [
 ]
 
 { #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderClonedFragment: mooseEntity [
-	self writeKey: 'id' value: mooseEntity mooseID.
-	self writeKey: 'name' value: mooseEntity formattedName.
-	self writeKey: 'type' value: mooseEntity class name.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderDisplayProperty: aProperty [
-	self writeKey: 'label' value: aProperty label.
-	self writeKey: 'textIntervalSelector' value: aProperty textIntervalSelector.
-	self writeKey: 'color' value: aProperty color printHtmlString.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderFamixChange: aFamixChange [
-	self writeKey: 'name' value: (aFamixChange name).
-	self writeKey: 'color' value: (aFamixChange color asHTMLColor).
-	self writeKey: 'entityID' value: (aFamixChange entity mooseID)
-]
-
-{ #category : #writing }
 MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
-	self writeKey: 'type' value: mooseEntity class name.
-	self writeKey: 'numberOfViolatedRules' value: (mooseEntity mooseModel violatedRulesFor: mooseEntity) size
+	self writeKey: 'type' value: mooseEntity class name
 ]
 
 { #category : #writing }
@@ -74,10 +52,4 @@ MWNeoJSONStreamingWriter >> writeHeaderProjectVersion: projectVersion [
 	self writeKey: 'type' value: projectVersion class name.
 	self writeKey: 'date' value: projectVersion date asUnixTime.
 	self writeKey: 'modelID' value: projectVersion mooseModel mooseID.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderQueryConcern: queryConcern [
-	self writeKey: 'label' value: queryConcern label.
-	self writeKey: 'description' value: queryConcern explanation.
 ]
