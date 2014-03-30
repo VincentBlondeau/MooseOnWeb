@@ -40,8 +40,9 @@ MWNeoJSONWriterTest >> testWriteMooseEntity [
 '	"id" : ',entity mooseID asString,',',String crlf,
 '	"name" : "\"This is a ...\" in ",',String crlf,
 '	"type" : "FAMIXComment",',String crlf,
-'	"numberOfViolatedRules" : 0,',String crlf,
-'	"content" : "This is a test\"\r\t"',String crlf,
+'	"content" : "This is a test\"\r\t",',String crlf,
+'	"numberOfJavaNullChecks" : 0,', String crlf,
+'	"numberOfLinesOfCodeWithMoreThanOneCharacter" : 1', String crlf,
 '}'
 ]
 
@@ -66,8 +67,7 @@ MWNeoJSONWriterTest >> testWriteMooseModel [
 '		{',String crlf,
 '			"id" : ',entity mooseID asString,',',String crlf,
 '			"name" : "\"This is a ...\" in ",',String crlf,
-'			"type" : "FAMIXComment",',String crlf,
-'			"numberOfViolatedRules" : 0',String crlf,
+'			"type" : "FAMIXComment"',String crlf,
 '		}',String crlf,
 '	]',String crlf,
 '}'	
