@@ -13,3 +13,8 @@ ManifestMooseOnWebRESTApiGrammarCore class >> rejectClasses [
 ManifestMooseOnWebRESTApiGrammarCore class >> rejectRules [
 ^ #()
 ]
+
+{ #category : #'meta data' }
+ManifestMooseOnWebRESTApiGrammarCore class >> ruleOnlyReadOrWrittenVariableRuleV1FalsePositive [
+^ #(#(#(#RGClassDefinition #(#MWActionGrammar)) #'2014-03-30T23:56:47.302883+02:00') )
+]
