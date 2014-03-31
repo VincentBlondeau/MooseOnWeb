@@ -19,6 +19,11 @@ ManifestMooseOnWebRESTApiGrammarVisitor class >> ruleImplementedNotSentRuleV1Fal
 ]
 
 { #category : #'meta data' }
+ManifestMooseOnWebRESTApiGrammarVisitor class >> ruleInstVarInSubclassesRuleV1FalsePositive [
+^ #()
+]
+
+{ #category : #'meta data' }
 ManifestMooseOnWebRESTApiGrammarVisitor class >> ruleNoClassCommentRuleV1FalsePositive^ [ #()
 ]
 
