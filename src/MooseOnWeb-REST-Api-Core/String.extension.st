@@ -17,6 +17,6 @@ String >> asMessage [
 
 { #category : #'*MooseOnWeb-REST-Api-Core' }
 String >> compareTo: anOtherObject withOp: operator [
-	operator = #= ifTrue: [ operator = #includesSubstring: ].
+	operator = #= ifTrue: [ operator := #includesSubstring: ].
 	^ [ self perform: operator with: anOtherObject asString ] on: Error do: [ MWValueNotComparable signal ]
 ]
