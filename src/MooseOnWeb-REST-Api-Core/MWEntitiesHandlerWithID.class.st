@@ -44,7 +44,7 @@ MWEntitiesHandlerWithID >> action: anEntity [
 { #category : #public }
 MWEntitiesHandlerWithID >> actionMapping [
 	^ {('q' -> [ :anEntity | self query: anEntity ]).
-	('action' -> [ :anEntity | self action: anEntity ])} asDictionary
+	('action' -> [ :anEntity | self action: anEntity ])}asDictionary
 ]
 
 { #category : #query }
