@@ -20,14 +20,24 @@ Class {
 	#superclass : #ZnJSONRestServerDelegate,
 	#instVars : [
 		'mooseModelList',
-		'mooseProjectList',
-		'jsonWriterClass'
+		'mooseProjectList'
 	],
 	#classVars : [
+		'jsonWriterClass',
 		'server'
 	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
+
+{ #category : #accessing }
+MWRestServerDelegate class >> jsonWriterClass [
+	^ jsonWriterClass ifNil: [ jsonWriterClass := MWNeoJSONWriter ]
+]
+
+{ #category : #accessing }
+MWRestServerDelegate class >> jsonWriterClass: aClass [
+	jsonWriterClass := aClass
+]
 
 { #category : #accessing }
 MWRestServerDelegate class >> server [
@@ -96,16 +106,6 @@ MWRestServerDelegate >> handleRequest: request [
 MWRestServerDelegate >> initialize [ 
 	self uriSpace: ZnCallHierarchyRestUriSpace new.
 	self uriSpace rootClass: MWRestCallHandler
-]
-
-{ #category : #accessing }
-MWRestServerDelegate >> jsonWriterClass [
-	^ jsonWriterClass ifNil: [ jsonWriterClass := MWNeoJSONWriter ]
-]
-
-{ #category : #accessing }
-MWRestServerDelegate >> jsonWriterClass: aClass [
-	jsonWriterClass := aClass
 ]
 
 { #category : #'as yet unclassified' }

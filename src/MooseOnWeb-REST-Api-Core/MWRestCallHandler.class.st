@@ -55,7 +55,7 @@ MWRestCallHandler >> created: uri [
 		statusLine: ZnStatusLine created;
 		headers: ZnHeaders defaultResponseHeaders;
 		setLocation: uri;
-		entity: (ZnEntity with: (self jsonWriterClass toString: uri) , String crlf type: ZnMimeType applicationJson);
+		entity: (ZnEntity with: (self class jsonWriterClass toString: uri) , String crlf type: ZnMimeType applicationJson);
 		yourself
 ]
 
@@ -112,7 +112,7 @@ MWRestCallHandler >> jsonResponse: data [
 
 { #category : #accessing }
 MWRestCallHandler >> jsonWriterClass [
-	^ self delegate jsonWriterClass
+	^ self delegate class jsonWriterClass
 ]
 
 { #category : #accessing }
