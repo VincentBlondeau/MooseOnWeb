@@ -22,7 +22,7 @@ MWNeoJSONStreamingWriter >> mooseName: mooseObject [
 MWNeoJSONStreamingWriter >> writeHeaderMooseEntity: mooseEntity [
 	self writeKey: 'id' value: mooseEntity mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseEntity).
-	self writeKey: 'type' value: mooseEntity class name
+	self writeKey: 'type' value: mooseEntity class name.
 ]
 
 { #category : #writing }
@@ -36,20 +36,4 @@ MWNeoJSONStreamingWriter >> writeHeaderMooseModel: mooseModel [
 	self writeKey: 'id' value: mooseModel mooseID.
 	self writeKey: 'name' value: (self mooseName: mooseModel).
 	self writeKey: 'type' value: mooseModel class name.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderMooseProject: project [
-	self writeKey: 'id' value: project mooseID.
-	self writeKey: 'name' value: (self mooseName: project).
-	self writeKey: 'type' value: project class name.
-]
-
-{ #category : #writing }
-MWNeoJSONStreamingWriter >> writeHeaderProjectVersion: projectVersion [
-	self writeKey: 'id' value: projectVersion mooseID.
-	self writeKey: 'name' value: (self mooseName: projectVersion).
-	self writeKey: 'type' value: projectVersion class name.
-	self writeKey: 'date' value: projectVersion date asUnixTime.
-	self writeKey: 'modelID' value: projectVersion mooseModel mooseID.
 ]

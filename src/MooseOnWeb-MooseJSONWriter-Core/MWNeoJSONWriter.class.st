@@ -83,13 +83,6 @@ MWNeoJSONWriter >> writeMooseModel: mooseModel [
 ]
 
 { #category : #writing }
-MWNeoJSONWriter >> writeMooseProject: aProject [
-	self writeMapStreamingDo: [ :jsonMapWriter | 
-			aProject neoJsonHeaderOn: jsonMapWriter.
-]
-]
-
-{ #category : #writing }
 MWNeoJSONWriter >> writeStreamingDo: block [
 	| mapWriter |
 	mapWriter := self mapWriterClass on: self.

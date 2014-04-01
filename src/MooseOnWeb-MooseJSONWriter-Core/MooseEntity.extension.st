@@ -2,7 +2,7 @@ Extension { #name : #MooseEntity }
 
 { #category : #'*MooseOnWeb-MooseJSONWriter-Core-Core' }
 MooseEntity >> neoJsonHeaderOn: jsonMapWriter [
-	jsonMapWriter writeHeaderMooseEntity: self.
+	jsonMapWriter writeHeaderFragmentLocation: self.
 
 ]
 

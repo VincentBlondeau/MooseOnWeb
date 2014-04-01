@@ -19,5 +19,5 @@ ManifestMooseOnWebMooseJSONWriterCore class >> rejectRules [
 
 { #category : #'meta data' }
 ManifestMooseOnWebMooseJSONWriterCore class >> ruleSentNotImplementedRuleV1TODO [
-^ #(#(#(#RGMethodDefinition #(#MWNeoJSONStreamingWriterExtended #writeHeaderDisplayProperty: #false)) #'2014-03-30T23:56:48.951883+02:00') #(#(#RGMethodDefinition #(#MWNeoJSONStreamingWriterExtended #writeHeaderClonedFragment: #false)) #'2014-03-30T23:56:48.951883+02:00') )
+^ #(#(#(#RGMethodDefinition #(#SWNeoJSONStreamingWriter #writeHeaderDisplayProperty: #false)) #'2014-03-30T23:56:48.951883+02:00') #(#(#RGMethodDefinition #(#SWNeoJSONStreamingWriter #writeHeaderClonedFragment: #false)) #'2014-03-30T23:56:48.951883+02:00') )
 ]
