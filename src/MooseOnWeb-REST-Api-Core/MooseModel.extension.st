@@ -1,6 +1,6 @@
 Extension { #name : #MooseModel }
 
-{ #category : #'*MooseOnWeb-REST-Api-Core' }
+{ #category : #'*MooseOnWeb-REST-Api-Core-Core' }
 MooseModel >> objectWithID: elementID [
 	self sourceLanguage mooseID = elementID ifTrue: [ 
 		^self sourceLanguage
@@ -8,9 +8,4 @@ MooseModel >> objectWithID: elementID [
 		^super objectWithID: elementID
 	]
 	
-]
-
-{ #category : #'*MooseOnWeb-REST-Api-Core' }
-MooseModel >> violatedRulesFor: anEntity [
-	^ { }
 ]

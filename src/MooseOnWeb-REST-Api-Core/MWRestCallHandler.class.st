@@ -26,9 +26,6 @@ None IV is declared in this classe and subclasses and that must not be changed.
 Class {
 	#name : #MWRestCallHandler,
 	#superclass : #ZnJSONRestCall,
-	#instVars : [
-		'writerClass'
-	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
 
@@ -55,40 +52,8 @@ MWRestCallHandler >> created: uri [
 		statusLine: ZnStatusLine created;
 		headers: ZnHeaders defaultResponseHeaders;
 		setLocation: uri;
-		entity: (ZnEntity with: (self class jsonWriterClass toString: uri) , String crlf type: ZnMimeType applicationJson);
+		entity: (ZnEntity with: (MWNeoJSONWriter toString: uri) , String crlf type: ZnMimeType applicationJson);
 		yourself
-]
-
-{ #category : #accessing }
-MWRestCallHandler >> findEntityInModelWithID: anEntityID [
-	^ ((self listMooseModels collect: [ :m | m objectWithID: anEntityID ]) select: [ :anElement | anElement isNotNil ])
-		ifEmpty: [ Array with: nil ]
-]
-
-{ #category : #accessing }
-MWRestCallHandler >> findEntityWithID: anEntityID [
-	| entity |
-	self updateListModel.
-	entity:= self findProjectWithID: anEntityID .
-	entity ifNotNil: [ ^entity ].
-	entity:= self findVersionWithID: anEntityID.
-	entity ifNotNil: [ ^entity ].
-	entity:= self findEntityInModelWithID: anEntityID.
-	entity first ifNotNil: [ ^entity first ].
-MWRessourceNotFound signalFor: anEntityID 
-]
-
-{ #category : #accessing }
-MWRestCallHandler >> findProjectWithID: anEntityID [
-	self listMooseProjects do: [:aProj | (aProj mooseID = anEntityID ) ifTrue: [^aProj]].
-	^ nil
-]
-
-{ #category : #accessing }
-MWRestCallHandler >> findVersionWithID: anEntityID [
-	self listMooseProjects do: [:p | p versions do: [:v | v mooseID = anEntityID 
-					ifTrue: [ ^ v ] ] ].
-			^ nil
 ]
 
 { #category : #public }
@@ -102,7 +67,7 @@ MWRestCallHandler >> jsonResponse: data [
 	| json |
 	json := String
 		streamContents: [ :stream | 
-			(self jsonWriterClass on: stream)
+			(MWNeoJSONWriter on: stream)
 				prettyPrint: true;
 				newLine: String crlf;
 				nextPut: data.
@@ -111,18 +76,8 @@ MWRestCallHandler >> jsonResponse: data [
 ]
 
 { #category : #accessing }
-MWRestCallHandler >> jsonWriterClass [
-	^ self delegate class jsonWriterClass
-]
-
-{ #category : #accessing }
 MWRestCallHandler >> listMooseModels [
 	^ self delegate mooseModelList
-]
-
-{ #category : #'as yet unclassified' }
-MWRestCallHandler >> listMooseProjects [
-	^self delegate mooseProjectList
 ]
 
 { #category : #'error handling' }
@@ -152,7 +107,6 @@ MWRestCallHandler >> okWithNoContent [
 
 { #category : #conversion }
 MWRestCallHandler >> sendJsonFrom: aData [
-	
 	self jsonResponse: aData
 ]
 
@@ -168,12 +122,4 @@ MWRestCallHandler >> unsupportedMediaType [
 		errorResponse: request 
 		code: 415
 		message: 'Unsupported Media Type ', request accept.
-]
-
-{ #category : #'as yet unclassified' }
-MWRestCallHandler >> updateListModel [
-	self delegate
-		mooseModelList:
-			((self listMooseProjects flatCollect: [ :p | p versions collect: [ :v | v mooseModel ] ])
-				, self delegate mooseModelList asArray) asSet asArray
 ]

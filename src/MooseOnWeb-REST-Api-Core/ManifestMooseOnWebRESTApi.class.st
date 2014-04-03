@@ -24,11 +24,6 @@ ManifestMooseOnWebRESTApi class >> ruleCodeCruftLeftInMethodsRuleV1TODO [
 ]
 
 { #category : #'meta data' }
-ManifestMooseOnWebRESTApi class >> ruleIfTrueReturnsRuleV1TODO [
-^ #(#(#(#RGMethodDefinition #(#ZnMimeType #> #false)) #'2014-03-30T23:56:49.177883+02:00') )
-]
-
-{ #category : #'meta data' }
 ManifestMooseOnWebRESTApi class >> ruleLawOfDemeterRuleV1TODO [
 ^ #(#(#(#RGMethodDefinition #(#MWEntitiesHandlerWithID #listActions #false)) #'2013-07-12T16:33:34.188000001+02:00') #(#(#RGMethodDefinition #(#MWHelpHandler #get #false)) #'2013-07-12T16:33:34.188+02:00') )
 ]
@@ -50,11 +45,6 @@ ManifestMooseOnWebRESTApi class >> ruleMissingSubclassResponsibilityRuleV1FalseP
 { #category : #'meta data' }
 ManifestMooseOnWebRESTApi class >> ruleNoClassCommentRuleV1TODO [
 ^ #(#(#(#RGClassDefinition #(#MWServerCommandLineHandler)) #'2013-07-12T16:33:33.738000001+02:00') #(#(#RGClassDefinition #(#MWNeoJSONWriter)) #'2013-07-12T16:33:33.738+02:00') )
-]
-
-{ #category : #'meta data' }
-ManifestMooseOnWebRESTApi class >> ruleSentNotImplementedRuleV1TODO [
-^ #(#(#(#RGMethodDefinition #(#'MWRestServerDelegate class' #serverStartOn:projects: #true)) #'2014-03-30T23:56:48.538883+02:00') )
 ]
 
 { #category : #'meta data' }
