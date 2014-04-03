@@ -118,6 +118,7 @@ MWRestCallHandler >> sendText: aText [
 
 { #category : #'error handling' }
 MWRestCallHandler >> unsupportedMediaType [
+
 	response := self delegate 
 		errorResponse: request 
 		code: 415
