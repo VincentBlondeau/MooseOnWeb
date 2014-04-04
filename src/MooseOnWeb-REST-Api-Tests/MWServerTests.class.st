@@ -18,7 +18,7 @@ server
 "
 Class {
 	#name : #MWServerTests,
-	#superclass : #TestCase,
+	#superclass : #BabyMockTestCase,
 	#instVars : [
 		'server',
 		'client',
@@ -27,6 +27,13 @@ Class {
 	],
 	#category : #'MooseOnWeb-REST-Api-Tests'
 }
+
+{ #category : #accessing }
+MWServerTests >> createDelegate [
+	^ MWRestServerDelegate new
+		mooseModelList: self rootModelForTestServer;
+		yourself
+]
 
 { #category : #accessing }
 MWServerTests >> createTestModel [
@@ -54,19 +61,14 @@ MWServerTests >> rootModelForTestServer [
 MWServerTests >> setUp [
 	self modelTest: self createTestModel.
 	server := ZnServer startOn: 1710 + 10 atRandom.
-	server
-		delegate:
-			(MWRestServerDelegate new
-				mooseModelList:  self rootModelForTestServer ;
-				yourself).
+	server delegate: self createDelegate.
 	server register.
 	client := ZnClient new
 		url: server localUrl;
 		addPathSegment: #mooseOnWeb;
 		yourself.
 	isProxyUsed := NetworkSystemSettings useHTTPProxy.
-	NetworkSystemSettings useHTTPProxy: false.
-	"server debugMode: true"
+	NetworkSystemSettings useHTTPProxy: false	"server debugMode: true"
 ]
 
 { #category : #running }
