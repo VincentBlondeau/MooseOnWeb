@@ -68,7 +68,8 @@ MWServerTests >> setUp [
 		addPathSegment: #mooseOnWeb;
 		yourself.
 	isProxyUsed := NetworkSystemSettings useHTTPProxy.
-	NetworkSystemSettings useHTTPProxy: false	"server debugMode: true"
+	NetworkSystemSettings useHTTPProxy: false.
+	"server debugMode: true"
 ]
 
 { #category : #running }
