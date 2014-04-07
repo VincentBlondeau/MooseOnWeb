@@ -26,6 +26,9 @@ None IV is declared in this classe and subclasses and that must not be changed.
 Class {
 	#name : #MWRestCallHandler,
 	#superclass : #ZnJSONRestCall,
+	#instVars : [
+		'writerClass'
+	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
 
@@ -52,7 +55,7 @@ MWRestCallHandler >> created: uri [
 		statusLine: ZnStatusLine created;
 		headers: ZnHeaders defaultResponseHeaders;
 		setLocation: uri;
-		entity: (ZnEntity with: (MWNeoJSONWriter toString: uri) , String crlf type: ZnMimeType applicationJson);
+		entity: (ZnEntity with: (self jsonWriterClass toString: uri) , String crlf type: ZnMimeType applicationJson);
 		yourself
 ]
 
@@ -67,12 +70,17 @@ MWRestCallHandler >> jsonResponse: data [
 	| json |
 	json := String
 		streamContents: [ :stream | 
-			(MWNeoJSONWriter on: stream)
+			(self jsonWriterClass on: stream)
 				prettyPrint: true;
 				newLine: String crlf;
 				nextPut: data.
 			stream crlf ].
 	self response: (ZnResponse okRest: (ZnEntity with: json type: ZnMimeType applicationJson setCharSetUTF8))
+]
+
+{ #category : #accessing }
+MWRestCallHandler >> jsonWriterClass [
+	^ self delegate class jsonWriterClass
 ]
 
 { #category : #accessing }

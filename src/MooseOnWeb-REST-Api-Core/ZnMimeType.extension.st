@@ -15,6 +15,7 @@ ZnMimeType >> weight [
 
 { #category : #'*MooseOnWeb-REST-Api-Core' }
 ZnMimeType >> weight: aNumber [
-	((aNumber between: 0 and: 1) not) ifTrue: [ DomainError signalFrom: 0 to: 1 ].
+	(aNumber between: 0 and: 1)
+		ifFalse: [ DomainError signalFrom: 0 to: 1 ].
 	self parameterAt: #q put: aNumber asString
 ]

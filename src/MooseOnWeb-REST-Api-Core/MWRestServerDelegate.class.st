@@ -19,13 +19,25 @@ Class {
 	#name : #MWRestServerDelegate,
 	#superclass : #ZnJSONRestServerDelegate,
 	#instVars : [
-		'mooseModelList'
+		'mooseModelList',
+		'mooseProjectList'
 	],
 	#classVars : [
+		'jsonWriterClass',
 		'server'
 	],
 	#category : #'MooseOnWeb-REST-Api-Core'
 }
+
+{ #category : #accessing }
+MWRestServerDelegate class >> jsonWriterClass [
+	^ jsonWriterClass ifNil: [ jsonWriterClass := MWNeoJSONWriter ]
+]
+
+{ #category : #accessing }
+MWRestServerDelegate class >> jsonWriterClass: aClass [
+	jsonWriterClass := aClass
+]
 
 { #category : #accessing }
 MWRestServerDelegate class >> server [

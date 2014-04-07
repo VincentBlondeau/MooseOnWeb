@@ -42,7 +42,7 @@ MWModelsHandler >> contentMatching [
 
 { #category : #public }
 MWModelsHandler >> defaultModelName [ 
-	^ 'Imported Model-', ($- join: Date dateAndTimeNow)
+	^ 'Imported Model-',  (DateAndTime now asString)
 ]
 
 { #category : #public }

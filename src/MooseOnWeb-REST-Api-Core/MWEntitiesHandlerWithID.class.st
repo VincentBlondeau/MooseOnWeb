@@ -44,7 +44,12 @@ MWEntitiesHandlerWithID >> action: anEntity [
 { #category : #public }
 MWEntitiesHandlerWithID >> actionMapping [
 	^ {('q' -> [ :anEntity | self query: anEntity ]).
-	('action' -> [ :anEntity | self action: anEntity ])} asDictionary
+	('action' -> [ :anEntity | self action: anEntity ])}asDictionary
+]
+
+{ #category : #query }
+MWEntitiesHandlerWithID >> compare: aStringOrANumberOrABoolean to: anOtherObject withOp: operator [
+	^ aStringOrANumberOrABoolean compareTo: anOtherObject withOp: operator
 ]
 
 { #category : #accessing }
@@ -116,9 +121,9 @@ MWEntitiesHandlerWithID >> query: anEntity [
 
 { #category : #query }
 MWEntitiesHandlerWithID >> search: anEntity [
-	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<property>&op=<op>&value=<value>'
+	<mooseonweb: 'GET' name: '/entities/<mooseID>?q=search&[onAction=<action>&]key=<propriete>&op=<op>&value=<value>'
 	description:
-		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action. The action is one of the available actions, the property is a action available on the precedent result, op is an operator in { eq lt le gt ge }, and value is a value comparable with the property result'>
+		'Search the entities of the group <mooseID> which verify :  <property> <op> <value>. If the action is provided, the search will be done in the result group of the action.'>
 	| key op value action data uri |
 	[ 
 	uri := request uri.
@@ -129,11 +134,11 @@ MWEntitiesHandlerWithID >> search: anEntity [
 		do: [ MWRessourceNotFound signal ].
 	[ 
 	action := uri queryAt: 'onAction'.
-	data := self performAction: action on: anEntity.  ]
+	data := self performAction: action on: anEntity ]
 		on: KeyNotFound
 		do: [ data := anEntity ].
 	data isCollection
 		ifFalse: [ NotYetImplemented signalFor: 'Only moose groups !' ].
 	^ ((data select: [ :el | el respondsTo: key asSymbol ])
-		select: [ :el | (el perform: key asSymbol) asString perform: op asMessage with: value ]) asOrderedCollection
+		select: [ :el | self compare: (el perform: key asSymbol) to: value withOp: op asMessage  ]) asOrderedCollection
 ]
