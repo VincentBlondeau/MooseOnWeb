@@ -249,7 +249,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetSearchLt1 [
 			cyclo := e cyclomaticComplexity.
 			 cyclo < 10
 				ifTrue: [ 
-					self assert: (output includesSubstring: e mooseName).
+					self assert: (output includesSubstring: e mooseName asString).
 					self assert: (output includesSubstring: e mooseID asString) ]
 				ifFalse: [
 					self deny: (output includesSubstring: e mooseName).
