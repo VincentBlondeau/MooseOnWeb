@@ -75,8 +75,8 @@ MWServerTests >> setUp [
 { #category : #running }
 MWServerTests >> tearDown [
 	client close.
-	server stop.
 	server unregister.
+	server stop.
 	NetworkSystemSettings useHTTPProxy: isProxyUsed
 ]
 
