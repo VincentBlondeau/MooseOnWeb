@@ -255,6 +255,65 @@ ConfigurationOfMooseOnWeb >> baseline13: spec [
 					#('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core' 'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Tests' 'MooseOnWeb-REST-Api-Grammar-Visitor' 'MooseOnWeb-REST-Api-Grammar-AST' 'MooseOnWeb-REST-Api-Grammar-Core') ]
 ]
 
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb >> catalogChangeLog [
+	"Returns a paragraph describing the most important changes in the configuration class."
+	^ '- 1.0 - 10 May 2015 - First stable version
+[[[
+	(ConfigurationOfMooseOnWeb project version: ''1.0'' ) load					
+]]].'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb >> catalogContactInfo [
+	"Returns a paragraph describing contact information such as email, mailing lists and website."
+	^ 'You can get in contact with the developper at vincent.blondeau@polytech-lille.net'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb >> catalogDescription [
+	"Returns a paragraph describing the project"
+	^ 'Moose On Web is an Api providing access a the models included in a Moose image.
+
+To easily get the Api :
+
+[[[ 
+Gofer new
+    smalltalkhubUser: '''' project: ''VincentBlondeau/MooseOnWeb'';
+    package: ''ConfigurationOfMooseOnWeb'';
+    load.
+ ]]]
+and then:
+[[[
+ ConfigurationOfMooseOnWeb loadDefault
+]]]
+You can also use the image built by Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
+
+To try the Api, the server have to be launched :
+[[[
+MWRestServerDelegate serverStartOn: 8080
+]]]
+This command run the Api server. You can go on you favorite web broswer on : http://localhost:8080/mooseOnWeb/help to have the list of the commands.
+
+You can use the Rest Client of firefox to forge your requests to the Api.
+
+If you want to download the image with Moose on Web from Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
+
+If you just want to try it, you can go to http://37.139.2.203(not available for now) where a amber client interract with the pharo image through the API. You can download the client on https://github.com/VincentBlondeau/amber-MooseOnWeb'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb >> catalogKeyClassesAndExample [
+	"Returns a paragraph or more describing the key classes of your project. You can use Pillar/Pier syntax to layout out the text i.e., ==Code== and - for bullet."
+	^ ''
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb >> catalogKeywords [
+	"Returns an array of symbols"
+	^ #(moose rest web models explore json metamodel) 
+]
+
 { #category : #baselines }
 ConfigurationOfMooseOnWeb >> default: spec [ 	
 	 ^ self development: spec
@@ -264,9 +323,7 @@ ConfigurationOfMooseOnWeb >> default: spec [
 ConfigurationOfMooseOnWeb >> development: spec [
 	<symbolicVersion: #'development'>
 
-	"spec for: #'pharo1.4.x' version: '1.2'."
-	spec for: #'pharo2.x' version: '1.3-baseline'.
-	spec for: #'pharo3.x' version: '1.3-baseline'.
+	spec for: #'common' version: '1.3-baseline'.
 
 ]
 
@@ -283,19 +340,34 @@ ConfigurationOfMooseOnWeb >> project [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfMooseOnWeb >> stable: spec [
+	<symbolicVersion: #'stable'>
+
+	spec for: #'common' version: '1.0'.
+
+]
+
+{ #category : #versions }
 ConfigurationOfMooseOnWeb >> version10: spec [
-	<version: '1.0' imports: #('0.3-baseline' )>
+	<version: '1.0' imports: #('1.3-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'development'.
-		spec description: ''.
-		spec author: 'Vincent Blondeau'.
-		spec timestamp: '7/10/2013 15:00'.
+		spec blessing: #'stable'.
+		spec description: 'version 1.0'.
+		spec author: 'VincentBlondeau'.
+		spec timestamp: '5/10/2015 15:25'.
 		spec 
-			project: 'ZincHTTPComponents' with: '2.4.3';
+			project: 'ZincHTTPComponents' with: '2.6.3';
 			project: 'BabyMock' with: '1.0'.
 		spec 
-			package: 'MooseOnWeb-REST-Api' with: 'MooseOnWeb-REST-Api-VincentBlondeau.28';
-			package: 'MooseOnWeb-REST-Api-Tests' with: 'MooseOnWeb-REST-Api-Tests-VincentBlondeau.14'.
-	]
+			package: 'MooseOnWeb-REST-Api-Exceptions' with: 'MooseOnWeb-REST-Api-Exceptions';
+			package: 'MooseOnWeb-MooseJSONWriter-Core' with: 'MooseOnWeb-MooseJSONWriter-Core';
+			package: 'MooseOnWeb-MooseJSONWriter-Tests' with: 'MooseOnWeb-MooseJSONWriter-Tests';
+			package: 'MooseOnWeb-REST-Api-Grammar-Visitor' with: 'MooseOnWeb-REST-Api-Grammar-Visitor';
+			package: 'MooseOnWeb-REST-Api-Grammar-AST' with: 'MooseOnWeb-REST-Api-Grammar-AST';
+			package: 'MooseOnWeb-REST-Api-Grammar-Core' with: 'MooseOnWeb-REST-Api-Grammar-Core';
+			package: 'MooseOnWeb-REST-Api-Core' with: 'MooseOnWeb-REST-Api-Core';
+			package: 'MooseOnWeb-REST-Api-Tests' with: 'MooseOnWeb-REST-Api-Tests';
+			package: 'MooseOnWeb-REST-Api-Grammar-Tests' with: 'MooseOnWeb-REST-Api-Grammar-Tests'. ].
+
 ]
