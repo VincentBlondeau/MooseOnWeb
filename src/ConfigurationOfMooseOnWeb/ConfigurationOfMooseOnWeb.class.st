@@ -7,6 +7,65 @@ Class {
 	#category : #ConfigurationOfMooseOnWeb
 }
 
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb class >> catalogChangeLog [
+	"Returns a paragraph describing the most important changes in the configuration class."
+	^ '- 1.0 - 10 May 2015 - First stable version
+[[[
+	(ConfigurationOfMooseOnWeb project version: ''1.0'' ) load					
+]]].'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb class >> catalogContactInfo [
+	"Returns a paragraph describing contact information such as email, mailing lists and website."
+	^ 'You can get in contact with the developper at vincent.blondeau@polytech-lille.net'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb class >> catalogDescription [
+	"Returns a paragraph describing the project"
+	^ 'Moose On Web is an Api providing access a the models included in a Moose image.
+
+To easily get the Api :
+
+[[[ 
+Gofer new
+    smalltalkhubUser: '''' project: ''VincentBlondeau/MooseOnWeb'';
+    package: ''ConfigurationOfMooseOnWeb'';
+    load.
+ ]]]
+and then:
+[[[
+ ConfigurationOfMooseOnWeb loadDefault
+]]]
+You can also use the image built by Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
+
+To try the Api, the server have to be launched :
+[[[
+MWRestServerDelegate serverStartOn: 8080
+]]]
+This command run the Api server. You can go on you favorite web broswer on : http://localhost:8080/mooseOnWeb/help to have the list of the commands.
+
+You can use the Rest Client of firefox to forge your requests to the Api.
+
+If you want to download the image with Moose on Web from Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
+
+If you just want to try it, you can go to http://37.139.2.203(not available for now) where a amber client interract with the pharo image through the API. You can download the client on https://github.com/VincentBlondeau/amber-MooseOnWeb'
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb class >> catalogKeyClassesAndExample [
+	"Returns a paragraph or more describing the key classes of your project. You can use Pillar/Pier syntax to layout out the text i.e., ==Code== and - for bullet."
+	^ ''
+]
+
+{ #category : #catalog }
+ConfigurationOfMooseOnWeb class >> catalogKeywords [
+	"Returns an array of symbols"
+	^ #(moose rest web models explore json metamodel) 
+]
+
 { #category : #private }
 ConfigurationOfMooseOnWeb class >> ensureMetacello [
 	Smalltalk at: #MetacelloProject ifAbsent: [
@@ -253,65 +312,6 @@ ConfigurationOfMooseOnWeb >> baseline13: spec [
 				group: 'default'
 				with:
 					#('MooseOnWeb-REST-Api-Tests' 'MooseOnWeb-REST-Api-Core' 'MooseOnWeb-MooseJSONWriter-Core' 'MooseOnWeb-MooseJSONWriter-Tests' 'MooseOnWeb-REST-Api-Exceptions' 'MooseOnWeb-REST-Api-Grammar-Tests' 'MooseOnWeb-REST-Api-Grammar-Visitor' 'MooseOnWeb-REST-Api-Grammar-AST' 'MooseOnWeb-REST-Api-Grammar-Core') ]
-]
-
-{ #category : #catalog }
-ConfigurationOfMooseOnWeb >> catalogChangeLog [
-	"Returns a paragraph describing the most important changes in the configuration class."
-	^ '- 1.0 - 10 May 2015 - First stable version
-[[[
-	(ConfigurationOfMooseOnWeb project version: ''1.0'' ) load					
-]]].'
-]
-
-{ #category : #catalog }
-ConfigurationOfMooseOnWeb >> catalogContactInfo [
-	"Returns a paragraph describing contact information such as email, mailing lists and website."
-	^ 'You can get in contact with the developper at vincent.blondeau@polytech-lille.net'
-]
-
-{ #category : #catalog }
-ConfigurationOfMooseOnWeb >> catalogDescription [
-	"Returns a paragraph describing the project"
-	^ 'Moose On Web is an Api providing access a the models included in a Moose image.
-
-To easily get the Api :
-
-[[[ 
-Gofer new
-    smalltalkhubUser: '''' project: ''VincentBlondeau/MooseOnWeb'';
-    package: ''ConfigurationOfMooseOnWeb'';
-    load.
- ]]]
-and then:
-[[[
- ConfigurationOfMooseOnWeb loadDefault
-]]]
-You can also use the image built by Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
-
-To try the Api, the server have to be launched :
-[[[
-MWRestServerDelegate serverStartOn: 8080
-]]]
-This command run the Api server. You can go on you favorite web broswer on : http://localhost:8080/mooseOnWeb/help to have the list of the commands.
-
-You can use the Rest Client of firefox to forge your requests to the Api.
-
-If you want to download the image with Moose on Web from Jenkins : https://ci.inria.fr/moose/job/Moose-On-The-Web/
-
-If you just want to try it, you can go to http://37.139.2.203(not available for now) where a amber client interract with the pharo image through the API. You can download the client on https://github.com/VincentBlondeau/amber-MooseOnWeb'
-]
-
-{ #category : #catalog }
-ConfigurationOfMooseOnWeb >> catalogKeyClassesAndExample [
-	"Returns a paragraph or more describing the key classes of your project. You can use Pillar/Pier syntax to layout out the text i.e., ==Code== and - for bullet."
-	^ ''
-]
-
-{ #category : #catalog }
-ConfigurationOfMooseOnWeb >> catalogKeywords [
-	"Returns an array of symbols"
-	^ #(moose rest web models explore json metamodel) 
 ]
 
 { #category : #baselines }
