@@ -85,7 +85,7 @@ MWEntitiesHandlerWithIDServerTest >> testGetEntityActionResultAccessID [
 		yourself.
 		
 	self modelTest do:[:entity| 
-		(entity allDeclaredProperties reject: [ :p | p implementingSelector = '#accesses' ])
+		(entity allDeclaredProperties reject: [ :p | {#accesses . #accessors .  #sourceAnchor}anySatisfy: [ :symbol | p implementingSelector = symbol ]])
 		do: [ :p | 
 			| res |
 			res := entity perform: p implementingSelector.
